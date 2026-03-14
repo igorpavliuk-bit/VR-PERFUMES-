@@ -8,19 +8,18 @@
         :root { --main-color: #449244; --viber-color: #7360f2; --bg-color: #f8f9fa; }
         body { font-family: -apple-system, sans-serif; margin: 0; padding: 10px; background: var(--bg-color); color: #333; }
         header { text-align: center; padding: 20px 0; }
-        .logo-img { width: 120px; height: auto; }
-        h1 { font-size: 22px; text-transform: uppercase; margin: 10px 0 0; font-weight: 900; }
-        .viber-main { display: block; background: var(--viber-color); color: #fff; text-decoration: none; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; margin: 15px 0; font-size: 14px; }
+        .logo-img { width: 140px; height: auto; display: block; margin: 0 auto 10px; }
+        h1 { font-size: 22px; text-transform: uppercase; margin: 0; font-weight: 900; letter-spacing: 1px; }
+        .viber-main { display: block; background: var(--viber-color); color: #fff; text-decoration: none; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; margin: 15px 0; font-size: 14px; box-shadow: 0 4px 12px rgba(115, 96, 242, 0.2); }
         .zoom-box { background: #fff; padding: 10px; border-radius: 10px; display: flex; align-items: center; gap: 10px; border: 1px solid #ddd; margin-bottom: 20px; font-size: 12px; }
         #range { flex-grow: 1; accent-color: #000; }
         #catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 15px; }
-        .card { background: #fff; border-radius: 15px; padding: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; position: relative; }
-        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; cursor: pointer; background: #eee; transition: transform 0.2s; }
-        .card img:active { transform: scale(0.98); }
+        .card { background: #fff; border-radius: 15px; padding: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; cursor: pointer; background: #eee; }
         .brand { font-weight: bold; font-size: 12px; margin: 8px 0 2px; text-transform: uppercase; color: #000; }
         .p-name { font-size: 12px; color: #666; min-height: 32px; margin-bottom: 8px; line-height: 1.2; }
-        .price-ml { color: var(--main-color); font-weight: bold; font-size: 11px; margin-bottom: 10px; background: #f0f7f0; padding: 3px 6px; border-radius: 4px; align-self: flex-start; }
-        select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 10px; font-size: 14px; background: #fff; -webkit-appearance: none; }
+        .price-ml { color: var(--main-color); font-weight: bold; font-size: 11px; margin-bottom: 10px; background: #f0f7f0; padding: 4px 8px; border-radius: 5px; align-self: flex-start; }
+        select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 10px; font-size: 14px; background: #fff; }
         .price-tag { font-size: 19px; font-weight: 900; text-align: center; margin-bottom: 12px; color: #000; }
         .order-btn { background: #000; color: #fff; text-decoration: none; padding: 12px; border-radius: 10px; text-align: center; font-weight: bold; font-size: 13px; }
         .modal { display: none; position: fixed; z-index: 1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; padding: 15px; }
@@ -49,7 +48,7 @@
     <div class="modal-content" onclick="event.stopPropagation()">
         <span class="close" onclick="document.getElementById('infoModal').style.display='none'">&times;</span>
         <h3 id="mTitle" style="margin-top:0;"></h3>
-        <p id="mText" style="line-height:1.5; color:#444;"></p>
+        <p id="mText" style="line-height:1.5; color:#444; font-size:15px;"></p>
     </div>
 </div>
 
@@ -58,19 +57,16 @@
     const PHONE = '380962178464';
 
     async function load() {
-        const container = document.getElementById('catalog');
         try {
-            const response = await fetch(SHEET_URL + '&t=' + Date.now());
-            const text = await response.text();
+            const res = await fetch(SHEET_URL + '&t=' + Date.now());
+            const text = await res.text();
             
-            // Надійний парсинг CSV
             const rows = [];
             let current = '';
             let inQuotes = false;
             let currentRow = [];
 
-            for (let i = 0; i < text.length; i++) {
-                const char = text[i];
+            for (let char of text) {
                 if (char === '"') inQuotes = !inQuotes;
                 else if (char === ',' && !inQuotes) { currentRow.push(current.trim()); current = ''; }
                 else if (char === '\n' && !inQuotes) { currentRow.push(current.trim()); rows.push(currentRow); currentRow = []; current = ''; }
@@ -78,20 +74,19 @@
             }
             if (current || currentRow.length > 0) { currentRow.push(current.trim()); rows.push(currentRow); }
 
+            const container = document.getElementById('catalog');
             container.innerHTML = '';
             
-            // Пропускаємо перший рядок (заголовок)
-            for (let i = 1; i < rows.length; i++) {
-                const r = rows[i];
-                if (r.length < 3 || !r[0]) continue;
+            rows.slice(1).forEach(r => {
+                if (r.length < 3 || !r[0]) return;
 
                 const brand = r[0].replace(/^"|"$/g, '');
                 const name = r[1].replace(/^"|"$/g, '');
                 const price = parseFloat(r[2].replace(',', '.'));
-                const notes = (r[3] || '').replace(/^"|"$/g, '').replace(/\\n/g, '<br>');
+                const notes = (r[3] || '').replace(/^"|"$/g, '');
                 const img = (r[4] || '').replace(/^"|"$/g, '').trim();
 
-                if (isNaN(price)) continue;
+                if (isNaN(price)) return;
 
                 const card = document.createElement('div');
                 card.className = 'card';
@@ -105,40 +100,36 @@
 
                 card.innerHTML = `
                     <img src="${img}" onerror="this.src='https://via.placeholder.com/300?text=VR+PERFUMES'" 
-                         onclick="showInfo(\`${brand} ${name}\`, \`${notes}\`)">
+                         onclick="showInfo(\`${brand} ${name}\`, \`${notes.replace(/`/g, "'")}\`)">
                     <div class="brand">${brand}</div>
                     <div class="p-name">${name}</div>
                     <div class="price-ml">${Math.round(price)} грн / мл</div>
                     <select onchange="this.nextElementSibling.innerText = this.options[this.selectedIndex].getAttribute('data-p') + ' грн'">${opts}</select>
                     <div class="price-tag">${Math.round(2 * price)} грн</div>
-                    <a href="#" class="order-btn" onclick="sendOrder('${brand} ${name}', this)">ЗАМОВИТИ</a>
+                    <a href="#" class="order-btn" onclick="sendOrder(\`${brand} ${name}\`, this)">ЗАМОВИТИ</a>
                 `;
                 container.appendChild(card);
-            }
+            });
         } catch (err) {
-            container.innerHTML = '<div style="grid-column:1/-1; text-align:center;">Помилка завантаження даних. Перевірте інтернет.</div>';
+            document.getElementById('catalog').innerHTML = 'Помилка завантаження даних.';
         }
     }
 
     function showInfo(title, text) {
         document.getElementById('mTitle').innerText = title;
-        document.getElementById('mText').innerHTML = text;
+        document.getElementById('mText').innerText = text;
         document.getElementById('infoModal').style.display = 'flex';
     }
 
     function sendOrder(item, btn) {
         const sel = btn.previousElementSibling.previousElementSibling;
         const total = btn.previousElementSibling.innerText;
-        const msg = `🛍️ НОВЕ ЗАМОВЛЕННЯ:\n✨ Аромат: ${item}\n💧 Об'єм: ${sel.value} мл\n💰 Сума: ${total}\n──────────────────\nЧекаю на підтвердження!`;
+        const msg = `🛍️ НОВЕ ЗАМОВЛЕННЯ:\n✨ Аромат: ${item}\n💧 Об'єм: ${sel.value} мл\n💰 Сума: ${total}`;
         
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(msg).then(() => {
-                window.location.href = `viber://chat?number=%2B${PHONE}`;
-                setTimeout(() => alert("Текст замовлення скопійовано! ✅\nВставте його у Viber."), 500);
-            });
-        } else {
+        navigator.clipboard.writeText(msg).then(() => {
             window.location.href = `viber://chat?number=%2B${PHONE}`;
-        }
+            setTimeout(() => alert("Текст замовлення скопійовано!"), 500);
+        });
     }
 
     document.getElementById('range').oninput = function() {

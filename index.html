@@ -1,21 +1,134 @@
-function makeOrder(item, btn) {
-    const select = btn.previousElementSibling.previousElementSibling;
-    const ml = select.value;
-    const sum = btn.previousElementSibling.innerText;
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    const text = `🛍️ НОВЕ ЗАМОВЛЕННЯ\n\nАромат: ${item}\nОб'єм: ${ml} мл\nСума: ${sum}`;
-    const subject = `Замовлення: ${item}`;
+    <title>VR-PERFUMES | Каталог</title>
+    <meta property="og:title" content="VR-PERFUMES">
+    <meta property="og:image" content="https://i.postimg.cc/CxkmFFJ3/logo.png">
+    <meta property="og:description" content="Ексклюзивний розпив парфумерії.">
 
-    // Створюємо вибір для користувача
-    if (confirm(`Куди відправити замовлення?\n\nОК — у Viber (швидше)\nСкасувати — на Email`)) {
-        // Перехід у Viber
-        window.location.href = `viber://chat?number=%2B${TARGET_VIBER}`;
+    <style>
+        :root { --main: #449244; --viber: #7360f2; }
+        body { font-family: -apple-system, sans-serif; margin: 0; padding: 10px; background: #fff; color: #333; }
+        header { text-align: center; padding: 20px 0; }
+        .logo { width: 120px; height: auto; margin-bottom: 10px; }
+        .viber-btn { display: block; background: var(--viber); color: #fff; text-decoration: none; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; margin: 15px 0; font-size: 14px; }
         
-        // Копіюємо текст замовлення в буфер, щоб клієнт міг його просто вставити в чат
-        navigator.clipboard.writeText(text);
-        alert("Дані замовлення скопійовано! Просто вставте їх у повідомлення Viber.");
-    } else {
-        // Перехід на пошту
-        window.location.href = `mailto:${TARGET_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
+        #catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+        .card { border: 1px solid #eee; border-radius: 15px; padding: 12px; display: flex; flex-direction: column; background: #fff; }
+        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; background: #f9f9f9; cursor: pointer; }
+        
+        .brand { font-weight: bold; font-size: 13px; text-transform: uppercase; margin-top: 10px; color: #000; }
+        .name { font-size: 12px; color: #666; min-height: 32px; margin: 4px 0 8px; line-height: 1.2; }
+        
+        .price-info { font-size: 11px; color: var(--main); background: #f0f9f0; padding: 5px; border-radius: 6px; margin-bottom: 10px; font-weight: bold; text-align: center; border: 1px solid #e0f0e0; }
+        
+        select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 12px; background: #fff; }
+        .total { font-size: 20px; font-weight: 900; text-align: center; margin-bottom: 15px; color: #000; }
+        
+        .order-btn { background: #000; color: #fff; border: none; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; }
+        
+        /* Стильне меню вибору */
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: #fff; padding: 25px; border-radius: 20px; width: 100%; max-width: 350px; text-align: center; }
+        .choice-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; text-decoration: none; font-size: 16px; }
+        .btn-v { background: var(--viber); color: #fff; }
+        .btn-e { background: #eee; color: #333; }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" alt="VR-PERFUMES" class="logo">
+    <h1 style="font-size:22px; margin:0;">VR-PERFUMES</h1>
+    <p style="font-size:12px; color:#888; margin:5px 0;">Ексклюзивний розпив • Хмельницький</p>
+</header>
+
+<a href="https://invite.viber.com/?g2=AQBjzS%2BM5uBAeFRYT57vm5okC%2BGV00WHPJgDJBWE9ptyotTAmhAhpYNBmtPwZxQe" class="viber-btn">ПРИЄДНАТИСЬ ДО VIBER-КАНАЛУ</a>
+
+<div id="catalog">Завантаження ароматів...</div>
+
+<div id="orderModal" class="modal">
+    <div class="modal-content">
+        <h3 style="margin-top:0;">Оберіть спосіб замовлення:</h3>
+        <button id="viberOrder" class="choice-btn btn-v">Написати у Viber</button>
+        <button id="emailOrder" class="choice-btn btn-e">Відправити на Email</button>
+        <button onclick="closeModal()" style="background:none; border:none; color:#999; margin-top:10px; cursor:pointer;">Скасувати</button>
+    </div>
+</div>
+
+<script>
+    const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
+    const TARGET_EMAIL = 'vrshopping2017@gmail.com';
+    const TARGET_VIBER = '380962178464';
+
+    async function loadCatalog() {
+        try {
+            const response = await fetch(SHEET_CSV + '&t=' + Date.now());
+            const csvText = await response.text();
+            const lines = csvText.split('\n').slice(1);
+            const container = document.getElementById('catalog');
+            container.innerHTML = '';
+
+            lines.forEach(line => {
+                const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim());
+                if (cols.length < 3 || !cols[0]) return;
+
+                const brand = cols[0], name = cols[1], price = parseFloat(cols[2].replace(',','.')) || 0, 
+                      min = parseInt(cols[3]) || 2, desc = cols[4] || '', img = cols[5] || '';
+
+                let options = '';
+                [2, 5, 10].forEach(ml => {
+                    if (ml >= min) {
+                        let total = ml * price;
+                        if (ml === 10) total *= 0.9;
+                        options += `<option value="${ml}" data-p="${Math.round(total)}">${ml} мл — ${Math.round(total)} грн</option>`;
+                    }
+                });
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${img}" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
+                    <div class="brand">${brand}</div>
+                    <div class="name">${name}</div>
+                    <div class="price-info">Ціна за 1 мл: ${Math.round(price)} грн</div>
+                    <select onchange="this.nextElementSibling.innerText = this.options[this.selectedIndex].getAttribute('data-p') + ' грн'">${options}</select>
+                    <div class="total">${Math.round(min * price)} грн</div>
+                    <button class="order-btn" onclick="openOrderMenu('${brand} ${name}', this)">ЗАМОВИТИ</button>
+                `;
+                container.appendChild(card);
+            });
+        } catch (err) { console.error(err); }
     }
-}
+
+    function openOrderMenu(item, btn) {
+        const select = btn.previousElementSibling.previousElementSibling;
+        const ml = select.value;
+        const sum = btn.previousElementSibling.innerText;
+        const text = `🛍️ ЗАМОВЛЕННЯ:\n${item}\nОб'єм: ${ml} мл\nСума: ${sum}`;
+
+        document.getElementById('orderModal').style.display = 'flex';
+
+        document.getElementById('viberOrder').onclick = () => {
+            navigator.clipboard.writeText(text).then(() => {
+                window.location.href = `viber://chat?number=%2B${TARGET_VIBER}`;
+                alert("Дані замовлення скопійовано! Просто вставте їх у чат Viber.");
+                closeModal();
+            });
+        };
+
+        document.getElementById('emailOrder').onclick = () => {
+            window.location.href = `mailto:${TARGET_EMAIL}?subject=Замовлення&body=${encodeURIComponent(text)}`;
+            closeModal();
+        };
+    }
+
+    function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
+
+    loadCatalog();
+</script>
+</body>
+</html>

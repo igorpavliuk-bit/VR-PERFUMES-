@@ -5,33 +5,140 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>VR-PERFUMES | Каталог</title>
     <style>
-        :root { --main-color: #449244; --viber-color: #7360f2; --bg: #ffffff; }
-        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 10px; background: var(--bg); color: #333; -webkit-tap-highlight-color: transparent; }
-        header { text-align: center; padding: 15px 0 5px; }
-        .logo { width: 60px; height: 60px; background: #000; color: #fff; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px; line-height: 1.1; text-align: center; }
-        h1 { font-size: 20px; margin: 10px 0 5px; letter-spacing: 1px; text-transform: uppercase; }
-        .viber-main { display: block; background: var(--viber-color); color: #fff; text-decoration: none; padding: 14px; border-radius: 12px; text-align: center; font-weight: bold; margin-bottom: 20px; font-size: 14px; box-shadow: 0 4px 15px rgba(115, 96, 242, 0.3); }
-        .zoom-box { background: #f2f2f2; padding: 8px 12px; border-radius: 10px; margin-bottom: 20px; font-size: 11px; color: #777; display: flex; align-items: center; gap: 10px; }
-        #range { flex-grow: 1; accent-color: #000; }
-        #catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 12px; }
-        .card { border: 1px solid #eee; border-radius: 15px; padding: 10px; display: flex; flex-direction: column; background: #fff; }
-        .card img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 10px; margin-bottom: 8px; background: #f9f9f9; cursor: pointer; }
-        .brand { font-weight: 700; text-transform: uppercase; font-size: 13px; margin-bottom: 2px; }
-        .p-name { font-size: 12px; color: #666; margin-bottom: 10px; min-height: 30px; line-height: 1.2; }
-        select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 10px; font-size: 14px; background: #fdfdfd; }
+        :root { 
+            --main-color: #449244; 
+            --viber-color: #7360f2; 
+            --bg-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            --card-bg: #ffffff;
+        }
+        
+        body { 
+            font-family: -apple-system, system-ui, sans-serif; 
+            margin: 0; 
+            padding: 10px; 
+            background: var(--bg-gradient); 
+            background-attachment: fixed;
+            color: #333; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+        
+        header { 
+            text-align: center; 
+            padding: 20px 0 10px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        
+        .logo-img { 
+            width: 120px; 
+            height: auto; 
+            margin-bottom: 10px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+        
+        h1 { font-size: 22px; margin: 0 0 5px; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; }
+        .viber-main { 
+            display: block; 
+            background: var(--viber-color); 
+            color: #fff; 
+            text-decoration: none; 
+            padding: 14px; 
+            border-radius: 12px; 
+            text-align: center; 
+            font-weight: bold; 
+            margin-bottom: 25px; 
+            font-size: 14px; 
+            box-shadow: 0 4px 15px rgba(115, 96, 242, 0.3); 
+        }
+        
+        .zoom-box { 
+            background: rgba(255, 255, 255, 0.7); 
+            backdrop-filter: blur(5px);
+            padding: 8px 12px; 
+            border-radius: 10px; 
+            margin-bottom: 20px; 
+            font-size: 11px; 
+            color: #777; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        #range { flex-grow: 1; accent-color: #333; }
+        #catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 15px; }
+        
+        .card { 
+            border-radius: 20px; 
+            padding: 12px; 
+            display: flex; 
+            flex-direction: column; 
+            background: var(--card-bg); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        
+        .card img { 
+            width: 100%; 
+            aspect-ratio: 3/4; 
+            object-fit: cover; 
+            border-radius: 15px; 
+            margin-bottom: 10px; 
+            background: #fdfdfd; 
+            cursor: pointer; 
+        }
+        
+        .brand { font-weight: 700; text-transform: uppercase; font-size: 13px; margin-bottom: 2px; color: #111; }
+        .p-name { font-size: 12px; color: #666; margin-bottom: 4px; min-height: 30px; line-height: 1.2; }
+        
+        .price-per-ml { 
+            font-size: 11px; 
+            color: var(--main-color); 
+            font-weight: 600;
+            margin-bottom: 12px; 
+            background: rgba(68, 146, 68, 0.08);
+            padding: 3px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            align-self: center;
+        }
+        
+        select { 
+            width: 100%; 
+            padding: 10px; 
+            border-radius: 10px; 
+            border: 1px solid #eee; 
+            margin-bottom: 10px; 
+            font-size: 14px; 
+            background: #fdfdfd; 
+            color: #333;
+        }
+        
         .price-tag { font-size: 18px; font-weight: 800; margin-bottom: 12px; text-align: center; color: #000; }
-        .order-btn { background: var(--main-color); color: #fff; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; text-align: center; font-size: 13px; }
-        .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; padding: 15px; }
-        .modal-content { background: #fff; padding: 25px; border-radius: 20px; width: 100%; max-width: 400px; position: relative; }
+        .order-btn { 
+            background: #000; 
+            color: #fff; 
+            text-decoration: none; 
+            padding: 12px; 
+            border-radius: 10px; 
+            font-weight: bold; 
+            text-align: center; 
+            font-size: 13px; 
+            transition: opacity 0.2s;
+        }
+
+        .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(3px); align-items: center; justify-content: center; padding: 15px; }
+        .modal-content { background: #fff; padding: 25px; border-radius: 25px; width: 100%; max-width: 400px; position: relative; }
         .close { position: absolute; right: 15px; top: 10px; font-size: 30px; color: #ccc; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">VR<br>PERFUMES</div>
+    <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" alt="VR-PERFUMES" class="logo-img">
     <h1>VR-PERFUMES</h1>
-    <p style="font-size:12px; color:#999; margin:0;">Ексклюзивний розпив • Хмельницький</p>
+    <p style="font-size:12px; color:#777; margin:0; letter-spacing: 1px;">Ексклюзивний розпив • Хмельницький</p>
 </header>
 
 <a href="https://invite.viber.com/?g2=AQBjzS%2BM5uBAeFRYT57vm5okC%2BGV00WHPJgDJBWE9ptyotTAmhAhpYNBmtPwZxQe" target="_blank" class="viber-main">ПРИЄДНАТИСЬ ДО VIBER-КАНАЛУ</a>
@@ -46,8 +153,8 @@
 <div id="infoModal" class="modal" onclick="this.style.display='none'">
     <div class="modal-content" onclick="event.stopPropagation()">
         <span class="close" onclick="document.getElementById('infoModal').style.display='none'">&times;</span>
-        <h3 id="mTitle" style="margin-top:0; color:var(--main-color);"></h3>
-        <p id="mText" style="line-height:1.5; font-size:14px; color:#444;"></p>
+        <h3 id="mTitle" style="margin-top:0; color:#000;"></h3>
+        <p id="mText" style="line-height:1.6; font-size:14px; color:#444;"></p>
     </div>
 </div>
 
@@ -77,53 +184,3 @@
                 let opts = '';
                 [2, 5, 10].forEach(ml => {
                     if (ml >= minMl) {
-                        let finalP = ml * baseP;
-                        if (ml === 10) finalP = Math.round(finalP * 0.9);
-                        opts += `<option value="${ml}" data-p="${finalP}">${ml} мл — ${finalP} грн</option>`;
-                    }
-                });
-
-                card.innerHTML = `
-                    <img src="${img || 'https://via.placeholder.com/300'}" onclick="showInfo('${brand.replace(/'/g, "\\'")} ${name.replace(/'/g, "\\'")}', '${notes.replace(/'/g, "\\'").replace(/\n/g, " ")}')">
-                    <div class="brand">${brand}</div>
-                    <div class="p-name">${name}</div>
-                    <select onchange="this.nextElementSibling.innerText = this.options[this.selectedIndex].getAttribute('data-p') + ' грн'">${opts}</select>
-                    <div class="price-tag">${Math.round(minMl * baseP)} грн</div>
-                    <a href="#" class="order-btn" onclick="sendOrder('${brand.replace(/'/g, "\\'")} ${name.replace(/'/g, "\\'")}', this)">ЗАМОВИТИ</a>
-                `;
-                container.appendChild(card);
-            });
-        } catch (e) {
-            document.getElementById('catalog').innerText = "Оновлення...";
-        }
-    }
-
-    function showInfo(t, n) {
-        document.getElementById('mTitle').innerText = t;
-        document.getElementById('mText').innerText = n;
-        document.getElementById('infoModal').style.display = 'flex';
-    }
-
-    function sendOrder(item, btn) {
-        const sel = btn.previousElementSibling.previousElementSibling;
-        const total = btn.previousElementSibling.innerText;
-        const msg = `Вітаю! Хочу замовити ${item}, ${sel.value} мл.`;
-        
-        // Найбільш надійний метод переходу для iPhone
-        // Спочатку намагаємося відкрити чат, якщо ні - просто відкриваємо Viber
-        window.location.href = `viber://chat?number=%2B${PHONE}`;
-        
-        // Показуємо підказку з текстом, який треба надіслати
-        setTimeout(() => {
-            alert("Viber відкрився? Надішліть мені повідомлення:\n\n" + msg);
-        }, 1000);
-    }
-
-    document.getElementById('range').oninput = function() {
-        document.getElementById('catalog').style.gridTemplateColumns = `repeat(auto-fill, minmax(${this.value}px, 1fr))`;
-    };
-
-    loadProducts();
-</script>
-</body>
-</html>

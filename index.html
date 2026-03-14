@@ -30,7 +30,7 @@
         
         .order-btn { background: #000; color: #fff; border: none; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; }
         
-        /* Стильне меню вибору */
+        /* Меню вибору */
         .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; }
         .modal-content { background: #fff; padding: 25px; border-radius: 20px; width: 100%; max-width: 350px; text-align: center; }
         .choice-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; text-decoration: none; font-size: 16px; }
@@ -52,9 +52,9 @@
 
 <div id="orderModal" class="modal">
     <div class="modal-content">
-        <h3 style="margin-top:0;">Оберіть спосіб замовлення:</h3>
-        <button id="viberOrder" class="choice-btn btn-v">Написати у Viber</button>
-        <button id="emailOrder" class="choice-btn btn-e">Відправити на Email</button>
+        <h3 style="margin-top:0;">Як бажаєте замовити?</h3>
+        <button id="viberOrder" class="choice-btn btn-v">Viber (096 217 84 64)</button>
+        <button id="emailOrder" class="choice-btn btn-e">Електронна пошта</button>
         <button onclick="closeModal()" style="background:none; border:none; color:#999; margin-top:10px; cursor:pointer;">Скасувати</button>
     </div>
 </div>
@@ -115,7 +115,7 @@
         document.getElementById('viberOrder').onclick = () => {
             navigator.clipboard.writeText(text).then(() => {
                 window.location.href = `viber://chat?number=%2B${TARGET_VIBER}`;
-                alert("Дані замовлення скопійовано! Просто вставте їх у чат Viber.");
+                alert("Текст замовлення скопійовано! Просто вставте його в чат Viber.");
                 closeModal();
             });
         };

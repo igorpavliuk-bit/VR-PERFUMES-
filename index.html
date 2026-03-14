@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>VR-PERFUMES | Каталог</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
         :root { --main-color: #449244; --viber-color: #7360f2; --bg-color: #f8f9fa; }
         body { font-family: -apple-system, sans-serif; margin: 0; padding: 10px; background: var(--bg-color); color: #333; }
@@ -14,16 +15,19 @@
         .zoom-box { background: #fff; padding: 10px; border-radius: 10px; display: flex; align-items: center; gap: 10px; border: 1px solid #ddd; margin-bottom: 20px; font-size: 12px; }
         #range { flex-grow: 1; accent-color: #000; }
         #catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 15px; }
+        
         .card { background: #fff; border-radius: 15px; padding: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
-        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; cursor: pointer; background: #eee; }
+        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; cursor: pointer; background: #eee; transition: transform 0.2s; }
+        .card img:active { transform: scale(0.98); }
         .brand { font-weight: bold; font-size: 12px; margin: 8px 0 2px; text-transform: uppercase; color: #000; }
         .p-name { font-size: 12px; color: #666; min-height: 32px; margin-bottom: 8px; line-height: 1.2; }
         .price-ml { color: var(--main-color); font-weight: bold; font-size: 11px; margin-bottom: 10px; background: #f0f7f0; padding: 4px 8px; border-radius: 5px; align-self: flex-start; }
         select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #eee; margin-bottom: 10px; font-size: 14px; background: #fff; }
         .price-tag { font-size: 19px; font-weight: 900; text-align: center; margin-bottom: 12px; color: #000; }
-        .order-btn { background: #000; color: #fff; text-decoration: none; padding: 12px; border-radius: 10px; text-align: center; font-weight: bold; font-size: 13px; }
-        .modal { display: none; position: fixed; z-index: 1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; padding: 15px; }
-        .modal-content { background:#fff; padding:25px; border-radius:20px; width:100%; max-width:400px; position:relative; box-sizing: border-box; }
+        .order-btn { background: #000; color: #fff; text-decoration: none; padding: 12px; border-radius: 10px; text-align: center; font-weight: bold; font-size: 13px; cursor: pointer; border: none; width: 100%; box-sizing: border-box; }
+        
+        .modal { display: none; position: fixed; z-index: 1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; padding: 15px; box-sizing: border-box; }
+        .modal-content { background:#fff; padding:25px; border-radius:20px; width:100%; max-width:400px; position:relative; box-sizing: border-box; max-height: 80vh; overflow-y: auto; }
         .close { position:absolute; right:15px; top:10px; font-size:30px; cursor:pointer; color:#aaa; }
     </style>
 </head>
@@ -35,7 +39,7 @@
     <div style="font-size: 11px; color: #777; margin-top: 5px;">Ексклюзивний розпив • Хмельницький</div>
 </header>
 
-<a href="https://invite.viber.com/?g2=AQBjzS%2BM5uBAeFRYT57vm5okC%2BGV00WHPJgDJBWE9ptyotTAmhAhpYNBmtPwZxQe" class="viber-main">ПРИЄДНАТИСЬ ДО VIBER-КАНАЛУ</a>
+<a href="https://invite.viber.com/?g2=AQBjzS%2BM5uBAeFRYT57vm5okC%2BGV00WHPJgDJBWE9ptyotTAmhAhpYNBmtPwZxQe" class="viber-main" target="_blank">ПРИЄДНАТИСЬ ДО VIBER-КАНАЛУ</a>
 
 <div class="zoom-box">
     <span>МАСШТАБ:</span>
@@ -48,7 +52,7 @@
     <div class="modal-content" onclick="event.stopPropagation()">
         <span class="close" onclick="document.getElementById('infoModal').style.display='none'">&times;</span>
         <h3 id="mTitle" style="margin-top:0;"></h3>
-        <p id="mText" style="line-height:1.5; color:#444; font-size:15px;"></p>
+        <p id="mText" style="line-height:1.5; color:#444; font-size:15px; white-space: pre-wrap;"></p>
     </div>
 </div>
 
@@ -56,79 +60,87 @@
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
     const PHONE = '380962178464';
 
-    async function load() {
-        try {
-            const res = await fetch(SHEET_URL + '&t=' + Date.now());
-            const text = await res.text();
-            
-            const rows = [];
-            let current = '';
-            let inQuotes = false;
-            let currentRow = [];
-
-            for (let char of text) {
-                if (char === '"') inQuotes = !inQuotes;
-                else if (char === ',' && !inQuotes) { currentRow.push(current.trim()); current = ''; }
-                else if (char === '\n' && !inQuotes) { currentRow.push(current.trim()); rows.push(currentRow); currentRow = []; current = ''; }
-                else current += char;
+    function init() {
+        // Використовуємо PapaParse для ідеального зчитування CSV
+        Papa.parse(SHEET_URL + '&t=' + Date.now(), {
+            download: true,
+            header: false,
+            skipEmptyLines: true,
+            complete: function(results) {
+                renderCatalog(results.data.slice(1)); // Пропускаємо заголовок таблиці
+            },
+            error: function(err) {
+                document.getElementById('catalog').innerHTML = '<div style="text-align:center; grid-column: 1/-1;">Помилка підключення до таблиці.</div>';
             }
-            if (current || currentRow.length > 0) { currentRow.push(current.trim()); rows.push(currentRow); }
+        });
+    }
 
-            const container = document.getElementById('catalog');
-            container.innerHTML = '';
-            
-            rows.slice(1).forEach(r => {
-                if (r.length < 3 || !r[0]) return;
+    function renderCatalog(rows) {
+        const container = document.getElementById('catalog');
+        container.innerHTML = '';
 
-                const brand = r[0].replace(/^"|"$/g, '');
-                const name = r[1].replace(/^"|"$/g, '');
-                const price = parseFloat(r[2].replace(',', '.'));
-                const notes = (r[3] || '').replace(/^"|"$/g, '');
-                const img = (r[4] || '').replace(/^"|"$/g, '').trim();
+        rows.forEach(row => {
+            if (row.length < 3 || !row[0]) return; // Пропускаємо порожні рядки
 
-                if (isNaN(price)) return;
+            const brand = row[0].trim();
+            const name = row[1].trim();
+            const price = parseFloat(row[2].replace(',', '.'));
+            const notes = row[3] ? row[3].trim() : "Опис очікується...";
+            const imgUrl = row[4] ? row[4].trim() : '';
 
-                const card = document.createElement('div');
-                card.className = 'card';
-                
-                let opts = '';
-                [2, 5, 10].forEach(ml => {
-                    let p = Math.round(ml * price);
-                    if (ml === 10) p = Math.round(p * 0.9);
-                    opts += `<option value="${ml}" data-p="${p}">${ml} мл — ${p} грн</option>`;
-                });
+            if (isNaN(price)) return;
 
-                card.innerHTML = `
-                    <img src="${img}" onerror="this.src='https://via.placeholder.com/300?text=VR+PERFUMES'" 
-                         onclick="showInfo(\`${brand} ${name}\`, \`${notes.replace(/`/g, "'")}\`)">
-                    <div class="brand">${brand}</div>
-                    <div class="p-name">${name}</div>
-                    <div class="price-ml">${Math.round(price)} грн / мл</div>
-                    <select onchange="this.nextElementSibling.innerText = this.options[this.selectedIndex].getAttribute('data-p') + ' грн'">${opts}</select>
-                    <div class="price-tag">${Math.round(2 * price)} грн</div>
-                    <a href="#" class="order-btn" onclick="sendOrder(\`${brand} ${name}\`, this)">ЗАМОВИТИ</a>
-                `;
-                container.appendChild(card);
+            // Створюємо картку безпечним методом
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            // Формуємо опції об'єму
+            let optsHtml = '';
+            [2, 5, 10].forEach(ml => {
+                let p = Math.round(ml * price);
+                if (ml === 10) p = Math.round(p * 0.9); // Знижка на 10 мл
+                optsHtml += `<option value="${ml}" data-p="${p}">${ml} мл — ${p} грн</option>`;
             });
-        } catch (err) {
-            document.getElementById('catalog').innerHTML = 'Помилка завантаження даних.';
-        }
-    }
 
-    function showInfo(title, text) {
-        document.getElementById('mTitle').innerText = title;
-        document.getElementById('mText').innerText = text;
-        document.getElementById('infoModal').style.display = 'flex';
-    }
+            // Наповнюємо HTML картки (БЕЗ inline-обробників подій, щоб не ламалось від лапок)
+            card.innerHTML = `
+                <img class="frag-img" src="${imgUrl}" onerror="this.src='https://via.placeholder.com/300?text=VR+PERFUMES'">
+                <div class="brand">${brand}</div>
+                <div class="p-name">${name}</div>
+                <div class="price-ml">${Math.round(price)} грн / мл</div>
+                <select class="vol-select">${optsHtml}</select>
+                <div class="price-tag">${Math.round(2 * price)} грн</div>
+                <button class="order-btn">ЗАМОВИТИ</button>
+            `;
 
-    function sendOrder(item, btn) {
-        const sel = btn.previousElementSibling.previousElementSibling;
-        const total = btn.previousElementSibling.innerText;
-        const msg = `🛍️ НОВЕ ЗАМОВЛЕННЯ:\n✨ Аромат: ${item}\n💧 Об'єм: ${sel.value} мл\n💰 Сума: ${total}`;
-        
-        navigator.clipboard.writeText(msg).then(() => {
-            window.location.href = `viber://chat?number=%2B${PHONE}`;
-            setTimeout(() => alert("Текст замовлення скопійовано!"), 500);
+            // Додаємо безпечні слухачі подій (ніякі апострофи чи переноси рядків це не зламають)
+            card.querySelector('.frag-img').addEventListener('click', () => {
+                document.getElementById('mTitle').innerText = `${brand} ${name}`;
+                document.getElementById('mText').innerText = notes;
+                document.getElementById('infoModal').style.display = 'flex';
+            });
+
+            const selectEl = card.querySelector('.vol-select');
+            const priceTagEl = card.querySelector('.price-tag');
+            
+            selectEl.addEventListener('change', () => {
+                const selectedPrice = selectEl.options[selectEl.selectedIndex].getAttribute('data-p');
+                priceTagEl.innerText = selectedPrice + ' грн';
+            });
+
+            card.querySelector('.order-btn').addEventListener('click', () => {
+                const total = priceTagEl.innerText;
+                const msg = `🛍️ НОВЕ ЗАМОВЛЕННЯ:\n✨ Аромат: ${brand} ${name}\n💧 Об'єм: ${selectEl.value} мл\n💰 Сума: ${total}\n──────────────────\nЧекаю на підтвердження!`;
+                
+                navigator.clipboard.writeText(msg).then(() => {
+                    window.location.href = `viber://chat?number=%2B${PHONE}`;
+                    setTimeout(() => alert("Текст замовлення скопійовано! Вставте його у Viber."), 500);
+                }).catch(() => {
+                    window.location.href = `viber://chat?number=%2B${PHONE}`;
+                });
+            });
+
+            container.appendChild(card);
         });
     }
 
@@ -136,7 +148,8 @@
         document.getElementById('catalog').style.gridTemplateColumns = `repeat(auto-fill, minmax(${this.value}px, 1fr))`;
     };
 
-    load();
+    // Запускаємо
+    init();
 </script>
 </body>
 </html>

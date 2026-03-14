@@ -5,48 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>VR-PERFUMES | Каталог</title>
     
+    <meta property="og:title" content="VR-PERFUMES">
+    <meta property="og:image" content="https://i.postimg.cc/CxkmFFJ3/logo.png">
+
     <style>
         :root { --main: #449244; --viber: #7360f2; --bg: #ffffff; }
         body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 10px; background: #f4f4f4; color: #333; }
         
-        /* Шапка */
-        header { text-align: center; padding: 15px; background: #fff; border-radius: 15px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        header { text-align: center; padding: 15px; background: #fff; border-radius: 15px; margin-bottom: 10px; }
         .logo { width: 80px; height: auto; }
         
-        /* БЛОК ПОШУКУ - тепер він закріплений зверху */
+        /* БЛОК ПОШУКУ - Яскравий та помітний */
         .search-box { 
             position: sticky; top: 10px; z-index: 100; 
-            background: #fff; padding: 10px; border-radius: 15px; 
-            margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: #fff; padding: 12px; border-radius: 15px; 
+            margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
             border: 2px solid var(--viber);
         }
         #searchInput { 
-            width: 100%; padding: 12px; border: none; 
+            width: 100%; padding: 10px; border: none; 
             font-size: 16px; outline: none; box-sizing: border-box;
+            font-weight: bold;
         }
 
         .viber-channel { display: block; background: var(--viber); color: #fff; text-decoration: none; padding: 12px; border-radius: 10px; text-align: center; font-weight: bold; margin-bottom: 15px; font-size: 13px; }
         
         #catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
         
-        /* Картка товару */
+        /* Картка */
         .card { position: relative; border-radius: 15px; padding: 10px; display: flex; flex-direction: column; background: #fff; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .new-badge { position: absolute; top: -5px; left: 50%; transform: translateX(-50%); background: var(--main); color: white; padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: bold; z-index: 10; }
+        .new-badge { position: absolute; top: -5px; left: 50%; transform: translateX(-50%); background: var(--main); color: white; padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: bold; z-index: 10; border: 1px solid #fff; }
         
         .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; background: #f9f9f9; }
-        .brand { font-weight: bold; font-size: 13px; margin-top: 10px; text-transform: uppercase; }
+        .brand { font-weight: bold; font-size: 13px; margin-top: 10px; text-transform: uppercase; color: #000; }
         .name { font-size: 12px; color: #666; height: 32px; margin: 4px 0; overflow: hidden; }
         .price-info { font-size: 11px; color: var(--main); font-weight: bold; margin-bottom: 8px; }
         
         select { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 10px; background: #fff; }
-        .total { font-size: 18px; font-weight: 900; margin-bottom: 10px; }
-        .order-btn { background: #000; color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .total { font-size: 18px; font-weight: 900; margin-bottom: 10px; color: #000; }
+        .order-btn { background: #000; color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .order-btn:active { background: #333; transform: scale(0.95); }
 
-        /* Вікно сповіщення */
+        /* Сповіщення */
         #copyNotice {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: #fff; padding: 25px; border-radius: 20px; z-index: 1000; text-align: center;
-            width: 80%; max-width: 280px; box-shadow: 0 0 0 2000px rgba(0,0,0,0.8); border: 3px solid var(--viber);
+            width: 80%; max-width: 280px; box-shadow: 0 0 0 2000px rgba(0,0,0,0.85); border: 3px solid var(--viber);
         }
     </style>
 </head>
@@ -55,6 +59,7 @@
 <header>
     <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" class="logo">
     <h1 style="font-size:20px; margin:5px 0;">VR-PERFUMES</h1>
+    <p style="font-size:11px; color:#888; margin:0;">Ексклюзивний розпив • Хмельницький</p>
 </header>
 
 <div class="search-box">
@@ -63,11 +68,12 @@
 
 <a href="https://invite.viber.com/?g2=AQBjzS%2BM5uBAeFRYT57vm5okC%2BGV00WHPJgDJBWE9ptyotTAmhAhpYNBmtPwZxQe" class="viber-channel">ПРИЄДНАТИСЬ ДО VIBER</a>
 
-<div id="catalog">Завантаження...</div>
+<div id="catalog">Завантаження аромату...</div>
 
 <div id="copyNotice">
+    <div style="font-size: 40px; margin-bottom: 10px;">📋</div>
     <b style="font-size: 18px; color: var(--viber);">СКОПІЙОВАНО!</b>
-    <p>Зараз відкриється Viber.<br>Просто натисніть <b>"Вставити"</b></p>
+    <p style="line-height: 1.4;">Замовлення в буфері.<br><br><b>ЗАРАЗ У VIBER</b><br>натисніть <b>"ВСТАВИТИ"</b></p>
 </div>
 
 <script>
@@ -82,7 +88,7 @@
                 return row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim());
             }).filter(c => c.length >= 3 && c[0]);
 
-            // Сортування за датою (стовпець G)
+            // Сортування за датою (стовпець G / 7-й)
             rows.sort((a, b) => new Date(b[6] || 0) - new Date(a[6] || 0));
 
             const container = document.getElementById('catalog');
@@ -91,14 +97,15 @@
 
             rows.forEach(c => {
                 const brand = c[0], name = c[1], price = parseFloat(c[2].replace(',','.')) || 0, 
-                      min = parseInt(c[3]) || 2, img = c[5] || '', date = new Date(c[6] || 0);
+                      min = parseInt(c[3]) || 2, img = c[5] || '', dateRaw = c[6] || '2000-01-01';
 
+                const date = new Date(dateRaw);
                 const isNew = (today - date) / (1000 * 60 * 60 * 24) <= 14;
 
                 let options = '';
                 [2, 5, 10].forEach(ml => {
                     if (ml >= min) {
-                        let sum = Math.round(ml * price);
+                        let sum = Math.round(ml * price); // Пряма математика без знижок
                         options += `<option value="${ml}" data-p="${sum}">${ml} мл — ${sum} грн</option>`;
                     }
                 });
@@ -118,7 +125,7 @@
                 `;
                 container.appendChild(card);
             });
-        } catch (e) { console.error(e); }
+        } catch (e) { document.getElementById('catalog').innerHTML = "Помилка завантаження."; }
     }
 
     function filterCatalog() {
@@ -140,11 +147,12 @@
         el.select(); document.execCommand("copy");
         document.body.removeChild(el);
 
-        document.getElementById('copyNotice').style.display = 'block';
+        const notice = document.getElementById('copyNotice');
+        notice.style.display = 'block';
         setTimeout(() => {
-            document.getElementById('copyNotice').style.display = 'none';
+            notice.style.display = 'none';
             window.location.href = `viber://chat?number=%2B${VIBER_NUMBER}`;
-        }, 2000);
+        }, 2200);
     }
 
     loadCatalog();

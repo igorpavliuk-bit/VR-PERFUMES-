@@ -19,7 +19,6 @@
             background: var(--bg-gradient); 
             background-attachment: fixed;
             color: #333; 
-            -webkit-tap-highlight-color: transparent; 
         }
         
         header { 
@@ -30,105 +29,41 @@
             align-items: center; 
         }
         
-        .logo-img { 
-            width: 120px; 
-            height: auto; 
-            margin-bottom: 10px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-        }
-        
+        .logo-img { width: 120px; height: auto; margin-bottom: 10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
         h1 { font-size: 22px; margin: 0 0 5px; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; }
         
         .viber-main { 
-            display: block; 
-            background: var(--viber-color); 
-            color: #fff; 
-            text-decoration: none; 
-            padding: 14px; 
-            border-radius: 12px; 
-            text-align: center; 
-            font-weight: bold; 
-            margin-bottom: 25px; 
-            font-size: 14px; 
-            box-shadow: 0 4px 15px rgba(115, 96, 242, 0.3); 
+            display: block; background: var(--viber-color); color: #fff; text-decoration: none; padding: 14px; 
+            border-radius: 12px; text-align: center; font-weight: bold; margin-bottom: 25px; font-size: 14px; 
         }
         
         .zoom-box { 
-            background: rgba(255, 255, 255, 0.7); 
-            backdrop-filter: blur(5px);
-            padding: 8px 12px; 
-            border-radius: 10px; 
-            margin-bottom: 20px; 
-            font-size: 11px; 
-            color: #777; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-            border: 1px solid rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(5px); padding: 8px 12px; 
+            border-radius: 10px; margin-bottom: 20px; font-size: 11px; color: #777; display: flex; align-items: center; gap: 10px; 
         }
         
         #range { flex-grow: 1; accent-color: #333; }
         #catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 15px; }
         
         .card { 
-            border-radius: 20px; 
-            padding: 12px; 
-            display: flex; 
-            flex-direction: column; 
-            background: var(--card-bg); 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
+            border-radius: 20px; padding: 12px; display: flex; flex-direction: column; 
+            background: var(--card-bg); box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
         
-        .card img { 
-            width: 100%; 
-            aspect-ratio: 3/4; 
-            object-fit: cover; 
-            border-radius: 15px; 
-            margin-bottom: 10px; 
-            background: #fdfdfd; 
-            cursor: pointer; 
-        }
-        
+        .card img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 15px; margin-bottom: 10px; background: #fdfdfd; cursor: pointer; }
         .brand { font-weight: 700; text-transform: uppercase; font-size: 13px; margin-bottom: 2px; color: #111; }
         .p-name { font-size: 12px; color: #666; margin-bottom: 4px; min-height: 30px; line-height: 1.2; }
         
         .price-per-ml { 
-            font-size: 11px; 
-            color: var(--main-color); 
-            font-weight: 600;
-            margin-bottom: 12px; 
-            background: rgba(68, 146, 68, 0.08);
-            padding: 3px 8px;
-            border-radius: 6px;
-            display: inline-block;
-            align-self: center;
+            font-size: 11px; color: var(--main-color); font-weight: 600; margin-bottom: 12px; 
+            background: rgba(68, 146, 68, 0.08); padding: 3px 8px; border-radius: 6px; align-self: center;
         }
         
-        select { 
-            width: 100%; 
-            padding: 10px; 
-            border-radius: 10px; 
-            border: 1px solid #eee; 
-            margin-bottom: 10px; 
-            font-size: 14px; 
-            background: #fdfdfd; 
-            color: #333;
-        }
-        
+        select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #eee; margin-bottom: 10px; font-size: 14px; }
         .price-tag { font-size: 18px; font-weight: 800; margin-bottom: 12px; text-align: center; color: #000; }
-        .order-btn { 
-            background: #000; 
-            color: #fff; 
-            text-decoration: none; 
-            padding: 12px; 
-            border-radius: 10px; 
-            font-weight: bold; 
-            text-align: center; 
-            font-size: 13px; 
-        }
+        .order-btn { background: #000; color: #fff; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: bold; text-align: center; font-size: 13px; }
 
-        .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(3px); align-items: center; justify-content: center; padding: 15px; }
+        .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 15px; }
         .modal-content { background: #fff; padding: 25px; border-radius: 25px; width: 100%; max-width: 400px; position: relative; }
         .close { position: absolute; right: 15px; top: 10px; font-size: 30px; color: #ccc; cursor: pointer; }
     </style>
@@ -138,7 +73,7 @@
 <header>
     <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" alt="VR-PERFUMES" class="logo-img">
     <h1>VR-PERFUMES</h1>
-    <p style="font-size:12px; color:#777; margin:0; letter-spacing: 1px;">Ексклюзивний розпив • Хмельницький</p>
+    <p style="font-size:12px; color:#777; margin:0;">Ексклюзивний розпив • Хмельницький</p>
 </header>
 
 <a href="https://invite.viber.com/?g2=AQBjzS%2BM5uBAeFRYT57vm5okC%2BGV00WHPJgDJBWE9ptyotTAmhAhpYNBmtPwZxQe" target="_blank" class="viber-main">ПРИЄДНАТИСЬ ДО VIBER-КАНАЛУ</a>
@@ -162,56 +97,67 @@
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
     const PHONE = '380962178464';
 
+    function parseCSV(text) {
+        const lines = text.split(/\r?\n/);
+        return lines.map(line => {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                if (char === '"') inQuotes = !inQuotes;
+                else if (char === ',' && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else current += char;
+            }
+            result.push(current.trim());
+            return result;
+        });
+    }
+
     async function loadProducts() {
         try {
-            const response = await fetch(SHEET_URL + '&t=' + new Date().getTime());
+            const response = await fetch(SHEET_URL + '&cache=' + Math.random());
             const text = await response.text();
-            
-            // Виправляємо обробку рядків для вашої таблиці
-            const rows = text.split(/\r?\n/).slice(1);
+            const data = parseCSV(text).slice(1);
             const container = document.getElementById('catalog');
             container.innerHTML = '';
 
-            rows.forEach(row => {
-                // Покращений розбір CSV
-                const cols = row.match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g);
-                
-                if (!cols || cols.length < 4) return;
+            data.forEach(cols => {
+                if (cols.length < 3 || !cols[0]) return;
 
-                let brand = cols[0].replace(/"/g, '').trim();
-                let name = cols[1].replace(/"/g, '').trim();
-                let priceRaw = cols[2].replace(/"/g, '').replace(',', '.').trim();
-                let notes = cols[3].replace(/"/g, '').trim();
-                let img = cols[4] ? cols[4].replace(/"/g, '').trim() : '';
+                const brand = cols[0].replace(/^"|"$/g, '');
+                const name = cols[1].replace(/^"|"$/g, '');
+                const price = parseFloat(cols[2].replace(',', '.'));
+                const notes = cols[3] ? cols[3].replace(/^"|"$/g, '') : '';
+                const img = cols[4] ? cols[4].replace(/^"|"$/g, '') : '';
 
-                const baseP = parseFloat(priceRaw);
-                if (isNaN(baseP)) return;
+                if (isNaN(price)) return;
 
                 const card = document.createElement('div');
                 card.className = 'card';
                 
-                // Формуємо опції об'ємів
                 let opts = '';
                 [2, 5, 10].forEach(ml => {
-                    let finalP = Math.round(ml * baseP);
-                    if (ml === 10) finalP = Math.round(finalP * 0.9); // Знижка 10% на 10мл
-                    opts += `<option value="${ml}" data-p="${finalP}">${ml} мл — ${finalP} грн</option>`;
+                    let p = Math.round(ml * price);
+                    if (ml === 10) p = Math.round(p * 0.9);
+                    opts += `<option value="${ml}" data-p="${p}">${ml} мл — ${p} грн</option>`;
                 });
 
                 card.innerHTML = `
-                    <img src="${img || 'https://via.placeholder.com/300'}" onclick="showInfo('${brand.replace(/'/g, "\\'")}', '${name.replace(/'/g, "\\'")}', '${notes.replace(/'/g, "\\'").replace(/\n/g, " ")}')">
+                    <img src="${img || 'https://via.placeholder.com/300'}" onclick="showInfo('${brand.replace(/'/g, "\\'")}', '${name.replace(/'/g, "\\'")}', '${notes.replace(/'/g, "\\'")}')">
                     <div class="brand">${brand}</div>
                     <div class="p-name">${name}</div>
-                    <div class="price-per-ml">${Math.round(baseP)} грн / мл</div>
+                    <div class="price-per-ml">${Math.round(price)} грн / мл</div>
                     <select onchange="this.nextElementSibling.innerText = this.options[this.selectedIndex].getAttribute('data-p') + ' грн'">${opts}</select>
-                    <div class="price-tag">${Math.round(2 * baseP)} грн</div>
+                    <div class="price-tag">${Math.round(2 * price)} грн</div>
                     <a href="#" class="order-btn" onclick="sendOrder('${brand} ${name}', this)">ЗАМОВИТИ</a>
                 `;
                 container.appendChild(card);
             });
         } catch (e) {
-            console.error(e);
-            document.getElementById('catalog').innerText = "Помилка завантаження. Перевірте доступ до таблиці.";
+            document.getElementById('catalog').innerHTML = "<p style='grid-column: 1/-1; text-align: center;'>Оновлення даних... Будь ласка, оновіть сторінку через 30 секунд.</p>";
         }
     }
 
@@ -224,18 +170,13 @@
     function sendOrder(item, btn) {
         const sel = btn.previousElementSibling.previousElementSibling;
         const total = btn.previousElementSibling.innerText;
-        
         const orderText = `🛍️ НОВЕ ЗАМОВЛЕННЯ:\n──────────────────\n✨ Аромат: ${item}\n💧 Об'єм: ${sel.value} мл\n💰 Сума: ${total}\n──────────────────\nЧекаю на Ваше підтвердження!`;
         
-        if (navigator.clipboard && navigator.clipboard.writeText) {
+        if (navigator.clipboard) {
             navigator.clipboard.writeText(orderText).then(() => {
                 window.location.href = `viber://chat?number=%2B${PHONE}`;
-                setTimeout(() => {
-                    alert("Текст замовлення скопійовано! ✅\n\nПросто вставте його у чат Viber.");
-                }, 800);
-            }).catch(() => {
-                window.location.href = `viber://chat?number=%2B${PHONE}`;
-            });
+                setTimeout(() => alert("Текст замовлення скопійовано! ✅\nВставте його у чат Viber."), 800);
+            }).catch(() => window.location.href = `viber://chat?number=%2B${PHONE}`);
         } else {
             window.location.href = `viber://chat?number=%2B${PHONE}`;
         }

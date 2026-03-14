@@ -39,26 +39,31 @@
 <div id="copyNotice"><b>СКОПІЙОВАНО!</b><p>Відкриваємо Viber. Натисніть <b>"ВСТАВИТИ"</b></p></div>
 
 <script>
+    // ПЕРЕВІРТЕ ЦЕ ПОСИЛАННЯ ЯКЩО НЕ ПРАЦЮЄ
     const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
     const VIBER_NUMBER = '380962178464';
 
     async function loadCatalog() {
+        const container = document.getElementById('catalog');
         try {
             const r = await fetch(SHEET_CSV + '&t=' + Date.now());
-            const text = await r.text();
-            const lines = text.split('\n').slice(1);
-            const container = document.getElementById('catalog');
-            container.innerHTML = '';
+            if (!r.ok) throw new Error("Помилка доступу до таблиці");
             
+            const text = await r.text();
+            const lines = text.split('\n').filter(l => l.trim() !== "").slice(1);
+            
+            if (lines.length === 0) {
+                container.innerHTML = "Таблиця порожня або не опублікована правильно.";
+                return;
+            }
+
+            container.innerHTML = '';
             let items = [];
             lines.forEach(line => {
                 const c = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim());
-                if (c.length >= 3 && c[0]) {
-                    items.push(c);
-                }
+                if (c.length >= 3 && c[0]) items.push(c);
             });
 
-            // Надійне сортування
             items.sort((a, b) => {
                 const dA = a[6] ? new Date(a[6]) : new Date(0);
                 const dB = b[6] ? new Date(b[6]) : new Date(0);
@@ -86,7 +91,9 @@
                     <button class="order-btn" onclick="sendToViber('${brand} ${name}', this)">ЗАМОВИТИ</button>`;
                 container.appendChild(card);
             });
-        } catch (e) { document.getElementById('catalog').innerHTML = "Помилка даних. Перевірте таблицю."; }
+        } catch (e) { 
+            container.innerHTML = "Помилка: " + e.message + ". Перевірте публікацію таблиці."; 
+        }
     }
 
     function showInfo(b, n, d) { document.getElementById('modalBrand').innerText = b; document.getElementById('modalName').innerText = n; document.getElementById('modalDesc').innerText = d || "Опис додається..."; document.getElementById('infoModal').style.display = 'flex'; }

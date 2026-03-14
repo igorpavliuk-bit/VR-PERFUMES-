@@ -34,7 +34,7 @@
     <p style="font-size:12px; color:#999; margin:0;">Ексклюзивний розпив • Хмельницький</p>
 </header>
 
-<a href="https://invite.viber.com/?g2=AQB0%2BuUuG9zVxlM2WvI8Wqf9S8J8z" class="viber-main">ПРИЄДНАТИСЬ ДО VIBER-КАНАЛУ</a>
+<a href="https://invite.viber.com/?g2=AQB0%2BuUuG9zVxlM2WvI8Wqf9S8J8z" class="viber-main" target="_blank">ПРИЄДНАТИСЬ ДО VIBER-КАНАЛУ</a>
 
 <div class="zoom-box">
     <span>МАСШТАБ:</span>
@@ -57,14 +57,8 @@
 
     async function loadProducts() {
         try {
-            // Додаємо мітку часу, щоб обійти кеш браузера
             const response = await fetch(SHEET_URL + '&t=' + new Date().getTime());
             const text = await response.text();
-            
-            if (text.includes('<!DOCTYPE html>')) {
-                throw new Error("Невірний формат даних");
-            }
-
             const rows = text.split('\n').slice(1);
             const container = document.getElementById('catalog');
             container.innerHTML = '';
@@ -100,7 +94,7 @@
                 container.appendChild(card);
             });
         } catch (e) {
-            document.getElementById('catalog').innerText = "Помилка зв'язку з таблицею. Зачекайте хвилину та оновіть сторінку.";
+            document.getElementById('catalog').innerText = "Оновлення даних... Зачекайте хвилину.";
         }
     }
 
@@ -114,7 +108,19 @@
         const sel = btn.previousElementSibling.previousElementSibling;
         const total = btn.previousElementSibling.innerText;
         const msg = `Вітаю! Хочу замовити ${item}, об'єм ${sel.value} мл (${total})`;
-        window.location.href = `viber://chat?number=${PHONE}&text=${encodeURIComponent(msg)}`;
+        
+        // Використовуємо універсальний формат посилання для Viber
+        const viberUrl = `viber://chat?number=%2B${PHONE}&text=${encodeURIComponent(msg)}`;
+        
+        // Спроба відкрити Viber
+        window.location.href = viberUrl;
+
+        // Запасний варіант для браузерів, які блокують прямі виклики
+        setTimeout(() => {
+            if (confirm("Відкрити Viber для оформлення замовлення?")) {
+                window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`, '_blank'); // Як варіант, якщо Viber зовсім не йде
+            }
+        }, 1500);
     }
 
     document.getElementById('range').oninput = function() {

@@ -7,7 +7,7 @@
     
     <meta property="og:title" content="VR-PERFUMES">
     <meta property="og:image" content="https://i.postimg.cc/CxkmFFJ3/logo.png">
-    <meta property="og:description" content="Ексклюзивний розпив парфумерії у Хмельницькому">
+    <meta property="og:description" content="Ексклюзивний розпив парфумерії">
 
     <style>
         :root { --main: #449244; --viber: #7360f2; }
@@ -30,7 +30,7 @@
         .order-btn { background: #000; color: #fff; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 14px; transition: 0.2s; }
         .order-btn:active { transform: scale(0.96); }
 
-        /* Стильне сповіщення про копіювання */
+        /* Яскраве сповіщення */
         #copyNotice {
             display: none;
             position: fixed;
@@ -45,8 +45,8 @@
             text-align: center;
             width: 80%;
             max-width: 300px;
-            box-shadow: 0 0 0 1000px rgba(0,0,0,0.7), 0 10px 30px rgba(0,0,0,0.3);
-            border: 3px solid var(--viber);
+            box-shadow: 0 0 0 2000px rgba(0,0,0,0.8), 0 10px 40px rgba(0,0,0,0.5);
+            border: 4px solid var(--viber);
         }
     </style>
 </head>
@@ -63,12 +63,12 @@
 <div id="catalog">Завантаження ароматів...</div>
 
 <div id="copyNotice">
-    <div style="font-size: 40px; margin-bottom: 10px;">📋</div>
-    <b style="font-size: 18px; display: block; margin-bottom: 10px;">ГОТОВО!</b>
-    <p style="margin: 0; line-height: 1.4; font-size: 15px;">
-        Текст замовлення скопійовано.<br>
-        <b>ЗАРАЗ У ВАЙБЕРІ</b><br>
-        просто натисніть <b>"ВСТАВИТИ"</b>
+    <div style="font-size: 50px; margin-bottom: 15px;">📋</div>
+    <b style="font-size: 20px; display: block; margin-bottom: 10px; color: var(--viber);">СКОПІЙОВАНО!</b>
+    <p style="margin: 0; line-height: 1.5; font-size: 16px;">
+        Дані замовлення вже у вас.<br><br>
+        Зараз відкриється Viber:<br>
+        натисніть там <b>"ВСТАВИТИ"</b>
     </p>
 </div>
 
@@ -94,8 +94,9 @@
                 let options = '';
                 [2, 5, 10].forEach(ml => {
                     if (ml >= min) {
-                        let sum = ml * price;
-                        options += `<option value="${ml}" data-p="${Math.round(sum)}">${ml} мл — ${Math.round(sum)} грн</option>`;
+                        // ТУТ ПРЯМИЙ РОЗРАХУНОК: ціна * мл (БЕЗ ЗНИЖОК)
+                        let sum = Math.round(ml * price);
+                        options += `<option value="${ml}" data-p="${sum}">${ml} мл — ${sum} грн</option>`;
                     }
                 });
 
@@ -128,15 +129,13 @@
         document.execCommand("copy");
         document.body.removeChild(dummy);
 
-        // Показуємо наше гарне сповіщення
         const notice = document.getElementById('copyNotice');
         notice.style.display = 'block';
 
-        // Через 3 секунди перенаправляємо у Viber і ховаємо банер
         setTimeout(() => {
             notice.style.display = 'none';
             window.location.href = `viber://chat?number=%2B${VIBER_NUMBER}`;
-        }, 2800);
+        }, 2500);
     }
 
     loadCatalog();

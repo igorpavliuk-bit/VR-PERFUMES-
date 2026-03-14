@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
     <title>VR-PERFUMES | Каталог</title>
+    
     <meta property="og:title" content="VR-PERFUMES">
     <meta property="og:image" content="https://i.postimg.cc/CxkmFFJ3/logo.png">
-    <meta property="og:description" content="Ексклюзивний розпив парфумерії.">
+    <meta property="og:description" content="Ексклюзивний розпив парфумерії у Хмельницькому">
 
     <style>
         :root { --main: #449244; --viber: #7360f2; }
@@ -15,27 +15,16 @@
         header { text-align: center; padding: 20px 0; }
         .logo { width: 120px; height: auto; margin-bottom: 10px; }
         .viber-btn { display: block; background: var(--viber); color: #fff; text-decoration: none; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; margin: 15px 0; font-size: 14px; }
-        
         #catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-        .card { border: 1px solid #eee; border-radius: 15px; padding: 12px; display: flex; flex-direction: column; background: #fff; }
-        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; background: #f9f9f9; cursor: pointer; }
-        
+        .card { border: 1px solid #eee; border-radius: 15px; padding: 12px; display: flex; flex-direction: column; background: #fff; text-align: center; }
+        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; background: #f9f9f9; }
         .brand { font-weight: bold; font-size: 13px; text-transform: uppercase; margin-top: 10px; color: #000; }
         .name { font-size: 12px; color: #666; min-height: 32px; margin: 4px 0 8px; line-height: 1.2; }
-        
-        .price-info { font-size: 11px; color: var(--main); background: #f0f9f0; padding: 5px; border-radius: 6px; margin-bottom: 10px; font-weight: bold; text-align: center; border: 1px solid #e0f0e0; }
-        
+        .price-info { font-size: 11px; color: var(--main); background: #f0f9f0; padding: 5px; border-radius: 6px; margin-bottom: 10px; font-weight: bold; }
         select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 12px; background: #fff; }
-        .total { font-size: 20px; font-weight: 900; text-align: center; margin-bottom: 15px; color: #000; }
-        
-        .order-btn { background: #000; color: #fff; border: none; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; }
-        
-        /* Меню вибору */
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: #fff; padding: 25px; border-radius: 20px; width: 100%; max-width: 350px; text-align: center; }
-        .choice-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; text-decoration: none; font-size: 16px; }
-        .btn-v { background: var(--viber); color: #fff; }
-        .btn-e { background: #eee; color: #333; }
+        .total { font-size: 20px; font-weight: 900; margin-bottom: 15px; color: #000; }
+        .order-btn { background: #000; color: #fff; border: none; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; }
+        .order-btn:active { transform: scale(0.96); }
     </style>
 </head>
 <body>
@@ -50,41 +39,32 @@
 
 <div id="catalog">Завантаження ароматів...</div>
 
-<div id="orderModal" class="modal">
-    <div class="modal-content">
-        <h3 style="margin-top:0;">Як бажаєте замовити?</h3>
-        <button id="viberOrder" class="choice-btn btn-v">Viber (096 217 84 64)</button>
-        <button id="emailOrder" class="choice-btn btn-e">Електронна пошта</button>
-        <button onclick="closeModal()" style="background:none; border:none; color:#999; margin-top:10px; cursor:pointer;">Скасувати</button>
-    </div>
-</div>
-
 <script>
-    const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
-    const TARGET_EMAIL = 'vrshopping2017@gmail.com';
-    const TARGET_VIBER = '380962178464';
+    const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakw)m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
+    const VIBER_NUMBER = '380962178464';
+    const FORM_ACTION = 'https://formspree.io/f/xvgzlowq'; // Тимчасовий ID для відправки на вашу пошту
 
     async function loadCatalog() {
         try {
-            const response = await fetch(SHEET_CSV + '&t=' + Date.now());
-            const csvText = await response.text();
-            const lines = csvText.split('\n').slice(1);
+            const r = await fetch(SHEET_CSV + '&t=' + Date.now());
+            const data = await r.text();
+            const rows = data.split('\n').slice(1);
             const container = document.getElementById('catalog');
             container.innerHTML = '';
 
-            lines.forEach(line => {
-                const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim());
-                if (cols.length < 3 || !cols[0]) return;
+            rows.forEach(row => {
+                const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim());
+                if (c.length < 3 || !c[0]) return;
 
-                const brand = cols[0], name = cols[1], price = parseFloat(cols[2].replace(',','.')) || 0, 
-                      min = parseInt(cols[3]) || 2, desc = cols[4] || '', img = cols[5] || '';
+                const brand = c[0], name = c[1], price = parseFloat(c[2].replace(',','.')) || 0, 
+                      min = parseInt(c[3]) || 2, img = c[5] || '';
 
                 let options = '';
                 [2, 5, 10].forEach(ml => {
                     if (ml >= min) {
-                        let total = ml * price;
-                        if (ml === 10) total *= 0.9;
-                        options += `<option value="${ml}" data-p="${Math.round(total)}">${ml} мл — ${Math.round(total)} грн</option>`;
+                        let sum = ml * price;
+                        if (ml === 10) sum *= 0.9;
+                        options += `<option value="${ml}" data-p="${Math.round(sum)}">${ml} мл — ${Math.round(sum)} грн</option>`;
                     }
                 });
 
@@ -97,36 +77,32 @@
                     <div class="price-info">Ціна за 1 мл: ${Math.round(price)} грн</div>
                     <select onchange="this.nextElementSibling.innerText = this.options[this.selectedIndex].getAttribute('data-p') + ' грн'">${options}</select>
                     <div class="total">${Math.round(min * price)} грн</div>
-                    <button class="order-btn" onclick="openOrderMenu('${brand} ${name}', this)">ЗАМОВИТИ</button>
+                    <button class="order-btn" onclick="sendOrder('${brand} ${name}', this)">ЗАМОВИТИ</button>
                 `;
                 container.appendChild(card);
             });
-        } catch (err) { console.error(err); }
+        } catch (e) { console.error(e); }
     }
 
-    function openOrderMenu(item, btn) {
+    function sendOrder(item, btn) {
         const select = btn.previousElementSibling.previousElementSibling;
         const ml = select.value;
         const sum = btn.previousElementSibling.innerText;
-        const text = `🛍️ ЗАМОВЛЕННЯ:\n${item}\nОб'єм: ${ml} мл\nСума: ${sum}`;
+        const message = `🛍️ ЗАМОВЛЕННЯ: ${item}\nОб'єм: ${ml} мл\nСума: ${sum}`;
 
-        document.getElementById('orderModal').style.display = 'flex';
+        // 1. Автоматична відправка на пошту (фоново)
+        fetch(FORM_ACTION, {
+            method: 'POST',
+            body: JSON.stringify({ message: message, email: "vrshopping2017@gmail.com" }),
+            headers: { 'Content-Type': 'application/json' }
+        });
 
-        document.getElementById('viberOrder').onclick = () => {
-            navigator.clipboard.writeText(text).then(() => {
-                window.location.href = `viber://chat?number=%2B${TARGET_VIBER}`;
-                alert("Текст замовлення скопійовано! Просто вставте його в чат Viber.");
-                closeModal();
-            });
-        };
-
-        document.getElementById('emailOrder').onclick = () => {
-            window.location.href = `mailto:${TARGET_EMAIL}?subject=Замовлення&body=${encodeURIComponent(text)}`;
-            closeModal();
-        };
+        // 2. Миттєвий перехід у Viber
+        navigator.clipboard.writeText(message).then(() => {
+            window.location.href = `viber://chat?number=%2B${VIBER_NUMBER}`;
+            alert("Деталі замовлення скопійовано! Просто вставте їх у чат Viber.");
+        });
     }
-
-    function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
 
     loadCatalog();
 </script>

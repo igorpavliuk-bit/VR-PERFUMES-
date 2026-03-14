@@ -7,24 +7,29 @@
     
     <meta property="og:title" content="VR-PERFUMES">
     <meta property="og:image" content="https://i.postimg.cc/CxkmFFJ3/logo.png">
-    <meta property="og:description" content="Ексклюзивний розпив парфумерії у Хмельницькому">
+    <meta property="og:description" content="Ексклюзивний розпив парфумерії">
 
     <style>
         :root { --main: #449244; --viber: #7360f2; }
         body { font-family: -apple-system, sans-serif; margin: 0; padding: 10px; background: #fff; color: #333; }
         header { text-align: center; padding: 20px 0; }
-        .logo { width: 120px; height: auto; margin-bottom: 10px; }
+        .logo { width: 110px; height: auto; margin-bottom: 10px; }
         .viber-btn { display: block; background: var(--viber); color: #fff; text-decoration: none; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; margin: 15px 0; font-size: 14px; }
+        
         #catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
         .card { border: 1px solid #eee; border-radius: 15px; padding: 12px; display: flex; flex-direction: column; background: #fff; text-align: center; }
         .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; background: #f9f9f9; }
-        .brand { font-weight: bold; font-size: 13px; text-transform: uppercase; margin-top: 10px; color: #000; }
+        
+        .brand { font-weight: bold; font-size: 13px; text-transform: uppercase; margin-top: 10px; }
         .name { font-size: 12px; color: #666; min-height: 32px; margin: 4px 0 8px; line-height: 1.2; }
+        
         .price-info { font-size: 11px; color: var(--main); background: #f0f9f0; padding: 5px; border-radius: 6px; margin-bottom: 10px; font-weight: bold; }
-        select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 12px; background: #fff; }
+        
+        select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 12px; background: #fff; font-size: 14px; }
         .total { font-size: 20px; font-weight: 900; margin-bottom: 15px; color: #000; }
-        .order-btn { background: #000; color: #fff; border: none; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; }
-        .order-btn:active { transform: scale(0.96); }
+        
+        .order-btn { background: #000; color: #fff; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; font-size: 14px; }
+        .order-btn:active { transform: scale(0.96); opacity: 0.8; }
     </style>
 </head>
 <body>
@@ -40,9 +45,8 @@
 <div id="catalog">Завантаження ароматів...</div>
 
 <script>
-    const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakw)m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
+    const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
     const VIBER_NUMBER = '380962178464';
-    const FORM_ACTION = 'https://formspree.io/f/xvgzlowq'; // Тимчасовий ID для відправки на вашу пошту
 
     async function loadCatalog() {
         try {
@@ -77,31 +81,31 @@
                     <div class="price-info">Ціна за 1 мл: ${Math.round(price)} грн</div>
                     <select onchange="this.nextElementSibling.innerText = this.options[this.selectedIndex].getAttribute('data-p') + ' грн'">${options}</select>
                     <div class="total">${Math.round(min * price)} грн</div>
-                    <button class="order-btn" onclick="sendOrder('${brand} ${name}', this)">ЗАМОВИТИ</button>
+                    <button class="order-btn" onclick="sendToViber('${brand} ${name}', this)">ЗАМОВИТИ У VIBER</button>
                 `;
                 container.appendChild(card);
             });
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error("Помилка завантаження:", e); }
     }
 
-    function sendOrder(item, btn) {
+    function sendToViber(item, btn) {
         const select = btn.previousElementSibling.previousElementSibling;
         const ml = select.value;
         const sum = btn.previousElementSibling.innerText;
-        const message = `🛍️ ЗАМОВЛЕННЯ: ${item}\nОб'єм: ${ml} мл\nСума: ${sum}`;
+        const message = `🛍️ ЗАМОВЛЕННЯ:\n${item}\nОб'єм: ${ml} мл\nСума: ${sum}`;
 
-        // 1. Автоматична відправка на пошту (фоново)
-        fetch(FORM_ACTION, {
-            method: 'POST',
-            body: JSON.stringify({ message: message, email: "vrshopping2017@gmail.com" }),
-            headers: { 'Content-Type': 'application/json' }
-        });
+        // Копіюємо текст у буфер обміну
+        const el = document.createElement('textarea');
+        el.value = message;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
 
-        // 2. Миттєвий перехід у Viber
-        navigator.clipboard.writeText(message).then(() => {
-            window.location.href = `viber://chat?number=%2B${VIBER_NUMBER}`;
-            alert("Деталі замовлення скопійовано! Просто вставте їх у чат Viber.");
-        });
+        alert("Текст замовлення скопійовано!\nЗараз відкриється Viber — просто вставте текст у повідомлення.");
+        
+        // Відкриваємо чат
+        window.location.href = `viber://chat?number=%2B${VIBER_NUMBER}`;
     }
 
     loadCatalog();

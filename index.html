@@ -4,47 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <title>VR-PERFUMES | Каталог розпиву</title>
-    <meta name="description" content="Ексклюзивний розпив парфумерії у Хмельницькому.">
-    <meta property="og:type" content="website">
+    <title>VR-PERFUMES | Каталог</title>
     <meta property="og:title" content="VR-PERFUMES">
-    <meta property="og:description" content="Оберіть свій ідеальний аромат у нашому каталозі.">
     <meta property="og:image" content="https://i.postimg.cc/CxkmFFJ3/logo.png">
-    <meta property="og:url" content="https://igorpavliuk-bit.github.io/VR-PERFUMES-/">
+    <meta property="og:description" content="Ексклюзивний розпив парфумерії.">
 
     <style>
         :root { --main: #449244; --viber: #7360f2; }
-        body { font-family: -apple-system, sans-serif; margin: 0; padding: 10px; background: #fff; color: #333; }
+        body { font-family: -apple-system, sans-serif; margin: 0; padding: 10px; background: #fff; }
         header { text-align: center; padding: 20px 0; }
         .logo { width: 120px; height: auto; margin-bottom: 10px; }
-        .viber-btn { display: block; background: var(--viber); color: #fff; text-decoration: none; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; margin: 15px 0; font-size: 14px; }
+        .viber-btn { display: block; background: var(--viber); color: #fff; text-decoration: none; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; margin: 15px 0; }
         
         #catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-        .card { border: 1px solid #eee; border-radius: 15px; padding: 12px; display: flex; flex-direction: column; background: #fff; transition: 0.3s; }
+        .card { border: 1px solid #eee; border-radius: 15px; padding: 12px; display: flex; flex-direction: column; background: #fff; }
         .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; background: #f9f9f9; cursor: pointer; }
         
-        .brand { font-weight: bold; font-size: 13px; text-transform: uppercase; margin-top: 10px; color: #000; }
-        .name { font-size: 12px; color: #666; min-height: 32px; margin: 4px 0 8px; line-height: 1.2; }
+        .brand { font-weight: bold; font-size: 13px; text-transform: uppercase; margin-top: 10px; }
+        .name { font-size: 12px; color: #666; min-height: 32px; margin: 4px 0 8px; }
         
-        .price-info { font-size: 11px; color: var(--main); background: #f0f9f0; padding: 5px; border-radius: 6px; margin-bottom: 10px; font-weight: bold; text-align: center; border: 1px solid #e0f0e0; }
+        .price-info { font-size: 11px; color: var(--main); background: #f0f9f0; padding: 5px; border-radius: 6px; margin-bottom: 10px; font-weight: bold; text-align: center; }
         
-        select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 12px; background: #fff; font-size: 13px; }
-        .total { font-size: 20px; font-weight: 900; text-align: center; margin-bottom: 15px; color: #000; }
+        select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 12px; }
+        .total { font-size: 20px; font-weight: 900; text-align: center; margin-bottom: 15px; }
         
-        .order-btn { background: #000; color: #fff; border: none; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; }
-        .order-btn:active { transform: scale(0.96); background: #333; }
+        .order-btn { background: #000; color: #fff; border: none; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; }
         
-        /* Модальне вікно (опис) */
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; padding: 20px; }
         .modal-content { background: #fff; padding: 25px; border-radius: 20px; width: 100%; max-width: 400px; position: relative; }
-        .close-modal { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #999; }
     </style>
 </head>
 <body>
 
 <header>
     <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" alt="VR-PERFUMES" class="logo">
-    <h1 style="font-size:22px; margin:0; letter-spacing: 1px;">VR-PERFUMES</h1>
+    <h1 style="font-size:22px; margin:0;">VR-PERFUMES</h1>
     <p style="font-size:12px; color:#888; margin:5px 0;">Ексклюзивний розпив • Хмельницький</p>
 </header>
 
@@ -54,19 +48,19 @@
 
 <div id="modal" class="modal" onclick="this.style.display='none'">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <span class="close-modal">&times;</span>
-        <h3 id="m-title" style="margin-top:0; color:#000;"></h3>
-        <p id="m-desc" style="line-height:1.6; color:#444; font-size:14px; white-space: pre-wrap; max-height: 60vh; overflow-y: auto;"></p>
+        <h3 id="m-title" style="margin-top:0;"></h3>
+        <p id="m-desc" style="line-height:1.6; color:#444; font-size:14px; white-space: pre-wrap;"></p>
     </div>
 </div>
 
 <script>
     const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
     const TARGET_EMAIL = 'vrshopping2017@gmail.com';
+    const TARGET_VIBER = '380962178464';
 
     async function loadCatalog() {
         try {
-            const response = await fetch(SHEET_CSV + '&cache=' + Date.now());
+            const response = await fetch(SHEET_CSV + '&t=' + Date.now());
             const csvText = await response.text();
             const lines = csvText.split('\n').slice(1);
             const container = document.getElementById('catalog');
@@ -79,13 +73,11 @@
                 const brand = cols[0], name = cols[1], price = parseFloat(cols[2].replace(',','.')) || 0, 
                       min = parseInt(cols[3]) || 2, desc = cols[4] || '', img = cols[5] || '';
 
-                if (price === 0) return;
-
                 let options = '';
                 [2, 5, 10].forEach(ml => {
                     if (ml >= min) {
                         let total = ml * price;
-                        if (ml === 10) total *= 0.9; // Знижка 10% на 10 мл
+                        if (ml === 10) total *= 0.9;
                         options += `<option value="${ml}" data-p="${Math.round(total)}">${ml} мл — ${Math.round(total)} грн</option>`;
                     }
                 });
@@ -97,26 +89,18 @@
                     <div class="brand">${brand}</div>
                     <div class="name">${name}</div>
                     <div class="price-info">Ціна за 1 мл: ${Math.round(price)} грн</div>
-                    <select onchange="updateTotal(this)">${options}</select>
+                    <select onchange="this.nextElementSibling.innerText = this.options[this.selectedIndex].getAttribute('data-p') + ' грн'">${options}</select>
                     <div class="total">${Math.round(min * price)} грн</div>
                     <button class="order-btn" onclick="makeOrder('${brand} ${name}', this)">ЗАМОВИТИ</button>
                 `;
                 container.appendChild(card);
             });
-        } catch (err) {
-            document.getElementById('catalog').innerText = 'Помилка завантаження даних.';
-        }
-    }
-
-    function updateTotal(select) {
-        const totalDiv = select.nextElementSibling;
-        const selectedPrice = select.options[select.selectedIndex].getAttribute('data-p');
-        totalDiv.innerText = selectedPrice + ' грн';
+        } catch (err) { console.error(err); }
     }
 
     function showInfo(title, text) {
         document.getElementById('m-title').innerText = title;
-        document.getElementById('m-desc').innerText = text || 'Опис аромату скоро з’явиться...';
+        document.getElementById('m-desc').innerText = text || 'Опис скоро з’явиться...';
         document.getElementById('modal').style.display = 'flex';
     }
 
@@ -126,9 +110,15 @@
         const sum = btn.previousElementSibling.innerText;
         
         const subject = encodeURIComponent(`Замовлення: ${item}`);
-        const body = encodeURIComponent(`🛍️ НОВЕ ЗАМОВЛЕННЯ\n\nАромат: ${item}\nОб'єм: ${ml} мл\nСума: ${sum}\n\nБудь ласка, зв'яжіться зі мною!`);
+        const body = encodeURIComponent(`🛍️ НОВЕ ЗАМОВЛЕННЯ\n\nАромат: ${item}\nОб'єм: ${ml} мл\nСума: ${sum}`);
         
+        // 1. Відкриваємо пошту
         window.location.href = `mailto:${TARGET_EMAIL}?subject=${subject}&body=${body}`;
+        
+        // 2. Через секунду перекидаємо у Viber
+        setTimeout(() => {
+            window.location.href = `viber://chat?number=%2B${TARGET_VIBER}`;
+        }, 1200);
     }
 
     loadCatalog();

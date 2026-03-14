@@ -7,21 +7,20 @@
     <style>
         :root { --main-color: #449244; --viber-color: #7360f2; --bg: #ffffff; }
         body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 10px; background: var(--bg); color: #333; -webkit-tap-highlight-color: transparent; }
-        header { text-align: center; padding: 15px 0 5px; display: flex; flex-direction: column; align-items: center; }
-        .logo-img { width: 100px; height: auto; margin-bottom: 10px; }
-        h1 { font-size: 20px; margin: 0 0 5px; letter-spacing: 1px; text-transform: uppercase; font-weight: 900; }
+        header { text-align: center; padding: 15px 0 5px; }
+        .logo { width: 60px; height: 60px; background: #000; color: #fff; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px; line-height: 1.1; text-align: center; }
+        h1 { font-size: 20px; margin: 10px 0 5px; letter-spacing: 1px; text-transform: uppercase; }
         .viber-main { display: block; background: var(--viber-color); color: #fff; text-decoration: none; padding: 14px; border-radius: 12px; text-align: center; font-weight: bold; margin-bottom: 20px; font-size: 14px; box-shadow: 0 4px 15px rgba(115, 96, 242, 0.3); }
         .zoom-box { background: #f2f2f2; padding: 8px 12px; border-radius: 10px; margin-bottom: 20px; font-size: 11px; color: #777; display: flex; align-items: center; gap: 10px; }
         #range { flex-grow: 1; accent-color: #000; }
         #catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 12px; }
-        .card { border: 1px solid #eee; border-radius: 15px; padding: 10px; display: flex; flex-direction: column; background: #fff; position: relative; }
-        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; margin-bottom: 8px; background: #f9f9f9; cursor: pointer; }
+        .card { border: 1px solid #eee; border-radius: 15px; padding: 10px; display: flex; flex-direction: column; background: #fff; }
+        .card img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 10px; margin-bottom: 8px; background: #f9f9f9; cursor: pointer; }
         .brand { font-weight: 700; text-transform: uppercase; font-size: 13px; margin-bottom: 2px; }
-        .p-name { font-size: 12px; color: #666; margin-bottom: 5px; min-height: 30px; line-height: 1.2; }
-        .price-per-ml { font-size: 11px; color: var(--main-color); margin-bottom: 10px; font-weight: bold; }
+        .p-name { font-size: 12px; color: #666; margin-bottom: 10px; min-height: 30px; line-height: 1.2; }
         select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 10px; font-size: 14px; background: #fdfdfd; }
         .price-tag { font-size: 18px; font-weight: 800; margin-bottom: 12px; text-align: center; color: #000; }
-        .order-btn { background: #000; color: #fff; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; text-align: center; font-size: 13px; cursor: pointer; border: none; }
+        .order-btn { background: var(--main-color); color: #fff; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; text-align: center; font-size: 13px; }
         .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; padding: 15px; }
         .modal-content { background: #fff; padding: 25px; border-radius: 20px; width: 100%; max-width: 400px; position: relative; }
         .close { position: absolute; right: 15px; top: 10px; font-size: 30px; color: #ccc; cursor: pointer; }
@@ -30,7 +29,7 @@
 <body>
 
 <header>
-    <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" alt="VR-PERFUMES" class="logo-img">
+    <div class="logo">VR<br>PERFUMES</div>
     <h1>VR-PERFUMES</h1>
     <p style="font-size:12px; color:#999; margin:0;">Ексклюзивний розпив • Хмельницький</p>
 </header>
@@ -48,7 +47,7 @@
     <div class="modal-content" onclick="event.stopPropagation()">
         <span class="close" onclick="document.getElementById('infoModal').style.display='none'">&times;</span>
         <h3 id="mTitle" style="margin-top:0; color:var(--main-color);"></h3>
-        <p id="mText" style="line-height:1.5; font-size:14px; color:#444; white-space: pre-wrap;"></p>
+        <p id="mText" style="line-height:1.5; font-size:14px; color:#444;"></p>
     </div>
 </div>
 
@@ -65,21 +64,66 @@
             container.innerHTML = '';
 
             rows.forEach(row => {
-                // Розбиваємо рядок з урахуванням лапок в описах
                 const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                if (cols.length < 4 || !cols[0].trim()) return;
+                if (cols.length < 5 || !cols[0].trim()) return;
 
-                // Чітко визначаємо змінні згідно з вашою таблицею:
-                let brand = cols[0] ? cols[0].replace(/^"|"$/g, '').trim() : "";
-                let name = cols[1] ? cols[1].replace(/^"|"$/g, '').trim() : "";
-                let priceRaw = cols[2] ? cols[2].replace(/^"|"$/g, '').trim() : "0";
-                let minRaw = cols[3] ? cols[3].replace(/^"|"$/g, '').trim() : "2";
-                let notes = cols[4] ? cols[4].replace(/^"|"$/g, '').trim() : "Опис очікується...";
-                let img = cols[5] ? cols[5].replace(/^"|"$/g, '').trim() : "";
+                let [brand, name, price, min, notes, img] = cols.map(c => c ? c.replace(/^"|"$/g, '').trim() : "");
+                const baseP = parseFloat(price);
+                const minMl = parseInt(min) || 2;
 
-                const baseP = parseFloat(priceRaw.replace(',', '.')) || 0;
-                const minMl = parseInt(minRaw) || 2;
+                const card = document.createElement('div');
+                card.className = 'card';
+                
+                let opts = '';
+                [2, 5, 10].forEach(ml => {
+                    if (ml >= minMl) {
+                        let finalP = ml * baseP;
+                        if (ml === 10) finalP = Math.round(finalP * 0.9);
+                        opts += `<option value="${ml}" data-p="${finalP}">${ml} мл — ${finalP} грн</option>`;
+                    }
+                });
 
-                if (baseP === 0) return;
+                card.innerHTML = `
+                    <img src="${img || 'https://via.placeholder.com/300'}" onclick="showInfo('${brand.replace(/'/g, "\\'")} ${name.replace(/'/g, "\\'")}', '${notes.replace(/'/g, "\\'").replace(/\n/g, " ")}')">
+                    <div class="brand">${brand}</div>
+                    <div class="p-name">${name}</div>
+                    <select onchange="this.nextElementSibling.innerText = this.options[this.selectedIndex].getAttribute('data-p') + ' грн'">${opts}</select>
+                    <div class="price-tag">${Math.round(minMl * baseP)} грн</div>
+                    <a href="#" class="order-btn" onclick="sendOrder('${brand.replace(/'/g, "\\'")} ${name.replace(/'/g, "\\'")}', this)">ЗАМОВИТИ</a>
+                `;
+                container.appendChild(card);
+            });
+        } catch (e) {
+            document.getElementById('catalog').innerText = "Оновлення...";
+        }
+    }
 
-                const card = document
+    function showInfo(t, n) {
+        document.getElementById('mTitle').innerText = t;
+        document.getElementById('mText').innerText = n;
+        document.getElementById('infoModal').style.display = 'flex';
+    }
+
+    function sendOrder(item, btn) {
+        const sel = btn.previousElementSibling.previousElementSibling;
+        const total = btn.previousElementSibling.innerText;
+        const msg = `Вітаю! Хочу замовити ${item}, ${sel.value} мл.`;
+        
+        // Найбільш надійний метод переходу для iPhone
+        // Спочатку намагаємося відкрити чат, якщо ні - просто відкриваємо Viber
+        window.location.href = `viber://chat?number=%2B${PHONE}`;
+        
+        // Показуємо підказку з текстом, який треба надіслати
+        setTimeout(() => {
+            alert("Viber відкрився? Надішліть мені повідомлення:\n\n" + msg);
+        }, 1000);
+    }
+
+    document.getElementById('range').oninput = function() {
+        document.getElementById('catalog').style.gridTemplateColumns = `repeat(auto-fill, minmax(${this.value}px, 1fr))`;
+    };
+
+    loadProducts();
+</script>
+</body>
+</html>

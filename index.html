@@ -21,9 +21,9 @@
         .price-ml { background: #f0f9f0; color: var(--main); font-size: 11px; font-weight: bold; padding: 5px; border-radius: 8px; margin: 8px 0; border: 1px solid #e0eee0; }
         select { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 10px; background: #fff; font-size: 14px; }
         .total { font-size: 18px; font-weight: 900; margin-bottom: 10px; color: #000; }
-        .order-btn { background: var(--tg); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .order-btn { background: var(--tg); color: #fff; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: bold; display: block; }
         .contact-buttons { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 12px; z-index: 1000; }
-        .contact-btn { width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .contact-btn { width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); text-decoration: none; }
         .contact-btn img { width: 32px; height: 32px; filter: brightness(0) invert(1); }
         .btn-tg { background: #0088cc; }
         .btn-vb { background: #7360f2; }
@@ -47,10 +47,10 @@
     ПРИЄДНАТИСЬ ДО VIBER-КАНАЛУ
 </a>
 
-<div id="catalog">Завантаження ароматів...</div>
+<div id="catalog">Завантаження...</div>
 
 <div class="contact-buttons">
-    <a href="tg://resolve?domain=viktoriia_viktoriia_r" class="contact-btn btn-tg">
+    <a href="https://t.me/viktoriia_viktoriia_r" class="contact-btn btn-tg">
         <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
     </a>
     <a href="viber://chat?number=%2B380962178464" class="contact-btn btn-vb">
@@ -67,7 +67,7 @@
 
 <script>
     const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
-    const TG_NICK = 'viktoriia_viktoriia_r'; 
+    const TG_NICK = 'viktoriia_viktoriia_r';
 
     async function load() {
         try {
@@ -85,52 +85,56 @@
                 const min = parseInt(minStr) || 2;
                 const isNew = (new Date() - new Date(dateStr || 0)) / 86400000 <= 14;
 
-                let opts = '';
-                [2, 5, 10].forEach(ml => {
-                    if (ml >= min) opts += `<option value="${ml}" data-p="${Math.round(ml*price)}">${ml} мл — ${Math.round(ml*price)} грн</option>`;
-                });
-
-                // Вирішуємо проблему з апострофом для Hermès та інших
+                // Вирішення проблеми Hermès: заміна технічного апострофа ' на типографічний ’
+                // Це не ламає код, але виглядає так само
                 const safeB = brand.replace(/'/g, "’");
                 const safeN = name.replace(/'/g, "’");
                 const safeD = desc ? desc.replace(/'/g, "’") : "";
 
+                let opts = '';
+                [2, 5, 10].forEach(ml => {
+                    if (ml >= min) {
+                        const sum = Math.round(ml * price);
+                        opts += `<option value="${ml}" data-sum="${sum}">${ml} мл — ${sum} грн</option>`;
+                    }
+                });
+
                 const div = document.createElement('div');
                 div.className = 'card';
                 div.setAttribute('data-search', (brand + ' ' + name).toLowerCase());
+                
                 div.innerHTML = `
                     ${isNew ? '<div class="new-badge">Новинка!</div>' : ''}
                     <img src="${img}" onclick="show('${safeB}','${safeN}','${safeD}')" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
                     <div class="brand">${brand}</div><div class="name">${name}</div>
                     <div class="price-ml">Ціна за 1 мл: ${Math.round(price)} грн</div>
-                    <select onchange="this.nextElementSibling.innerText = this.options[this.selectedIndex].getAttribute('data-p') + ' грн'">${opts}</select>
+                    <select onchange="updateBtn(this, '${safeB} ${safeN}')">${opts}</select>
                     <div class="total">${Math.round(min * price)} грн</div>
-                    <button class="order-btn" onclick="order('${safeB} ${safeN}', this)">ЗАМОВИТИ В TG</button>
+                    <a href="#" class="order-btn">ЗАМОВИТИ В TG</a>
                 `;
+                
                 container.appendChild(div);
+                updateBtn(div.querySelector('select'), safeB + ' ' + safeN);
             });
         } catch (e) { document.getElementById('catalog').innerText = "Помилка завантаження."; }
+    }
+
+    function updateBtn(select, fullName) {
+        const ml = select.value;
+        const sum = select.options[select.selectedIndex].getAttribute('data-sum');
+        const totalDiv = select.nextElementSibling;
+        const btn = totalDiv.nextElementSibling;
+        totalDiv.innerText = sum + " грн";
+        
+        const message = `🛍️ ЗАМОВЛЕННЯ:\n${fullName}\nОб'єм: ${ml} мл\nСума: ${sum} грн`;
+        // Чисте посилання, яке TikTok на iPhone пропускає миттєво
+        btn.href = `https://t.me/${TG_NICK}?text=${encodeURIComponent(message)}`;
     }
 
     function show(b, n, d) {
         document.getElementById('mB').innerText = b; document.getElementById('mN').innerText = n;
         document.getElementById('mD').innerText = d || "Опис додається...";
         document.getElementById('infoModal').style.display = 'flex';
-    }
-
-    function order(item, btn) {
-        const sel = btn.previousElementSibling.previousElementSibling;
-        const total = btn.previousElementSibling.innerText;
-        const message = `🛍️ ЗАМОВЛЕННЯ:\n${item}\nОб'єм: ${sel.value} мл\nСума: ${total}`;
-        const encodedMsg = encodeURIComponent(message);
-        
-        // Спроба відкрити через прямий протокол (Android)
-        window.location.href = "tg://msg?text=" + encodedMsg + "&to=" + TG_NICK;
-        
-        // Запасний варіант через 400мс (iPhone/Браузери)
-        setTimeout(function() {
-            window.location.href = "https://t.me/" + TG_NICK + "?text=" + encodedMsg;
-        }, 400);
     }
 
     function filterCatalog() {

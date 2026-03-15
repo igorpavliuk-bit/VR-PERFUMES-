@@ -6,7 +6,7 @@
     <title>VR-PERFUMES | Каталог</title>
     <style>
         :root { --main: #449244; --tg: #0088cc; --bg: #f4f4f4; --viber: #7360f2; }
-        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 10px; background: var(--bg); color: #333; padding-bottom: 90px; }
+        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 10px; background: var(--bg); color: #333; padding-bottom: 80px; }
         
         header { text-align: center; padding: 15px; background: #fff; border-radius: 15px; margin-bottom: 10px; }
         .logo { width: 80px; height: auto; }
@@ -56,7 +56,6 @@
             width: 55px; height: 55px; border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: 0.3s;
-            text-decoration: none;
         }
         .contact-btn img { width: 32px; height: 32px; filter: brightness(0) invert(1); }
         .btn-tg { background: #0088cc; }
@@ -85,10 +84,10 @@
 <div id="catalog">Завантаження ароматів...</div>
 
 <div class="contact-buttons">
-    <a href="https://t.me/viktoriia_viktoriia_r" class="contact-btn btn-tg" target="_blank" rel="noopener noreferrer">
+    <a href="https://t.me/viktoriia_viktoriia_r" class="contact-btn btn-tg" target="_blank" title="Написати у Telegram">
         <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
     </a>
-    <a href="https://msng.link/vi/380962178464" class="contact-btn btn-vb" target="_blank" rel="noopener noreferrer">
+    <a href="viber://chat?number=%2B380962178464" class="contact-btn btn-vb" title="Написати у Viber">
         <img src="https://cdn-icons-png.flaticon.com/512/733/733641.png" alt="Viber">
     </a>
 </div>
@@ -160,7 +159,7 @@
         const total = btn.previousElementSibling.innerText;
         const message = `🛍️ ЗАМОВЛЕННЯ:\n${item}\nОб'єм: ${sel.value} мл\nСума: ${total}`;
         const tgLink = `https://t.me/${TG_NICK}?text=${encodeURIComponent(message)}`;
-        window.open(tgLink, '_blank');
+        window.location.href = tgLink;
     }
 
     load();

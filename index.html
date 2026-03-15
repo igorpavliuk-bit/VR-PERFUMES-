@@ -6,27 +6,62 @@
     <title>VR-PERFUMES | Каталог</title>
     <style>
         :root { --main: #449244; --tg: #0088cc; --bg: #f4f4f4; --viber: #7360f2; }
-        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 10px; background: var(--bg); color: #333; padding-bottom: 80px; }
+        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 10px; background: var(--bg); color: #333; padding-bottom: 90px; }
+        
         header { text-align: center; padding: 15px; background: #fff; border-radius: 15px; margin-bottom: 10px; }
         .logo { width: 80px; height: auto; }
-        .search-box { position: sticky; top: 10px; z-index: 100; background: #fff; padding: 12px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border: 2px solid var(--tg); }
+        
+        .search-box { 
+            position: sticky; top: 10px; z-index: 100; 
+            background: #fff; padding: 12px; border-radius: 15px; 
+            margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            border: 2px solid var(--tg);
+        }
         #searchInput { width: 100%; padding: 10px; border: none; font-size: 16px; outline: none; box-sizing: border-box; font-weight: bold; }
-        .viber-banner { display: block; background: var(--viber); color: #fff; text-decoration: none; padding: 14px; border-radius: 12px; text-align: center; font-weight: bold; margin-bottom: 15px; font-size: 14px; box-shadow: 0 2px 8px rgba(115, 96, 242, 0.4); }
+
+        .viber-banner { 
+            display: block; background: var(--viber); color: #fff; 
+            text-decoration: none; padding: 14px; border-radius: 12px; 
+            text-align: center; font-weight: bold; margin-bottom: 15px; 
+            font-size: 14px; box-shadow: 0 2px 8px rgba(115, 96, 242, 0.4);
+        }
+        
         #catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+        
         .card { position: relative; border-radius: 15px; padding: 10px; display: flex; flex-direction: column; background: #fff; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .new-badge { position: absolute; top: -5px; left: 50%; transform: translateX(-50%); background: var(--main); color: white; padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: bold; z-index: 10; border: 1px solid #fff; }
+        
         .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; background: #f9f9f9; cursor: pointer; }
         .brand { font-weight: bold; font-size: 13px; margin-top: 10px; text-transform: uppercase; }
         .name { font-size: 12px; color: #666; height: 32px; margin: 4px 0; overflow: hidden; }
-        .price-ml { background: #f0f9f0; color: var(--main); font-size: 11px; font-weight: bold; padding: 5px; border-radius: 8px; margin: 8px 0; border: 1px solid #e0eee0; }
+
+        .price-ml { 
+            background: #f0f9f0; color: var(--main); 
+            font-size: 11px; font-weight: bold; 
+            padding: 5px; border-radius: 8px; 
+            margin: 8px 0; border: 1px solid #e0eee0;
+        }
+        
         select { width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 10px; background: #fff; font-size: 14px; }
         .total { font-size: 18px; font-weight: 900; margin-bottom: 10px; color: #000; }
+        
         .order-btn { background: var(--tg); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        .contact-buttons { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 12px; z-index: 1000; }
-        .contact-btn { width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+
+        /* Плаваючі кнопки зв'язку */
+        .contact-buttons {
+            position: fixed; bottom: 20px; right: 20px;
+            display: flex; flex-direction: column; gap: 12px; z-index: 1000;
+        }
+        .contact-btn {
+            width: 55px; height: 55px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: 0.3s;
+            text-decoration: none;
+        }
         .contact-btn img { width: 32px; height: 32px; filter: brightness(0) invert(1); }
         .btn-tg { background: #0088cc; }
         .btn-vb { background: #7360f2; }
+
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 200; justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: #fff; padding: 25px; border-radius: 20px; max-width: 400px; width: 100%; position: relative; text-align: center; }
         .close { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; }
@@ -50,10 +85,10 @@
 <div id="catalog">Завантаження ароматів...</div>
 
 <div class="contact-buttons">
-    <a href="https://t.me/viktoriia_viktoriia_r" class="contact-btn btn-tg">
+    <a href="https://t.me/viktoriia_viktoriia_r" class="contact-btn btn-tg" target="_blank" rel="noopener noreferrer">
         <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
     </a>
-    <a href="viber://chat?number=%2B380962178464" class="contact-btn btn-vb">
+    <a href="https://msng.link/vi/380962178464" class="contact-btn btn-vb" target="_blank" rel="noopener noreferrer">
         <img src="https://cdn-icons-png.flaticon.com/512/733/733641.png" alt="Viber">
     </a>
 </div>
@@ -67,13 +102,14 @@
 
 <script>
     const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
-    const TG_NICK = 'viktoriia_viktoriia_r';
+    const TG_NICK = 'viktoriia_viktoriia_r'; 
 
     async function load() {
         try {
             const r = await fetch(SHEET_CSV + '&cache=' + Date.now());
             const data = await r.text();
             const rows = data.split('\n').slice(1).map(line => line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim())).filter(c => c[0]);
+
             rows.sort((a, b) => new Date(b[6] || 0) - new Date(a[6] || 0));
 
             const container = document.getElementById('catalog');
@@ -86,11 +122,6 @@
                 const min = parseInt(minStr) || 2;
                 const isNew = (today - new Date(dateStr || 0)) / 86400000 <= 14;
 
-                // Замінюємо звичайний апостроф на типографічний, щоб JavaScript не помилявся
-                const bSafe = brand.replace(/'/g, "’");
-                const nSafe = name.replace(/'/g, "’");
-                const dSafe = desc ? desc.replace(/'/g, "’") : "";
-
                 let opts = '';
                 [2, 5, 10].forEach(ml => {
                     if (ml >= min) opts += `<option value="${ml}" data-p="${Math.round(ml*price)}">${ml} мл — ${Math.round(ml*price)} грн</option>`;
@@ -101,12 +132,12 @@
                 div.setAttribute('data-search', (brand + ' ' + name).toLowerCase());
                 div.innerHTML = `
                     ${isNew ? '<div class="new-badge">Новинка!</div>' : ''}
-                    <img src="${img}" onclick="show('${bSafe}','${nSafe}','${dSafe}')" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
+                    <img src="${img}" onclick="show('${brand.replace(/'/g,"")}','${name.replace(/'/g,"")}','${desc.replace(/'/g,"")}')" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
                     <div class="brand">${brand}</div><div class="name">${name}</div>
                     <div class="price-ml">Ціна за 1 мл: ${Math.round(price)} грн</div>
                     <select onchange="this.nextElementSibling.innerText = this.options[this.selectedIndex].getAttribute('data-p') + ' грн'">${opts}</select>
                     <div class="total">${Math.round(min * price)} грн</div>
-                    <button class="order-btn" onclick="order('${bSafe} ${nSafe}', this)">ЗАМОВИТИ В TG</button>
+                    <button class="order-btn" onclick="order('${brand} ${name}', this)">ЗАМОВИТИ В TG</button>
                 `;
                 container.appendChild(div);
             });
@@ -119,17 +150,17 @@
         document.getElementById('infoModal').style.display = 'flex';
     }
 
+    function filterCatalog() {
+        const q = document.getElementById('searchInput').value.toLowerCase();
+        document.querySelectorAll('.card').forEach(c => c.style.display = c.getAttribute('data-search').includes(q) ? 'flex' : 'none');
+    }
+
     function order(item, btn) {
         const sel = btn.previousElementSibling.previousElementSibling;
         const total = btn.previousElementSibling.innerText;
         const message = `🛍️ ЗАМОВЛЕННЯ:\n${item}\nОб'єм: ${sel.value} мл\nСума: ${total}`;
-        // Повертаємо вашу "безшовну" логіку
-        window.location.href = `https://t.me/${TG_NICK}?text=${encodeURIComponent(message)}`;
-    }
-
-    function filterCatalog() {
-        const q = document.getElementById('searchInput').value.toLowerCase();
-        document.querySelectorAll('.card').forEach(c => c.style.display = c.getAttribute('data-search').includes(q) ? 'flex' : 'none');
+        const tgLink = `https://t.me/${TG_NICK}?text=${encodeURIComponent(message)}`;
+        window.open(tgLink, '_blank');
     }
 
     load();

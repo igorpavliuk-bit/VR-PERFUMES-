@@ -85,10 +85,10 @@
 <div id="catalog">Завантаження ароматів...</div>
 
 <div class="contact-buttons">
-    <a href="https://t.me/viktoriia_viktoriia_r" class="contact-btn btn-tg" target="_blank" rel="noopener noreferrer">
+    <a href="https://t.me/viktoriia_viktoriia_r" class="contact-btn btn-tg" target="_blank">
         <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram">
     </a>
-    <a href="https://viber.click/380962178464" class="contact-btn btn-vb" target="_blank" rel="noopener noreferrer">
+    <a href="viber://chat?number=%2B380962178464" class="contact-btn btn-vb" id="viberBtn">
         <img src="https://cdn-icons-png.flaticon.com/512/733/733641.png" alt="Viber">
     </a>
 </div>
@@ -143,6 +143,14 @@
             });
         } catch (e) { document.getElementById('catalog').innerText = "Помилка завантаження."; }
     }
+
+    // Обробка Viber для TikTok браузера
+    document.getElementById('viberBtn').addEventListener('click', function(e) {
+        if (/TikTok|FBAV|Instagram/i.test(navigator.userAgent)) {
+            // Якщо відкривають через TikTok, додаток може блокувати прямий перехід.
+            // Ми намагаємось відкрити офіційний чат.
+        }
+    });
 
     function show(b, n, d) {
         document.getElementById('mB').innerText = b; document.getElementById('mN').innerText = n;

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VR-PERFUMES | Official Catalog</title>
+    <title>VR-PERFUMES | Catalog</title>
     <style>
         :root { 
             --bg: #f8f9fa; 
@@ -18,6 +18,7 @@
             padding-bottom: 90px; -webkit-tap-highlight-color: transparent;
         }
 
+        /* Підказка */
         .tt-hint { 
             background: #fff3cd; color: #856404; padding: 12px; border-radius: 12px; 
             text-align: center; font-size: 13px; margin-bottom: 20px; 
@@ -35,36 +36,55 @@
         .search-box { 
             position: sticky; top: 10px; z-index: 100; 
             background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            padding: 4px 18px; border-radius: 30px; margin: 0 5px 25px 5px; 
+            padding: 4px 18px; border-radius: 30px; margin: 0 5px 20px 5px; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.06); border: 1px solid rgba(255, 255, 255, 0.5);
             display: flex; align-items: center;
         }
         #searchInput { width: 100%; padding: 12px 0; border: none; background: transparent; font-size: 15px; outline: none; }
-        .search-icon { opacity: 0.4; margin-right: 10px; }
-
+        
         .viber-link { 
             display: flex; align-items: center; justify-content: center; gap: 8px;
             background: var(--viber-color); color: #fff; text-decoration: none; 
             padding: 12px; border-radius: 15px; text-align: center; font-weight: 700; 
-            margin-bottom: 25px; font-size: 14px; box-shadow: 0 4px 10px rgba(115, 96, 242, 0.2);
+            margin-bottom: 12px; font-size: 14px;
+        }
+
+        /* СТИЛІ БІГУЧОГО РЯДКА */
+        .news-ticker {
+            background: #000;
+            color: #fff;
+            margin: 0 -12px 25px -12px;
+            padding: 10px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            border-bottom: 1px solid var(--gold);
+        }
+        .news-ticker-content {
+            display: inline-block;
+            padding-left: 100%;
+            animation: ticker 25s linear infinite;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        @keyframes ticker {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
         }
 
         #catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
         .card { position: relative; border-radius: 15px; padding: 12px; display: flex; flex-direction: column; background: #fff; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #eee; }
-        .new-badge { position: absolute; top: 10px; right: 10px; background: #000; color: #fff; padding: 4px 10px; border-radius: 5px; font-size: 9px; font-weight: 800; z-index: 10; text-transform: uppercase; }
-        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; background: #fff; cursor: pointer; }
+        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; cursor: pointer; }
         .brand { font-weight: 800; font-size: 12px; margin-top: 10px; text-transform: uppercase; }
-        .name { font-size: 12px; color: #666; height: 32px; margin: 4px 0 6px; overflow: hidden; line-height: 1.2; }
+        .name { font-size: 12px; color: #666; height: 32px; margin: 4px 0 6px; overflow: hidden; }
         .price-ml { font-size: 11px; color: #999; margin-bottom: 8px; background: #f9f9f9; padding: 4px; border-radius: 6px; }
-        .price-ml b { color: #000; }
-        select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #eee; margin-bottom: 10px; background: #fff; outline: none; }
+        select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #eee; margin-bottom: 10px; background: #fff; }
         .total { font-size: 18px; font-weight: 800; margin-bottom: 12px; }
-        .order-btn { background: #000; color: #fff; border: none; padding: 13px; border-radius: 10px; font-weight: 700; font-size: 13px; cursor: pointer; text-transform: uppercase; }
+        .order-btn { background: #000; color: #fff; border: none; padding: 13px; border-radius: 10px; font-weight: 700; cursor: pointer; }
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(5px); }
         .modal-content { background: #fff; padding: 25px; border-radius: 20px; max-width: 350px; width: 100%; position: relative; text-align: center; }
-        .close { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #000; cursor: pointer; }
-
+        
         .fab-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 999; }
         .fab { width: 55px; height: 55px; border-radius: 28px; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .fab img { width: 26px; height: 26px; filter: brightness(0) invert(1); }
@@ -72,10 +92,7 @@
 </head>
 <body>
 
-<div class="tt-hint">
-    💡 <b>Не переходить у Telegram після натискання «Замовити»?</b><br>
-    Натисніть <b>(⋯)</b> вгорі справа та оберіть <b>«Відкрити у браузері»</b>.
-</div>
+<div class="tt-hint">💡 <b>Не переходить у Telegram?</b> Натисніть <b>(⋯)</b> та оберіть <b>«Відкрити у браузері»</b>.</div>
 
 <header>
     <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" class="logo">
@@ -83,13 +100,18 @@
 </header>
 
 <div class="search-box">
-    <span class="search-icon">🔎</span>
-    <input type="text" id="searchInput" placeholder="Знайти аромат або бренд..." oninput="filterCatalog()">
+    <input type="text" id="searchInput" placeholder="Пошук аромату..." oninput="filterCatalog()">
 </div>
 
-<a href="https://invite.viber.com/?g2=AQBjzS%2BM5uBAeFRYT57vm5okC%2BGV00WHPJgDJBWE9ptyotTAmhAhpYNBmtPwZxQe" class="viber-link">Приєднатися до Viber-спільноти</a>
+<a href="https://invite.viber.com/?g2=AQBjzS%2BM5uBAeFRYT57vm5okC%2BGV00WHPJgDJBWE9ptyotTAmhAhpYNBmtPwZxQe" class="viber-link">
+    <div style="padding:12px; background: var(--viber-color); border-radius:15px; color:#fff; width:100%; font-weight:700;">Приєднатися до Viber-спільноти</div>
+</a>
 
-<div id="catalog">Завантаження каталогу...</div>
+<div class="news-ticker">
+    <div class="news-ticker-content" id="newsContent">Завантаження новин...</div>
+</div>
+
+<div id="catalog">Завантаження...</div>
 
 <div class="fab-container">
     <a href="https://t.me/viktoriia_viktoriia_r" class="fab" style="background: var(--tg-color);"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png"></a>
@@ -98,11 +120,10 @@
 
 <div id="infoModal" class="modal" onclick="this.style.display='none'">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <span class="close" onclick="document.getElementById('infoModal').style.display='none'">&times;</span>
-        <h3 id="mB" style="margin-top:0;"></h3>
-        <p id="mN" style="color:#666; font-size:14px;"></p>
-        <hr border="0" style="height:1px; background:#eee; margin:15px 0;">
-        <p id="mD" style="font-size:14px; line-height:1.5; text-align:left; color:#333;"></p>
+        <h3 id="mB"></h3>
+        <p id="mN"></p>
+        <hr>
+        <p id="mD" style="text-align:left; font-size:14px;"></p>
     </div>
 </div>
 
@@ -114,44 +135,45 @@
         try {
             const r = await fetch(SHEET_CSV + '&v=' + Date.now());
             const data = await r.text();
-            const rows = data.split('\n').slice(1).map(line => line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim())).filter(c => c[0]);
+            const rows = data.split('\n').map(line => line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim()));
             
-            rows.sort((a, b) => new Date(b[6] || 0) - new Date(a[6] || 0));
+            // Зчитуємо новину з клітинки J1 (це rows[0][9])
+            if(rows[0] && rows[0][9]) {
+                document.getElementById('newsContent').innerText = rows[0][9];
+            } else {
+                document.getElementById('newsContent').innerText = "Ласкаво просимо до нашого каталогу! ✨";
+            }
+
+            const catalogData = rows.slice(1).filter(c => c[0]);
+            catalogData.sort((a, b) => new Date(b[6] || 0) - new Date(a[6] || 0));
+
             const container = document.getElementById('catalog');
             container.innerHTML = '';
-            const today = new Date();
-
-            rows.forEach(c => {
+            
+            catalogData.forEach(c => {
                 const [brand, name, priceStr, minStr, desc, img, dateStr] = c;
                 const price = parseFloat(priceStr.replace(',', '.')) || 0;
                 const min = parseInt(minStr) || 2;
-                const isNew = (today - new Date(dateStr || 0)) / 86400000 <= 14;
 
                 const cleanB = brand.replace(/'/g, "’");
                 const cleanN = name.replace(/'/g, "’");
-                const cleanD = desc ? desc.replace(/'/g, "’").replace(/"/g, "«") : "Опис скоро з’явиться...";
+                const cleanD = desc ? desc.replace(/'/g, "’") : "Опис скоро буде...";
 
                 const div = document.createElement('div');
                 div.className = 'card';
                 div.setAttribute('data-search', (brand + ' ' + name).toLowerCase());
                 
-                // Додано 20 мл до списку
                 let optionsHtml = '';
                 [2, 5, 10, 20].forEach(ml => {
-                    if (ml >= min) {
-                        optionsHtml += `<option value="${ml}">${ml} мл — ${Math.round(ml * price)} грн</option>`;
-                    }
+                    if (ml >= min) optionsHtml += `<option value="${ml}">${ml} мл — ${Math.round(ml * price)} грн</option>`;
                 });
 
                 div.innerHTML = `
-                    ${isNew ? '<div class="new-badge">Новинка</div>' : ''}
                     <img src="${img}" onclick="showModal('${cleanB}', '${cleanN}', '${cleanD}')" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
                     <div class="brand">${brand}</div>
                     <div class="name">${name}</div>
-                    <div class="price-ml">Ціна за 1 мл: <b>${Math.round(price)} грн</b></div>
-                    <select onchange="updatePrice(this, ${price})">
-                        ${optionsHtml}
-                    </select>
+                    <div class="price-ml">1 мл: <b>${Math.round(price)} грн</b></div>
+                    <select onchange="updatePrice(this, ${price})">${optionsHtml}</select>
                     <div class="total">${Math.round(min * price)} грн</div>
                     <button class="order-btn" onclick="order('${cleanB} ${cleanN}', this)">ЗАМОВИТИ</button>
                 `;
@@ -161,7 +183,7 @@
     }
 
     function showModal(b, n, d) {
-        document.getElementById('mB').innerText = b; 
+        document.getElementById('mB').innerText = b;
         document.getElementById('mN').innerText = n;
         document.getElementById('mD').innerText = d;
         document.getElementById('infoModal').style.display = 'flex';
@@ -174,8 +196,7 @@
     function order(item, btn) {
         const ml = btn.previousElementSibling.previousElementSibling.value;
         const total = btn.previousElementSibling.innerText;
-        const msg = `🛍️ ЗАМОВЛЕННЯ:\n${item}\nОб'єм: ${ml} мл\nСума: ${total}`;
-        window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent(msg)}`, '_top');
+        window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent('🛍️ ЗАМОВЛЕННЯ:\n' + item + '\nОб\'єм: ' + ml + ' мл\nСума: ' + total)}`, '_top');
     }
 
     function filterCatalog() {

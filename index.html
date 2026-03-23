@@ -18,7 +18,6 @@
             padding-bottom: 90px; -webkit-tap-highlight-color: transparent;
         }
 
-        /* Повертаємо допоміжну інформацію */
         .tt-hint { 
             background: #fff3cd; color: #856404; padding: 12px; border-radius: 12px; 
             text-align: center; font-size: 13px; margin-bottom: 20px; 
@@ -36,17 +35,62 @@
         .search-box { 
             position: sticky; top: 10px; z-index: 100; 
             background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            padding: 4px 18px; border-radius: 30px; margin: 0 5px 20px 5px; 
+            padding: 4px 18px; border-radius: 30px; margin: 0 5px 15px 5px; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.06); border: 1px solid rgba(255, 255, 255, 0.5);
             display: flex; align-items: center;
         }
         #searchInput { width: 100%; padding: 12px 0; border: none; background: transparent; font-size: 15px; outline: none; }
         
-        .viber-link { 
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            background: var(--viber-color); color: #fff; text-decoration: none; 
-            padding: 12px; border-radius: 15px; text-align: center; font-weight: 700; 
-            margin-bottom: 12px; font-size: 14px;
+        .action-buttons { display: flex; gap: 10px; margin: 0 5px 20px 5px; }
+        
+        .viber-link, .news-btn { 
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+            color: #fff; text-decoration: none; padding: 12px; border-radius: 15px; 
+            text-align: center; font-weight: 700; font-size: 13px; cursor: pointer;
+            position: relative; /* Важливо для позиціонування хмарки */
+        }
+        .viber-link { background: var(--viber-color); }
+        .news-btn { background: #000; border: 1px solid var(--gold); color: var(--gold); }
+
+        /* --- СТИЛІ ДЛЯ ХМАРКИ НОВИН --- */
+        .news-tooltip {
+            position: absolute;
+            bottom: 110%; 
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gold);
+            color: #000;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 800;
+            line-height: 1.3;
+            width: max-content;
+            max-width: 140px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Пружинна анімація */
+            z-index: 100;
+            pointer-events: none; /* Щоб не заважала натискати кнопку */
+        }
+        /* Хвостик хмарки */
+        .news-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: var(--gold) transparent transparent transparent;
+        }
+        /* Клас для появи хмарки */
+        .news-tooltip.show {
+            opacity: 1;
+            visibility: visible;
+            bottom: 135%; /* Підстрибує вгору */
         }
 
         .news-ticker {
@@ -76,9 +120,13 @@
         .total { font-size: 18px; font-weight: 800; margin-bottom: 12px; }
         .order-btn { background: #000; color: #fff; border: none; padding: 13px; border-radius: 10px; font-weight: 700; cursor: pointer; }
 
+        /* Модальні вікна */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(5px); }
-        .modal-content { background: #fff; padding: 25px; border-radius: 20px; max-width: 350px; width: 100%; position: relative; text-align: center; }
+        .modal-content { background: #fff; padding: 25px; border-radius: 20px; max-width: 350px; width: 100%; position: relative; text-align: center; max-height: 80vh; overflow-y: auto; }
         
+        .news-link { color: var(--tg-color); font-weight: bold; text-decoration: underline; cursor: pointer; padding: 2px 0; }
+        .close-btn { background: #f1f1f1; border: none; padding: 12px; border-radius: 10px; width: 100%; margin-top: 20px; cursor: pointer; font-weight: bold; }
+
         .fab-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 999; }
         .fab { width: 55px; height: 55px; border-radius: 28px; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .fab img { width: 26px; height: 26px; filter: brightness(0) invert(1); }
@@ -100,12 +148,18 @@
     <input type="text" id="searchInput" placeholder="Пошук аромату..." oninput="filterCatalog()">
 </div>
 
-<a href="https://invite.viber.com/?g2=AQBjzS%2BM5uBAeFRYT57vm5okC%2BGV00WHPJgDJBWE9ptyotTAmhAhpYNBmtPwZxQe" class="viber-link">
-    <div style="padding:12px; background: var(--viber-color); border-radius:15px; color:#fff; width:100%; font-weight:700; text-align:center;">Приєднатися до Viber-спільноти</div>
-</a>
+<div class="action-buttons">
+    <a href="https://invite.viber.com/?g2=AQBjzS%2BM5uBAeFRYT57vm5okC%2BGV00WHPJgDJBWE9ptyotTAmhAhpYNBmtPwZxQe" class="viber-link">
+        Viber-спільнота
+    </a>
+    <div class="news-btn" onclick="document.getElementById('newsModalWindow').style.display='flex'">
+        📰 Огляди
+        <div id="newsTooltip" class="news-tooltip">Новини...</div>
+    </div>
+</div>
 
 <div class="news-ticker">
-    <div class="news-ticker-content" id="newsContent">Завантаження новин... ✨</div>
+    <div class="news-ticker-content" id="newsTicker">Завантаження... ✨</div>
 </div>
 
 <div id="catalog">Завантаження каталогу...</div>
@@ -120,13 +174,27 @@
         <h3 id="mB" style="margin-top:0;"></h3>
         <p id="mN" style="color:#666;"></p>
         <hr style="border:0; height:1px; background:#eee; margin:15px 0;">
-        <p id="mD" style="text-align:left; font-size:14px; line-height:1.4;"></p>
+        <p id="mD" style="text-align:left; font-size:14px; line-height:1.4; white-space: pre-wrap;"></p>
+        <button class="close-btn" onclick="document.getElementById('infoModal').style.display='none'">Закрити</button>
+    </div>
+</div>
+
+<div id="newsModalWindow" class="modal" onclick="this.style.display='none'">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h3 style="margin-top:0; color: var(--gold); text-transform: uppercase;">Огляди та Новини</h3>
+        <hr style="border:0; height:1px; background:#eee; margin:15px 0;">
+        <div id="newsModalContent" style="text-align:left; font-size:14px; line-height:1.6;">
+            Завантаження новин...
+        </div>
+        <button class="close-btn" onclick="document.getElementById('newsModalWindow').style.display='none'">Закрити</button>
     </div>
 </div>
 
 <script>
     const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
     const TG_NICK = 'viktoriia_viktoriia_r'; 
+    
+    let globalCatalog = []; 
 
     async function load() {
         try {
@@ -134,13 +202,37 @@
             const data = await r.text();
             const rows = data.split('\n').map(line => line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim()));
             
-            // Текст новини з J1
+            // 1. Бігучий рядок (J1 - індекс 9)
             if(rows[0] && rows[0][9]) {
-                document.getElementById('newsContent').innerText = rows[0][9];
+                document.getElementById('newsTicker').innerText = rows[0][9];
             }
 
-            // Сортування: новіші (за датою в стовпці G) спочатку
             const catalogData = rows.slice(1).filter(c => c[0]);
+            globalCatalog = catalogData.map(c => ({brand: c[0], name: c[1], desc: c[4]}));
+
+            // 2. Новини для модального вікна (K1 - індекс 10)
+            let rawNews = (rows[0] && rows[0][10]) ? rows[0][10] : "Скоро тут з'являться наші огляди! ✨";
+            
+            // Формування короткого тексту для хмарки-підказки
+            // Видаляємо { та } щоб вони не світилися в хмарці
+            let cleanTextForTooltip = rawNews.replace(/[{}]/g, ''); 
+            let tooltipPreview = cleanTextForTooltip.substring(0, 45); // беремо перші 45 символів
+            if (cleanTextForTooltip.length > 45) {
+                tooltipPreview += '...';
+            }
+            document.getElementById('newsTooltip').innerText = tooltipPreview;
+            
+            // Запуск періодичної появи хмарки
+            startNewsTooltipAnimation();
+
+            // Формування повного тексту новин
+            let formattedNews = rawNews.replace(/\n/g, '<br>'); 
+            const processedNews = formattedNews.replace(/\{(.*?)\}/g, (match, perfumeName) => {
+                return `<span class="news-link" onclick="openPerfumeFromNews('${perfumeName}')">${perfumeName}</span>`;
+            });
+            document.getElementById('newsModalContent').innerHTML = processedNews;
+
+            // Сортування та рендер каталогу...
             catalogData.sort((a, b) => {
                 const dateA = new Date(a[6] || '2000-01-01');
                 const dateB = new Date(b[6] || '2000-01-01');
@@ -156,7 +248,6 @@
                 const price = parseFloat(priceStr.replace(',', '.')) || 0;
                 const min = parseInt(minStr) || 2;
                 
-                // Перевірка на Новинку (14 днів)
                 let isNew = false;
                 if (dateStr) {
                     const itemDate = new Date(dateStr);
@@ -192,11 +283,47 @@
         } catch (e) { console.error(e); }
     }
 
+    // Функція анімації хмарки
+    function startNewsTooltipAnimation() {
+        const tooltip = document.getElementById('newsTooltip');
+        
+        // Показуємо хмарку через 3 секунди після завантаження
+        setTimeout(() => {
+            tooltip.classList.add('show');
+            // Ховаємо через 4 секунди
+            setTimeout(() => tooltip.classList.remove('show'), 4000);
+        }, 3000);
+
+        // Потім повторюємо кожні 15 секунд
+        setInterval(() => {
+            tooltip.classList.add('show');
+            setTimeout(() => tooltip.classList.remove('show'), 4000);
+        }, 15000);
+    }
+
     function showModal(b, n, d) {
         document.getElementById('mB').innerText = b;
         document.getElementById('mN').innerText = n;
         document.getElementById('mD').innerText = d;
         document.getElementById('infoModal').style.display = 'flex';
+    }
+
+    function openPerfumeFromNews(query) {
+        const q = query.toLowerCase().trim();
+        const item = globalCatalog.find(c => {
+            const fullName = (c.brand + ' ' + c.name).toLowerCase();
+            return fullName.includes(q);
+        });
+
+        if (item) {
+            document.getElementById('newsModalWindow').style.display = 'none';
+            const cleanB = item.brand.replace(/'/g, "’");
+            const cleanN = item.name.replace(/'/g, "’");
+            const cleanD = item.desc ? item.desc.replace(/'/g, "’").replace(/"/g, "«") : "Опис скоро з’явиться...";
+            showModal(cleanB, cleanN, cleanD);
+        } else {
+            alert('Ой, схоже парфум "' + query + '" не знайдено в каталозі.');
+        }
     }
 
     function updatePrice(sel, p) {
@@ -220,4 +347,3 @@
 </script>
 </body>
 </html>
-

@@ -47,12 +47,12 @@
             flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
             color: #fff; text-decoration: none; padding: 12px; border-radius: 15px; 
             text-align: center; font-weight: 700; font-size: 13px; cursor: pointer;
-            position: relative; /* Важливо для позиціонування хмарки */
+            position: relative;
         }
         .viber-link { background: var(--viber-color); }
         .news-btn { background: #000; border: 1px solid var(--gold); color: var(--gold); }
 
-        /* --- СТИЛІ ДЛЯ ХМАРКИ НОВИН --- */
+        /* СТИЛІ ДЛЯ ХМАРКИ НОВИН */
         .news-tooltip {
             position: absolute;
             bottom: 110%; 
@@ -71,11 +71,10 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             opacity: 0;
             visibility: hidden;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Пружинна анімація */
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
             z-index: 100;
-            pointer-events: none; /* Щоб не заважала натискати кнопку */
+            pointer-events: none;
         }
-        /* Хвостик хмарки */
         .news-tooltip::after {
             content: '';
             position: absolute;
@@ -86,11 +85,10 @@
             border-style: solid;
             border-color: var(--gold) transparent transparent transparent;
         }
-        /* Клас для появи хмарки */
         .news-tooltip.show {
             opacity: 1;
             visibility: visible;
-            bottom: 135%; /* Підстрибує вгору */
+            bottom: 135%;
         }
 
         .news-ticker {
@@ -153,7 +151,7 @@
         Viber-спільнота
     </a>
     <div class="news-btn" onclick="document.getElementById('newsModalWindow').style.display='flex'">
-        📰 Огляди
+        📰 Новини
         <div id="newsTooltip" class="news-tooltip">Новини...</div>
     </div>
 </div>
@@ -181,7 +179,7 @@
 
 <div id="newsModalWindow" class="modal" onclick="this.style.display='none'">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h3 style="margin-top:0; color: var(--gold); text-transform: uppercase;">Огляди та Новини</h3>
+        <h3 style="margin-top:0; color: var(--gold); text-transform: uppercase;">Новини</h3>
         <hr style="border:0; height:1px; background:#eee; margin:15px 0;">
         <div id="newsModalContent" style="text-align:left; font-size:14px; line-height:1.6;">
             Завантаження новин...
@@ -202,7 +200,6 @@
             const data = await r.text();
             const rows = data.split('\n').map(line => line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, '').trim()));
             
-            // 1. Бігучий рядок (J1 - індекс 9)
             if(rows[0] && rows[0][9]) {
                 document.getElementById('newsTicker').innerText = rows[0][9];
             }
@@ -210,29 +207,25 @@
             const catalogData = rows.slice(1).filter(c => c[0]);
             globalCatalog = catalogData.map(c => ({brand: c[0], name: c[1], desc: c[4]}));
 
-            // 2. Новини для модального вікна (K1 - індекс 10)
-            let rawNews = (rows[0] && rows[0][10]) ? rows[0][10] : "Скоро тут з'являться наші огляди! ✨";
+            let rawNews = (rows[0] && rows[0][10]) ? rows[0][10] : "Скоро тут з'являться наші новини! ✨";
             
-            // Формування короткого тексту для хмарки-підказки
-            // Видаляємо { та } щоб вони не світилися в хмарці
             let cleanTextForTooltip = rawNews.replace(/[{}]/g, ''); 
-            let tooltipPreview = cleanTextForTooltip.substring(0, 45); // беремо перші 45 символів
+            let tooltipPreview = cleanTextForTooltip.substring(0, 45);
             if (cleanTextForTooltip.length > 45) {
                 tooltipPreview += '...';
             }
             document.getElementById('newsTooltip').innerText = tooltipPreview;
             
-            // Запуск періодичної появи хмарки
             startNewsTooltipAnimation();
 
-            // Формування повного тексту новин
             let formattedNews = rawNews.replace(/\n/g, '<br>'); 
+            
+            // Замінюємо клік на функцію orderPerfumeFromNews
             const processedNews = formattedNews.replace(/\{(.*?)\}/g, (match, perfumeName) => {
-                return `<span class="news-link" onclick="openPerfumeFromNews('${perfumeName}')">${perfumeName}</span>`;
+                return `<span class="news-link" onclick="orderPerfumeFromNews('${perfumeName}')">${perfumeName}</span>`;
             });
             document.getElementById('newsModalContent').innerHTML = processedNews;
 
-            // Сортування та рендер каталогу...
             catalogData.sort((a, b) => {
                 const dateA = new Date(a[6] || '2000-01-01');
                 const dateB = new Date(b[6] || '2000-01-01');
@@ -283,18 +276,12 @@
         } catch (e) { console.error(e); }
     }
 
-    // Функція анімації хмарки
     function startNewsTooltipAnimation() {
         const tooltip = document.getElementById('newsTooltip');
-        
-        // Показуємо хмарку через 3 секунди після завантаження
         setTimeout(() => {
             tooltip.classList.add('show');
-            // Ховаємо через 4 секунди
             setTimeout(() => tooltip.classList.remove('show'), 4000);
         }, 3000);
-
-        // Потім повторюємо кожні 15 секунд
         setInterval(() => {
             tooltip.classList.add('show');
             setTimeout(() => tooltip.classList.remove('show'), 4000);
@@ -308,22 +295,21 @@
         document.getElementById('infoModal').style.display = 'flex';
     }
 
-    function openPerfumeFromNews(query) {
+    // НОВА ФУНКЦІЯ: Перехід в Телеграм прямо з Новин
+    function orderPerfumeFromNews(query) {
+        document.getElementById('newsModalWindow').style.display = 'none';
+        
         const q = query.toLowerCase().trim();
+        // Шукаємо в базі, щоб додати бренд, якщо користувач ввів лише назву
         const item = globalCatalog.find(c => {
             const fullName = (c.brand + ' ' + c.name).toLowerCase();
-            return fullName.includes(q);
+            return fullName.includes(q) || c.name.toLowerCase().includes(q);
         });
 
-        if (item) {
-            document.getElementById('newsModalWindow').style.display = 'none';
-            const cleanB = item.brand.replace(/'/g, "’");
-            const cleanN = item.name.replace(/'/g, "’");
-            const cleanD = item.desc ? item.desc.replace(/'/g, "’").replace(/"/g, "«") : "Опис скоро з’явиться...";
-            showModal(cleanB, cleanN, cleanD);
-        } else {
-            alert('Ой, схоже парфум "' + query + '" не знайдено в каталозі.');
-        }
+        const perfumeName = item ? (item.brand + ' ' + item.name) : query;
+        const text = `🛍️ ЗАМОВЛЕННЯ (з Новин):\nАромат: ${perfumeName}\n\nПідкажіть, будь ласка, які об'єми доступні для розпиву?`;
+        
+        window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent(text)}`, '_top');
     }
 
     function updatePrice(sel, p) {

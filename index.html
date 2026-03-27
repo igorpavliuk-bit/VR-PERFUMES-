@@ -25,7 +25,7 @@
             border-bottom: 1px solid #eee; line-height: 1.5; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase;
         }
 
-        /* Герой-Слайдер */
+        /* --- Герой-Слайдер (ЗАМІСТЬ ХЕДЕРА) --- */
         .hero-carousel {
             position: relative; height: 160px; overflow: hidden; background: #000; border-bottom: 1px solid #1a1a1a; cursor: pointer;
         }
@@ -94,14 +94,43 @@
         .order-btn { background: #000; color: #fff; border: none; padding: 12px; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; border-radius: 4px; transition: background 0.3s; }
         .order-btn:active { background: var(--gold); color: #000; }
 
-        /* --- РОЗДІЛ: ІНШІ ПРОЄКТИ --- */
-        .other-projects { padding: 30px 15px; background: #fff; text-align: center; }
-        .other-projects h2 { font-size: 16px; letter-spacing: 3px; color: #000; font-family: Georgia, serif; margin-bottom: 25px; text-transform: uppercase; }
-        .other-projects-container { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; center; }
-        .other-projects-container::-webkit-scrollbar { display: none; }
-        .other-project-item { flex: 0 0 130px; border-radius: 4px; overflow: hidden; background: #fff; border: 1px solid #eee; text-align: center; }
-        .other-project-link { display: block; width: 100%; height: 100%; text-decoration: none; position: relative; }
-        .other-project-item img { display: block; width: 100%; height: 100%; object-fit: contain; padding: 0; margin: 0; }
+        /* --- ОНОВЛЕНИЙ РОЗДІЛ: ІНШІ ПРОЄКТИ (Круглі іконки) --- */
+        .other-projects { padding: 40px 15px 30px; background: #fff; text-align: center; border-top: 1px solid #eee; }
+        /* Акуратний заголовок у стилі Jan */
+        .other-projects h2 { font-size: 14px; letter-spacing: 2.5px; color: #111; font-weight: 600; font-family: Georgia, serif; margin: 0 0 30px; text-transform: uppercase; }
+        
+        .other-projects-container { display: flex; gap: 20px; justify-content: center; center; }
+        
+        /* Нові стилі для круглого елемента Jan-meets-Social-Icons */
+        .other-project-item { 
+            flex: 0 0 70px; 
+            width: 70px; 
+            height: 70px; 
+            border-radius: 50%; 
+            overflow: hidden; 
+            background-color: #fff; /* Білий фон */
+            border: 1px solid #eee; /* Дуже тонка сіра рамка */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); /* Легка тінь */
+            text-align: center; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            box-sizing: border-box; 
+            transition: all 0.3s;
+        }
+        .other-project-item:active { transform: scale(1.05); }
+
+        .other-project-link { display: block; width: 100%; height: 100%; text-decoration: none; position: relative; border-radius: 50%; }
+        
+        /* Картинка: contain, щоб було видно все лого всередині круга */
+        .other-project-item img { 
+            display: block; 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; /* Картинка повністю всередині, з білим фоном навколо */
+            object-position: center; /* Центрує */
+            padding: 0; 
+            margin: 0; 
+            border-radius: 50%;
+        }
         
         /* Модальні вікна */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
@@ -172,12 +201,12 @@
     <div class="other-projects-container">
         <div class="other-project-item">
             <a href="https://www.instagram.com/mysweetplanb?igsh=M2djcXJhMTBuZXpz" class="other-project-link" target="_blank">
-                <img loading="lazy" src="Screenshot_20260323-001755.png" alt="Sweet Plan B Instagram" onerror="this.src='Screenshot_20260323-001755.jpg'">
+                <img loading="lazy" src="Screenshot_20260323-001755.png" alt="Sweet Plan B Instagram">
             </a>
         </div>
         <div class="other-project-item">
             <a href="https://invite.viber.com/?g2=AQAhE1iZ%2B1uvKUgtymLfnM%2BRqfD3LHfLeTzxLtC2nlnXdK2yA0a2hXilbdMzlQ%2Fj" class="other-project-link" target="_blank">
-                <img loading="lazy" src="Screenshot_20260327-210532.png" alt="VR Shopping Viber" onerror="this.src='Screenshot_20260327-210532.jpg'">
+                <img loading="lazy" src="Screenshot_20260327-210532.png" alt="VR Shopping Viber">
             </a>
         </div>
     </div>

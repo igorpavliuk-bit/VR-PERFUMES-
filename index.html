@@ -150,16 +150,15 @@
         .modal-content { background: #fff; padding: 30px 25px; max-width: 400px; width: 100%; position: relative; text-align: left; max-height: 85vh; overflow-y: auto; border: 1px solid #eee; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
         .modal-content h3 { margin-top: 0; font-size: 18px; letter-spacing: 1px; text-transform: uppercase; font-family: Georgia, serif; text-align: center; }
         .news-link { color: #000; font-weight: 700; text-decoration: underline; cursor: pointer; text-decoration-color: var(--gold); text-decoration-thickness: 2px; }
-        
-        /* Нові елементи вибору в модалці */
-        .modal-ml-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #888; display: block; margin-top: 25px; margin-bottom: 8px; }
-        .modal-ml-select { width: 100%; padding: 12px; border: 1px solid #eee; border-radius: 4px; background: #fdfdfd; font-size: 14px; outline: none; margin-bottom: 5px; cursor: pointer; }
-        
-        .modal-order-btn { background: var(--gold); color: #000; border: none; padding: 14px; width: 100%; margin-top: 15px; cursor: pointer; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; border-radius: 4px; display: block; text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); transition: all 0.3s; }
-        .modal-order-btn:active { transform: scale(0.98); background: #c5a02e; }
-
         .close-btn { background: #fff; border: 1px solid #000; color: #000; padding: 12px; width: 100%; margin-top: 15px; cursor: pointer; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; border-radius: 4px; display: block; text-align: center;}
         
+        /* КНОПКА ЗАМОВИТИ В МОДАЛЦІ */
+        .modal-order-btn { background: var(--gold); color: #000; border: none; padding: 14px; width: 100%; margin-top: 25px; cursor: pointer; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; border-radius: 4px; display: block; text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
+
+        /* Спеціальний стиль для відгуків у модалці */
+        .review-positive { color: #1e7e34; }
+        .review-neutral { color: #d39e00; }
+        .review-negative { color: #c82333; }
         .review-box { background: #f9f9f9; padding: 10px 15px; border-radius: 6px; margin-bottom: 10px; border-left: 3px solid #ccc; font-style: italic; font-size: 12px;}
         .review-box.pos { border-color: #28a745; }
         .review-box.neu { border-color: #ffc107; }
@@ -172,11 +171,15 @@
 </head>
 <body>
 
-<div class="tt-hint">💡 Не переходить у Telegram? Натисніть <b>(⋯)</b> вгорі справа та оберіть <b>«Відкрити у браузері»</b>.</div>
+<div class="tt-hint">
+    💡 Не переходить у Telegram? Натисніть <b>(⋯)</b> вгорі справа та оберіть <b>«Відкрити у браузері»</b>.
+</div>
 
 <div class="hero-carousel" id="heroCarousel">
     <div class="slide logo-slide active">
-        <video class="bg-video" autoplay muted loop playsinline><source src="gemini_generated_video_956e165c.mp4" type="video/mp4"></video>
+        <video class="bg-video" autoplay muted loop playsinline>
+            <source src="gemini_generated_video_956e165c.mp4" type="video/mp4">
+        </video>
         <div class="video-overlay"></div>
         <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" class="logo">
         <h1>VR PERFUMES</h1>
@@ -188,24 +191,36 @@
         <img src="" id="weekSlideBottle" class="week-bottle">
         <div class="banner-content">
             <span class="banner-subtitle">Вибір Вікторії</span>
-            <span class="banner-title">ПАРФУМ ТИЖНЯ</span>
+            <span class="banner-title">ПАРФУМ<br>ТИЖНЯ</span>
             <span class="banner-btn">Дізнатись більше</span>
         </div>
     </div>
 
     <div class="slide banner-new" onclick="navigateToCategory('new')">
-        <div class="banner-content"><span class="banner-subtitle">Зустрічай весну</span><span class="banner-title">Нові Надходження</span><span class="banner-btn">Дивитись</span></div>
+        <div class="banner-content">
+            <span class="banner-subtitle">Зустрічай весну</span>
+            <span class="banner-title">Нові<br>Надходження</span>
+            <span class="banner-btn">Дивитись</span>
+        </div>
     </div>
 </div>
 
-<div class="news-ticker"><div class="news-ticker-content" id="newsTicker">ЗАВАНТАЖЕННЯ... ✨</div></div>
+<div class="news-ticker">
+    <div class="news-ticker-content" id="newsTicker">ЗАВАНТАЖЕННЯ... ✨</div>
+</div>
 
 <div class="controls-wrapper">
-    <div class="search-box"><input type="text" id="searchInput" placeholder="Пошук аромату..." oninput="filterCatalog()"></div>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Пошук аромату..." oninput="filterCatalog()">
+    </div>
     <div class="action-buttons">
         <a href="https://invite.viber.com/?g2=AQBjzS%2BM5uBAeFRYT57vm5okC%2BGV00WHPJgDJBWE9ptyotTAmhAhpYNBmtPwZxQe" class="viber-link">ViberCommunity</a>
-        <div class="news-btn" onclick="document.getElementById('newsModalWindow').style.display='flex'">Новини<div id="newsTooltip" class="news-tooltip">...</div></div>
+        <div class="news-btn" onclick="document.getElementById('newsModalWindow').style.display='flex'">
+            Новини
+            <div id="newsTooltip" class="news-tooltip">Новини...</div>
+        </div>
     </div>
+    
     <div class="tabs-container">
         <button class="tab-btn active" id="tab-all" onclick="setCategory('all', this)">Усі аромати</button>
         <button class="tab-btn" id="tab-new" onclick="setCategory('new', this)">Новинки</button>
@@ -213,17 +228,22 @@
     </div>
 </div>
 
-<div class="brand-slider-wrapper"><div class="brand-slider" id="brandSlider"></div></div>
+<div class="brand-slider-wrapper">
+    <div class="brand-slider" id="brandSlider"></div>
+</div>
+
 <div class="week-card-container" id="weekPerfumeContainer"></div>
+
 <div id="catalog">Завантаження каталогу...</div>
 
 <div class="about-section">
     <h2>ПРО НАС</h2>
     <img src="Screenshot_20260328-171201.png" alt="Вікторія" class="about-photo" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
     <div class="about-content">
-        <p><strong>Мене звати Вікторія.</strong> Вітаю в нашому барі!</p>
+        <p><strong>Вітаю всіх в нашому парфумерному барі! Мене звати Вікторія.</strong></p>
         <div class="about-quote">Кажуть, що жінка може мовчати, але її парфуми все скажуть за неї.</div>
-        <p>Тільки 100% оригінальна нішева парфумерія на розпив від 2мл.</p>
+        <p>💯 Всі парфуми оригінальні.</p>
+        
         <div class="about-contacts">
             <a href="https://t.me/viktoriia_viktoriia_r" class="about-contact-btn btn-tg">Telegram</a>
             <a href="viber://chat?number=%2B380962178464" class="about-contact-btn btn-vb">Viber</a>
@@ -234,14 +254,11 @@
 <div id="infoModal" class="modal" onclick="this.style.display='none'">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h3 id="mB" style="margin-bottom: 5px;"></h3>
-        <p id="mN" style="color:#666; font-size: 14px; text-align: center; margin-top: 0;"></p>
+        <p id="mN" style="color:#666; font-size: 14px; margin-top: 0; text-align: center;"></p>
         <hr style="border:0; height:1px; background:#eee; margin:20px 0;">
-        <div id="mD" style="font-size:13px; line-height:1.6; color: #333;"></div>
+        <div id="mD" style="font-size:13px; line-height:1.6; color: #333; margin-top: 15px;"></div>
         
-        <label class="modal-ml-label">Оберіть об'єм для замовлення:</label>
-        <select id="modalMlSelect" class="modal-ml-select" onchange="syncModalOrder()"></select>
-        
-        <a href="" id="modalOrderBtn" class="modal-order-btn" target="_blank">🛍️ Замовити</a>
+        <a href="" id="modalOrderBtn" class="modal-order-btn" target="_blank">🛍️ Замовити цей аромат</a>
         <button class="close-btn" onclick="document.getElementById('infoModal').style.display='none'">Закрити</button>
     </div>
 </div>
@@ -249,7 +266,10 @@
 <div id="newsModalWindow" class="modal" onclick="this.style.display='none'">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h3 style="color: #000;">НОВИНИ</h3>
-        <div id="newsModalContent" style="text-align:left; font-size:14px; line-height:1.7;"></div>
+        <hr style="border:0; height:1px; background:#eee; margin:20px 0;">
+        <div id="newsModalContent" style="text-align:left; font-size:14px; line-height:1.7; color: #333;">
+            Завантаження новин...
+        </div>
         <button class="close-btn" onclick="document.getElementById('newsModalWindow').style.display='none'">Закрити</button>
     </div>
 </div>
@@ -263,7 +283,6 @@
     const TG_NICK = 'viktoriia_viktoriia_r'; 
     
     let globalCatalog = []; 
-    let currentModalData = { price: 0, fullName: "" };
 
     function safeParseCSV(str) {
         let arr = []; let quote = false; let row = 0, col = 0;
@@ -285,28 +304,31 @@
             const data = await r.text();
             const rows = safeParseCSV(data);
             
-            if(rows[0][9]) document.getElementById('newsTicker').innerText = rows[0][9];
+            if(rows[0] && rows[0][9]) document.getElementById('newsTicker').innerText = rows[0][9];
+
             const catalogData = rows.slice(1).filter(c => c[0]); 
             const container = document.getElementById('catalog');
             container.innerHTML = '';
             
             let weekPerfume = null;
+
             catalogData.forEach(c => {
                 const [brand, name, pStr, minStr, desc, img, date, top, sDesc] = c;
                 const price = parseFloat(pStr.replace(/,/g, '.')) || 0;
                 const isWeek = top && top.toLowerCase().includes('тиждень');
                 const cleanD = (isWeek && sDesc) ? sDesc : desc;
 
-                if (isWeek) weekPerfume = { brand, name, cleanD, img, price, min: parseInt(minStr)||2 };
+                if (isWeek) {
+                    weekPerfume = { brand, name, cleanD, img, price, min: minStr };
+                }
 
                 const div = document.createElement('div');
                 div.className = 'card';
-                div.setAttribute('data-brand', brand);
                 div.innerHTML = `
-                    <img src="${img}" onclick="showModal('${brand}', '${name}', '${cleanD.replace(/'/g, "\\'")}', ${price}, ${minStr})" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
+                    <img loading="lazy" src="${img}" onclick="showModal('${brand}', '${name}', '${cleanD.replace(/'/g, "\\'")}')" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
                     <div class="brand">${brand}</div>
                     <div class="name">${name}</div>
-                    <button class="order-btn" onclick="showModal('${brand}', '${name}', '${cleanD.replace(/'/g, "\\'")}', ${price}, ${minStr})">ДЕТАЛЬНІШЕ</button>
+                    <button class="order-btn" onclick="showModal('${brand}', '${name}', '${cleanD.replace(/'/g, "\\'")}')">ДЕТАЛЬНІШЕ</button>
                 `;
                 container.appendChild(div);
             });
@@ -316,7 +338,7 @@
                 document.getElementById('weekSlideBottle').src = weekPerfume.img;
                 document.getElementById('weekSlide').style.display = 'flex';
                 document.getElementById('weekPerfumeContainer').innerHTML = `
-                    <div class="week-card" onclick="showModal('${weekPerfume.brand}', '${weekPerfume.name}', '${weekPerfume.cleanD.replace(/'/g, "\\'")}', ${weekPerfume.price}, ${weekPerfume.min})">
+                    <div class="week-card" onclick="showModal('${weekPerfume.brand}', '${weekPerfume.name}', '${weekPerfume.cleanD.replace(/'/g, "\\'")}')">
                         <div class="week-card-header">⭐ Парфум тижня ⭐</div>
                         <div class="week-card-body">
                             <div class="week-card-bg-blur" style="background-image: url('${weekPerfume.img}')"></div>
@@ -334,39 +356,16 @@
         } catch (e) { console.error(e); }
     }
 
-    function showModal(b, n, d, p, min) {
-        currentModalData = { price: p, fullName: b + " " + n };
+    function showModal(b, n, d) {
         document.getElementById('mB').innerText = b;
         document.getElementById('mN').innerText = n;
-        
         let f = d.replace(/\n/g, '<br>');
         f = f.replace(/\[\+\](.*?)(?=<br>|$)/g, '<div class="review-box pos">🟢 $1</div>');
-        f = f.replace(/\[\=\](.*?)(?=<br>|$)/g, '<div class="review-box neu">🟡 $1</div>');
+        f = f.replace(/\[\=\ Brooklyn(.*?)(?=<br>|$)/g, '<div class="review-box neu">🟡 $1</div>');
         f = f.replace(/\[\-\](.*?)(?=<br>|$)/g, '<div class="review-box neg">🔴 $1</div>');
         document.getElementById('mD').innerHTML = f;
-
-        const sel = document.getElementById('modalMlSelect');
-        sel.innerHTML = '';
-        [2, 5, 10, 20].forEach(ml => {
-            if (ml >= min) {
-                const opt = document.createElement('option');
-                opt.value = ml;
-                opt.innerText = `${ml} мл — ${Math.round(ml * p)} грн`;
-                sel.appendChild(opt);
-            }
-        });
-
-        syncModalOrder();
+        document.getElementById('modalOrderBtn').href = `https://t.me/${TG_NICK}?text=${encodeURIComponent('🛍️ ЗАМОВЛЕННЯ:\n' + b + ' ' + n)}`;
         document.getElementById('infoModal').style.display = 'flex';
-    }
-
-    function syncModalOrder() {
-        const ml = document.getElementById('modalMlSelect').value;
-        const total = Math.round(ml * currentModalData.price);
-        const btn = document.getElementById('modalOrderBtn');
-        const text = `🛍️ ЗАМОВЛЕННЯ:\n${currentModalData.fullName}\nОб'єм: ${ml} мл\nСума: ${total} грн`;
-        btn.href = `https://t.me/${TG_NICK}?text=${encodeURIComponent(text)}`;
-        btn.innerText = `🛍️ Замовити ${ml} мл за ${total} грн`;
     }
 
     function startHeroCarousel() {

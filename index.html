@@ -25,7 +25,7 @@
             border-bottom: 1px solid #eee; line-height: 1.5; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase;
         }
 
-        /* --- Герой-Слайдер (ЗАМІСТЬ ХЕДЕРА) --- */
+        /* Герой-Слайдер */
         .hero-carousel {
             position: relative; height: 160px; overflow: hidden; background: #000; border-bottom: 1px solid #1a1a1a; cursor: pointer;
         }
@@ -70,13 +70,33 @@
         .tab-btn { background: none; border: none; font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 1px; padding: 5px 0; cursor: pointer; white-space: nowrap; border-bottom: 2px solid transparent; transition: all 0.3s; }
         .tab-btn.active { color: #000; border-bottom-color: var(--gold); }
 
+        /* --- НОВИЙ СЛАЙДЕР БРЕНДІВ --- */
+        .brand-slider-wrapper { background: #fff; border-bottom: 1px solid #eee; padding: 15px 0; margin-bottom: 15px; }
+        .brand-slider { display: flex; gap: 30px; overflow-x: auto; padding: 0 20px; scrollbar-width: none; align-items: center; }
+        .brand-slider::-webkit-scrollbar { display: none; }
+        
+        .brand-btn { 
+            background: none; border: none; cursor: pointer; white-space: nowrap; opacity: 0.4; 
+            transition: all 0.3s; font-family: 'Helvetica Neue', Arial, sans-serif; 
+            font-size: 13px; font-weight: 600; text-transform: uppercase; color: #000; padding: 5px 0;
+        }
+        .brand-btn.active, .brand-btn:hover { opacity: 1; transform: scale(1.05); }
+
+        /* Фірмові стилі шрифтів для відомих брендів */
+        .brand-tf { font-family: 'Arial', sans-serif; font-weight: 900; letter-spacing: 1px; } /* Tom Ford */
+        .brand-jm { font-family: 'Times New Roman', Times, serif; font-weight: 400; letter-spacing: 3px; } /* Jo Malone */
+        .brand-creed { font-family: 'Georgia', serif; font-weight: 700; letter-spacing: 5px; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 2px 0; font-size: 11px; } /* Creed */
+        .brand-kilian { font-family: 'Georgia', serif; font-style: italic; text-transform: none; font-size: 17px; letter-spacing: 1px; } /* Kilian */
+        .brand-mm { font-family: 'Helvetica Neue', sans-serif; font-weight: 300; letter-spacing: 4px; } /* Mancera / Montale */
+        .brand-attar { font-family: 'Georgia', serif; font-variant: small-caps; letter-spacing: 2px; } /* Attar */
+
         /* Хмарка новин */
         .news-tooltip { position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); background: var(--gold); color: #000; padding: 8px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; line-height: 1.3; width: max-content; max-width: 150px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); opacity: 0; visibility: hidden; transition: all 0.4s ease; z-index: 100; pointer-events: none; }
         .news-tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: var(--gold) transparent transparent transparent; }
         .news-tooltip.show { opacity: 1; visibility: visible; bottom: 135%; }
 
         /* Каталог */
-        #catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px 15px; padding: 20px 15px; }
+        #catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px 15px; padding: 0 15px 20px; }
         .card { position: relative; display: flex; flex-direction: column; background: #fff; text-align: center; }
         
         .badges-container { position: absolute; top: 8px; right: 8px; display: flex; flex-direction: column; gap: 4px; z-index: 10; }
@@ -94,39 +114,26 @@
         .order-btn { background: #000; color: #fff; border: none; padding: 12px; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; border-radius: 4px; transition: background 0.3s; }
         .order-btn:active { background: var(--gold); color: #000; }
 
-        /* --- ОНОВЛЕНИЙ РОЗДІЛ: ІНШІ ПРОЄКТИ (Круглі іконки) --- */
+        /* ІНШІ ПРОЄКТИ */
         .other-projects { padding: 40px 15px 30px; background: #fff; text-align: center; border-top: 1px solid #eee; }
         .other-projects h2 { font-size: 14px; letter-spacing: 2.5px; color: #111; font-weight: 600; font-family: Georgia, serif; margin: 0 0 30px; text-transform: uppercase; }
         
         .other-projects-container { display: flex; gap: 20px; justify-content: center; }
         
         .other-project-item { 
-            flex: 0 0 70px; 
-            width: 70px; 
-            height: 70px; 
-            border-radius: 50%; 
-            overflow: hidden; 
-            background-color: #fff; 
-            border: 1px solid #eee; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06); 
-            text-align: center; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            box-sizing: border-box; 
-            transition: all 0.3s;
+            flex: 0 0 70px; width: 70px; height: 70px; border-radius: 50%; overflow: hidden; 
+            background-color: #fff; border: 1px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.06); 
+            text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            box-sizing: border-box; transition: all 0.3s;
         }
         .other-project-item:active { transform: scale(1.05); }
 
         .other-project-link { display: block; width: 100%; height: 100%; text-decoration: none; position: relative; border-radius: 50%; }
         
+        /* ВИПРАВЛЕНО: object-fit: cover гарантує, що скріншоти заповнять круг без деформацій */
         .other-project-item img { 
-            display: block; 
-            width: 100%; 
-            height: 100%; 
-            object-fit: contain; 
-            object-position: center; 
-            padding: 0; 
-            margin: 0; 
-            border-radius: 50%;
+            display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; 
+            padding: 0; margin: 0; border-radius: 50%;
         }
         
         /* Модальні вікна */
@@ -191,6 +198,11 @@
     </div>
 </div>
 
+<div class="brand-slider-wrapper">
+    <div class="brand-slider" id="brandSlider">
+        </div>
+</div>
+
 <div id="catalog">Завантаження каталогу...</div>
 
 <div class="other-projects">
@@ -198,12 +210,12 @@
     <div class="other-projects-container">
         <div class="other-project-item">
             <a href="https://www.instagram.com/mysweetplanb?igsh=M2djcXJhMTBuZXpz" class="other-project-link" target="_blank">
-                <img loading="lazy" src="Screenshot_20260327-220636.png" alt="Sweet Plan B Instagram">
+                <img loading="lazy" src="Screenshot_20260327-220636.png" alt="Sweet Plan B Instagram" onerror="this.src='Screenshot_20260327-220636.jpg'">
             </a>
         </div>
         <div class="other-project-item">
             <a href="https://invite.viber.com/?g2=AQAhE1iZ%2B1uvKUgtymLfnM%2BRqfD3LHfLeTzxLtC2nlnXdK2yA0a2hXilbdMzlQ%2Fj" class="other-project-link" target="_blank">
-                <img loading="lazy" src="Screenshot_20260327-210532.png" alt="VR Shopping Viber">
+                <img loading="lazy" src="Screenshot_20260327-210532.png" alt="VR Shopping Viber" onerror="this.src='Screenshot_20260327-210532.jpg'">
             </a>
         </div>
     </div>
@@ -241,6 +253,7 @@
     
     let globalCatalog = []; 
     let currentCategory = 'all'; 
+    let currentBrand = ''; // Додано фільтр бренду
 
     const TRENDS = [
         'baccarat', 'ganymede', 'tonka cola', 'wood sage', 'vanilla vibes', 'musk kashmir', 'blackberry', 'pomelo sorrento', 'soleil de capri', 'pear inc', 'this is her', 'fleur narcotique', 'lost cherry', 'tobacco vanille', 'delina', 'bianco latte', 'kirke', 'musc k'
@@ -254,14 +267,12 @@
             let cc = str[c], nc = str[c+1];
             arr[row] = arr[row] || [];
             arr[row][col] = arr[row][col] || '';
-            
             if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
             if (cc == '"') { quote = !quote; continue; }
             if (cc == ',' && !quote) { ++col; continue; }
             if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; continue; }
             if (cc == '\n' && !quote) { ++row; col = 0; continue; }
             if (cc == '\r' && !quote) { ++row; col = 0; continue; }
-            
             arr[row][col] += cc;
         }
         return arr.map(r => r.map(v => v.trim()));
@@ -278,6 +289,9 @@
 
             const catalogData = rows.slice(1).filter(c => c[0]); 
             globalCatalog = catalogData.map(c => ({brand: c[0]||'', name: c[1]||'', desc: c[4]||''}));
+
+            // ГЕНЕРАЦІЯ БРЕНДІВ
+            renderBrandSlider(globalCatalog);
 
             let rawNews = (rows[0] && rows[0][10]) ? rows[0][10] : "Скоро тут з'являться наші новини! ✨";
             let cleanTextForTooltip = rawNews.replace(/[{}]/g, ''); 
@@ -339,6 +353,7 @@
                 div.setAttribute('data-search', fullNameLower);
                 div.setAttribute('data-new', isNew);
                 div.setAttribute('data-top', isTop);
+                div.setAttribute('data-brand', brand); // Додано для фільтру брендів
                 
                 let optionsHtml = '';
                 [2, 5, 10, 20].forEach(ml => {
@@ -368,6 +383,37 @@
         }
     }
 
+    // ЛОГІКА СЛАЙДЕРУ БРЕНДІВ
+    function renderBrandSlider(catalog) {
+        // Отримуємо унікальні бренди
+        const brands = [...new Set(catalog.map(c => c.brand))].filter(b => b.trim() !== '').sort();
+        const slider = document.getElementById('brandSlider');
+        
+        slider.innerHTML = `<button class="brand-btn active" onclick="setBrand('', this)" style="opacity: 1; font-weight: 800;">УСІ БРЕНДИ</button>`;
+
+        brands.forEach(b => {
+            let customClass = '';
+            const lowerB = b.toLowerCase();
+            // Застосовуємо фірмові стилі до відомих брендів
+            if(lowerB.includes('tom ford')) customClass = 'brand-tf';
+            else if(lowerB.includes('jo malone')) customClass = 'brand-jm';
+            else if(lowerB.includes('creed')) customClass = 'brand-creed';
+            else if(lowerB.includes('kilian')) customClass = 'brand-kilian';
+            else if(lowerB.includes('mancera') || lowerB.includes('montale')) customClass = 'brand-mm';
+            else if(lowerB.includes('attar')) customClass = 'brand-attar';
+
+            slider.innerHTML += `<button class="brand-btn ${customClass}" onclick="setBrand('${b}', this)">${b}</button>`;
+        });
+    }
+
+    function setBrand(brand, btnElement) {
+        currentBrand = brand;
+        // Оновлюємо стилі кнопок
+        document.querySelectorAll('.brand-btn').forEach(btn => btn.classList.remove('active'));
+        btnElement.classList.add('active');
+        filterCatalog();
+    }
+
     function startHeroCarousel() {
         const slides = document.querySelectorAll('#heroCarousel .slide');
         let currentSlide = 0;
@@ -393,14 +439,21 @@
         filterCatalog();
     }
 
+    // ОНОВЛЕНА ФУНКЦІЯ ФІЛЬТРАЦІЇ (враховує бренд)
     function filterCatalog() {
         const q = document.getElementById('searchInput').value.toLowerCase();
         document.querySelectorAll('.card').forEach(c => {
             const matchesSearch = c.getAttribute('data-search').includes(q);
+            
             let matchesCategory = true;
             if (currentCategory === 'new') matchesCategory = c.getAttribute('data-new') === 'true';
             else if (currentCategory === 'top') matchesCategory = c.getAttribute('data-top') === 'true';
-            c.style.display = (matchesSearch && matchesCategory) ? 'flex' : 'none';
+
+            // Перевірка бренду
+            const cardBrand = c.getAttribute('data-brand');
+            const matchesBrand = (currentBrand === '' || cardBrand === currentBrand);
+
+            c.style.display = (matchesSearch && matchesCategory && matchesBrand) ? 'flex' : 'none';
         });
     }
 

@@ -224,7 +224,7 @@
         <h3 id="mB" style="margin-bottom: 5px;"></h3>
         <p id="mN" style="color:#666; font-size: 14px; margin-top: 0;"></p>
         <hr style="border:0; height:1px; background:#eee; margin:20px 0;">
-        <p id="mD" style="text-align:justify; font-size:13px; line-height:1.6; color: #444; margin-top: 15px;"></p>
+        <p id="mD" style="text-align:left; font-size:13px; line-height:1.6; color: #444; margin-top: 15px;"></p>
         <button class="close-btn" onclick="document.getElementById('infoModal').style.display='none'">Закрити</button>
     </div>
 </div>
@@ -335,9 +335,10 @@
                 if (TRENDS.some(trend => fullNameLower.includes(trend))) isTop = true;
                 if (customTop && customTop.toLowerCase().includes('топ')) isTop = true;
 
+                // БЕЗПЕЧНЕ ЧИТАННЯ ЕНТЕРІВ З ТАБЛИЦІ (щоб нічого не зникало)
+                let cleanD = desc ? desc.replace(/'/g, "’").replace(/"/g, "&quot;").replace(/\n/g, '<br>').replace(/\r/g, '') : "Опис скоро з’явиться...";
                 const cleanB = brand.replace(/'/g, "’");
                 const cleanN = name.replace(/'/g, "’");
-                const cleanD = desc ? desc.replace(/'/g, "’").replace(/"/g, "«") : "Опис скоро з’явиться...";
 
                 const div = document.createElement('div');
                 div.className = 'card';
@@ -353,7 +354,6 @@
 
                 let badgesHtml = '<div class="badges-container">';
                 if (isNew) badgesHtml += '<div class="badge badge-new">Новинка</div>';
-                // ОНОВЛЕНО: повернуто Best Seller
                 if (isTop) badgesHtml += '<div class="badge badge-top">Best Seller</div>';
                 badgesHtml += '</div>';
 
@@ -443,18 +443,25 @@
         setInterval(() => { tooltip.classList.add('show'); setTimeout(() => tooltip.classList.remove('show'), 4000); }, 15000);
     }
 
+    // ОНОВЛЕНЕ РОЗУМНЕ ФОРМАТУВАННЯ ТЕКСТУ
     function showModal(b, n, d) {
         document.getElementById('mB').innerText = b;
         document.getElementById('mN').innerText = n;
         
         let formattedDesc = d;
+        
+        // Додаємо крапочки і жирний шрифт для нових описів
         formattedDesc = formattedDesc.replace(/(Стиль:)/gi, '<br><br><b>$1</b>');
         formattedDesc = formattedDesc.replace(/(Піраміда аромату:)/gi, '<br><br><b>$1</b>');
         formattedDesc = formattedDesc.replace(/(Верхні ноти:)/gi, '<br>• <b>$1</b>');
         formattedDesc = formattedDesc.replace(/(Ноти серця:)/gi, '<br>• <b>$1</b>');
         formattedDesc = formattedDesc.replace(/(Базові ноти:)/gi, '<br>• <b>$1</b>');
         formattedDesc = formattedDesc.replace(/(Основні акорди:)/gi, '<br><br><b>$1</b>');
-        formattedDesc = formattedDesc.replace(/(Ноти:)/gi, '<br><br><b>$1</b>');
+        
+        // Прибираємо зайві порожні рядки, щоб усе виглядало компактно
+        formattedDesc = formattedDesc.replace(/(<br>\s*){3,}/g, '<br><br>');
+        if(formattedDesc.startsWith('<br>')) formattedDesc = formattedDesc.substring(4);
+        if(formattedDesc.startsWith('<br><br>')) formattedDesc = formattedDesc.substring(8);
 
         document.getElementById('mD').innerHTML = formattedDesc;
         document.getElementById('infoModal').style.display = 'flex';

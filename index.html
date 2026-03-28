@@ -36,7 +36,12 @@
         }
         .slide.active { opacity: 1; z-index: 2; pointer-events: auto; }
 
+        /* ВІДЕО-БАНЕР */
         .logo-slide { background: #000; }
+        .bg-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+        .video-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1; }
+        .logo-slide .logo, .logo-slide h1 { position: relative; z-index: 2; }
+
         .logo { width: 65px; height: auto; margin-bottom: 10px; }
         .hero-carousel h1 { font-size: 14px; font-weight: 600; letter-spacing: 5px; margin: 0; color: var(--gold); text-transform: uppercase; }
 
@@ -150,9 +155,14 @@
 
 <div class="hero-carousel" id="heroCarousel">
     <div class="slide logo-slide active">
+        <video class="bg-video" autoplay muted loop playsinline>
+            <source src="gemini_generated_video_956e165c.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
         <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" class="logo">
         <h1>VR PERFUMES</h1>
     </div>
+    
     <div class="slide banner-new" onclick="navigateToCategory('new')">
         <div class="banner-content">
             <span class="banner-subtitle">Зустрічай весну</span>
@@ -335,7 +345,6 @@
                 if (TRENDS.some(trend => fullNameLower.includes(trend))) isTop = true;
                 if (customTop && customTop.toLowerCase().includes('топ')) isTop = true;
 
-                // БЕЗПЕЧНЕ ЧИТАННЯ ЕНТЕРІВ З ТАБЛИЦІ (щоб нічого не зникало)
                 let cleanD = desc ? desc.replace(/'/g, "’").replace(/"/g, "&quot;").replace(/\n/g, '<br>').replace(/\r/g, '') : "Опис скоро з’явиться...";
                 const cleanB = brand.replace(/'/g, "’");
                 const cleanN = name.replace(/'/g, "’");
@@ -443,14 +452,11 @@
         setInterval(() => { tooltip.classList.add('show'); setTimeout(() => tooltip.classList.remove('show'), 4000); }, 15000);
     }
 
-    // ОНОВЛЕНЕ РОЗУМНЕ ФОРМАТУВАННЯ ТЕКСТУ
     function showModal(b, n, d) {
         document.getElementById('mB').innerText = b;
         document.getElementById('mN').innerText = n;
         
         let formattedDesc = d;
-        
-        // Додаємо крапочки і жирний шрифт для нових описів
         formattedDesc = formattedDesc.replace(/(Стиль:)/gi, '<br><br><b>$1</b>');
         formattedDesc = formattedDesc.replace(/(Піраміда аромату:)/gi, '<br><br><b>$1</b>');
         formattedDesc = formattedDesc.replace(/(Верхні ноти:)/gi, '<br>• <b>$1</b>');
@@ -458,7 +464,6 @@
         formattedDesc = formattedDesc.replace(/(Базові ноти:)/gi, '<br>• <b>$1</b>');
         formattedDesc = formattedDesc.replace(/(Основні акорди:)/gi, '<br><br><b>$1</b>');
         
-        // Прибираємо зайві порожні рядки, щоб усе виглядало компактно
         formattedDesc = formattedDesc.replace(/(<br>\s*){3,}/g, '<br><br>');
         if(formattedDesc.startsWith('<br>')) formattedDesc = formattedDesc.substring(4);
         if(formattedDesc.startsWith('<br><br>')) formattedDesc = formattedDesc.substring(8);

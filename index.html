@@ -68,10 +68,15 @@
         #searchInput { width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0; background: var(--gray-light); font-size: 14px; outline: none; border-radius: 4px; box-sizing: border-box; transition: border 0.3s; }
         #searchInput:focus { border-color: var(--gold); background: #fff; }
         
-        .action-buttons { display: flex; gap: 10px; margin-bottom: 15px; }
-        .viber-link, .news-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; padding: 10px; border-radius: 4px; text-align: center; font-weight: 600; font-size: 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; position: relative; }
+        /* КНОПКИ ДІЇ (ЗВУЖЕНІ) */
+        .action-buttons { display: flex; gap: 10px; margin-bottom: 15px; padding: 0 45px; } 
+        .viber-link, .news-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; padding: 10px; border-radius: 4px; text-align: center; font-weight: 600; font-size: 11px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; position: relative; }
         .viber-link { background: var(--viber-color); color: #fff; }
         .news-btn { background: #fff; border: 1px solid #000; color: #000; }
+        
+        .news-tooltip { position: absolute; top: -45px; right: 0; background: #000; color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 11px; font-weight: 500; white-space: nowrap; pointer-events: none; opacity: 0; transform: translateY(10px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1001; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .news-tooltip::after { content: ''; position: absolute; bottom: -6px; right: 20px; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid #000; }
+        .news-tooltip.show { opacity: 1; transform: translateY(0); }
 
         .tabs-container { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
         .tabs-container::-webkit-scrollbar { display: none; }
@@ -93,19 +98,19 @@
         .brand-mm { font-family: 'Helvetica Neue', sans-serif; font-weight: 300; letter-spacing: 4px; } 
         .brand-attar { font-family: 'Georgia', serif; font-variant: small-caps; letter-spacing: 2px; } 
 
-        /* ПАРФУМ ТИЖНЯ (КАРТКА) */
+        /* ПАРФУМ ТИЖНЯ (ВУЖЧА СМУЖКА) */
         .week-card-container { display: none; padding: 0 15px 25px; }
         .week-card { background: #0a0a0a; color: #fff; border-radius: 6px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .week-card-header { background: var(--gold); color: #000; text-align: center; padding: 8px; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; }
-        .week-card-body { display: flex; padding: 20px; gap: 15px; align-items: center; position: relative; }
-        .week-card-img { width: 100px; height: 100px; object-fit: contain; z-index: 2; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
+        .week-card-header { background: var(--gold); color: #000; text-align: center; padding: 6px; font-weight: 800; font-size: 10px; text-transform: uppercase; letter-spacing: 3px; }
+        .week-card-body { display: flex; padding: 12px 15px; gap: 15px; align-items: center; position: relative; }
+        .week-card-img { width: 80px; height: 80px; object-fit: contain; z-index: 2; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
         .week-card-info { flex: 1; z-index: 2; }
         .week-card-brand { color: var(--gold); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; }
-        .week-card-name { font-size: 17px; font-family: Georgia, serif; margin-bottom: 8px; line-height: 1.2; letter-spacing: 0.5px; }
+        .week-card-name { font-size: 16px; font-family: Georgia, serif; margin-bottom: 8px; line-height: 1.2; letter-spacing: 0.5px; }
         .week-btn-group { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
         .btn-fragrantica { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 8px; text-align: center; text-transform: uppercase; font-size: 9px; font-weight: bold; text-decoration: none; border-radius: 4px; letter-spacing: 1px; }
         .btn-week-desc { background: var(--gold); border: none; color: #000; padding: 10px; text-align: center; text-transform: uppercase; font-size: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; letter-spacing: 1px; }
-        .week-card-bg-blur { position: absolute; right: -20px; top: -20px; width: 150px; height: 150px; background-size: cover; background-position: center; filter: blur(20px) opacity(0.4); z-index: 1; border-radius: 50%; }
+        .week-card-bg-blur { position: absolute; right: -20px; top: -20px; width: 130px; height: 130px; background-size: cover; background-position: center; filter: blur(20px) opacity(0.4); z-index: 1; border-radius: 50%; }
 
         /* Каталог */
         #catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px 15px; padding: 0 15px 20px; }
@@ -141,7 +146,6 @@
         .other-projects h2 { font-size: 14px; letter-spacing: 2.5px; color: #111; font-weight: 600; font-family: Georgia, serif; margin: 0 0 30px; text-transform: uppercase; }
         .other-projects-container { display: flex; gap: 20px; justify-content: center; }
         .other-project-item { flex: 0 0 70px; width: 70px; height: 70px; border-radius: 50%; overflow: hidden; background-color: #fff; border: 1px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; transition: all 0.3s; }
-        .other-project-item:active { transform: scale(1.05); }
         .other-project-link { display: block; width: 100%; height: 100%; text-decoration: none; position: relative; border-radius: 50%; }
         .other-project-item img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; padding: 0; margin: 0; border-radius: 50%; }
         
@@ -152,10 +156,9 @@
         .news-link { color: #000; font-weight: 700; text-decoration: underline; cursor: pointer; text-decoration-color: var(--gold); text-decoration-thickness: 2px; }
         .close-btn { background: #fff; border: 1px solid #000; color: #000; padding: 12px; width: 100%; margin-top: 15px; cursor: pointer; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; border-radius: 4px; display: block; text-align: center;}
         
-        /* КНОПКА ЗАМОВИТИ В МОДАЛЦІ */
-        .modal-order-btn { background: var(--gold); color: #000; border: none; padding: 14px; width: 100%; margin-top: 25px; cursor: pointer; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; border-radius: 4px; display: block; text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
+        /* КНОПКА ЗАМОВИТИ ЗА ЗАМОВЧУВАННЯМ ПРИХОВАНА */
+        .modal-order-btn { background: var(--gold); color: #000; border: none; padding: 14px; width: 100%; margin-top: 25px; cursor: pointer; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; border-radius: 4px; display: none; text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
 
-        /* Спеціальний стиль для відгуків у модалці */
         .review-positive { color: #1e7e34; }
         .review-neutral { color: #d39e00; }
         .review-negative { color: #c82333; }
@@ -171,15 +174,11 @@
 </head>
 <body>
 
-<div class="tt-hint">
-    💡 Не переходить у Telegram? Натисніть <b>(⋯)</b> вгорі справа та оберіть <b>«Відкрити у браузері»</b>.
-</div>
+<div class="tt-hint">💡 Не переходить у Telegram? Натисніть <b>(⋯)</b> вгорі справа та оберіть <b>«Відкрити у браузері»</b>.</div>
 
 <div class="hero-carousel" id="heroCarousel">
     <div class="slide logo-slide active">
-        <video class="bg-video" autoplay muted loop playsinline>
-            <source src="gemini_generated_video_956e165c.mp4" type="video/mp4">
-        </video>
+        <video class="bg-video" autoplay muted loop playsinline><source src="gemini_generated_video_956e165c.mp4" type="video/mp4"></video>
         <div class="video-overlay"></div>
         <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" class="logo">
         <h1>VR PERFUMES</h1>
@@ -212,11 +211,9 @@
     </div>
 </div>
 
-<div class="news-ticker">
-    <div class="news-ticker-content" id="newsTicker">ЗАВАНТАЖЕННЯ... ✨</div>
-</div>
+<div class="news-ticker"><div class="news-ticker-content" id="newsTicker">ЗАВАНТАЖЕННЯ... ✨</div></div>
 
-<div class="controls-wrapper">
+<div class="controls-wrapper" id="stickyControls">
     <div class="search-box">
         <input type="text" id="searchInput" placeholder="Пошук аромату..." oninput="filterCatalog()">
     </div>
@@ -252,7 +249,7 @@
         <div class="about-quote">Кажуть, що жінка може мовчати, але її парфуми все скажуть за неї.</div>
         <p>Парфуми — моя особлива любов, завжди слідкую за трендами і багато ароматів купляю спочатку у пробніках перш, ніж замовити флакон і запропонувати Вам. Бо я просто не вмію продавати те, що мені особисто не подобається.</p>
         <p>✨ Оригінальна нішева парфумерія на розпив від 2мл для знайомства з ароматами!</p>
-        <p>💯 Всі парфуми оригінальні, викупляються на складі в Європі моєю колегою з Німеччини.</p>
+        <p>💯 Всі парфуми оригінальні, купуються в магазинах Європи та США.</p>
         <p>🛍️ Також під замовлення привезу повним флаконом будь-який інший аромат за Вашим побажанням — уточнюйте наявність, терміни та ціну в особисті повідомлення.</p>
         
         <div class="about-contacts">
@@ -293,7 +290,6 @@
         <p id="mN" style="color:#666; font-size: 14px; margin-top: 0; text-align: center;"></p>
         <hr style="border:0; height:1px; background:#eee; margin:20px 0;">
         <div id="mD" style="font-size:13px; line-height:1.6; color: #333; margin-top: 15px;"></div>
-        
         <a href="" id="modalOrderBtn" class="modal-order-btn" target="_blank">🛍️ Замовити цей аромат</a>
         <button class="close-btn" onclick="document.getElementById('infoModal').style.display='none'">Закрити</button>
     </div>
@@ -303,9 +299,7 @@
     <div class="modal-content" onclick="event.stopPropagation()">
         <h3 style="color: #000;">НОВИНИ</h3>
         <hr style="border:0; height:1px; background:#eee; margin:20px 0;">
-        <div id="newsModalContent" style="text-align:left; font-size:14px; line-height:1.7; color: #333;">
-            Завантаження новин...
-        </div>
+        <div id="newsModalContent" style="text-align:left; font-size:14px; line-height:1.7; color: #333;">Завантаження новин...</div>
         <button class="close-btn" onclick="document.getElementById('newsModalWindow').style.display='none'">Закрити</button>
     </div>
 </div>
@@ -318,18 +312,13 @@
     let currentCategory = 'all'; 
     let currentBrand = ''; 
 
-    const TRENDS = [
-        'baccarat', 'ganymede', 'tonka cola', 'wood sage', 'vanilla vibes', 'musk kashmir', 'blackberry', 'pomelo sorrento', 'soleil de capri', 'pear inc', 'this is her', 'fleur narcotique', 'lost cherry', 'tobacco vanille', 'delina', 'bianco latte', 'kirke', 'musc k'
-    ];
+    const TRENDS = ['baccarat', 'ganymede', 'tonka cola', 'wood sage', 'vanilla vibes', 'musk kashmir', 'blackberry', 'pomelo sorrento', 'soleil de capri', 'pear inc', 'this is her', 'fleur narcotique', 'lost cherry', 'tobacco vanille', 'delina', 'bianco latte', 'kirke', 'musc k'];
 
     function safeParseCSV(str) {
-        let arr = [];
-        let quote = false;
-        let row = 0, col = 0;
+        let arr = []; let quote = false; let row = 0, col = 0;
         for (let c = 0; c < str.length; c++) {
             let cc = str[c], nc = str[c+1];
-            arr[row] = arr[row] || [];
-            arr[row][col] = arr[row][col] || '';
+            arr[row] = arr[row] || []; arr[row][col] = arr[row][col] || '';
             if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
             if (cc == '"') { quote = !quote; continue; }
             if (cc == ',' && !quote) { ++col; continue; }
@@ -341,114 +330,66 @@
         return arr.map(r => r.map(v => v.trim()));
     }
 
+    /* ФУНКЦІЯ АВТОПРОКРУТКИ */
+    function scrollAfterFilter() {
+        const offset = 10;
+        const element = document.getElementById('stickyControls');
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+    }
+
     async function load() {
         try {
             const r = await fetch(SHEET_CSV + '&v=' + Date.now());
             const data = await r.text();
             const rows = safeParseCSV(data);
-            
             if(rows[0] && rows[0][9]) document.getElementById('newsTicker').innerText = rows[0][9];
 
             const catalogData = rows.slice(1).filter(c => c[0]); 
             globalCatalog = catalogData.map(c => ({brand: c[0]||'', name: c[1]||'', desc: c[4]||''}));
-
             renderBrandSlider(globalCatalog);
 
             let rawNews = (rows[0] && rows[0][10]) ? rows[0][10] : "Скоро тут з'являться наші новини! ✨";
             let cleanTextForTooltip = rawNews.replace(/[{}]/g, ''); 
-            let tooltipPreview = cleanTextForTooltip.substring(0, 45) + (cleanTextForTooltip.length > 45 ? '...' : '');
-            document.getElementById('newsTooltip').innerText = tooltipPreview;
-            
+            document.getElementById('newsTooltip').innerText = cleanTextForTooltip.substring(0, 45) + (cleanTextForTooltip.length > 45 ? '...' : '');
             startNewsTooltipAnimation();
 
             let formattedNews = rawNews.replace(/\n/g, '<br>'); 
-            const processedNews = formattedNews.replace(/\{(.*?)\}/g, (match, perfumeName) => {
-                return `<span class="news-link" onclick="orderPerfumeFromNews('${perfumeName}')">${perfumeName}</span>`;
-            });
-            document.getElementById('newsModalContent').innerHTML = processedNews;
+            document.getElementById('newsModalContent').innerHTML = formattedNews.replace(/\{(.*?)\}/g, (match, p) => `<span class="news-link" onclick="orderPerfumeFromNews('${p}')">${p}</span>`);
 
-            catalogData.sort((a, b) => {
-                const dateA = new Date(a[6] || '2000-01-01');
-                const dateB = new Date(b[6] || '2000-01-01');
-                return dateB - dateA;
-            });
-
+            catalogData.sort((a, b) => new Date(b[6] || '2000-01-01') - new Date(a[6] || '2000-01-01'));
             const today = new Date();
             const container = document.getElementById('catalog');
             container.innerHTML = '';
-            
             let weekPerfume = null;
 
             catalogData.forEach(c => {
-                const brand = c[0] || '';
-                const name = c[1] || '';
-                const priceStr = c[2] || '0';
-                const minStr = c[3] || '2';
-                const desc = c[4] || '';
-                const img = c[5] || '';
-                const dateStr = c[6] || '';
-                const customTop = c[7] || '';
-                const specialDesc = c[8] || '';
-
-                const price = parseFloat(priceStr.replace(/,/g, '.')) || 0;
+                const [brand, name, pStr, minStr, desc, img, dateStr, top, sDesc] = c;
+                const price = parseFloat(pStr.replace(/,/g, '.')) || 0;
                 const min = parseInt(minStr) || 2;
                 
-                let isNew = false;
-                if (dateStr) {
-                    const itemDate = new Date(dateStr);
-                    if (!isNaN(itemDate)) {
-                        const diffDays = (today - itemDate) / (1000 * 60 * 60 * 24);
-                        if (diffDays >= 0 && diffDays <= 14) isNew = true;
-                    }
-                }
-
-                let isTop = false;
-                let isWeek = false;
-                
-                const fullNameLower = (brand + ' ' + name).toLowerCase();
-                if (TRENDS.some(trend => fullNameLower.includes(trend))) isTop = true;
-                if (customTop && customTop.toLowerCase().includes('топ')) isTop = true;
-                if (customTop && customTop.toLowerCase().includes('тиждень')) {
-                    isWeek = true;
-                    isTop = true;
-                }
-
-                let rawDescToUse = (isWeek && specialDesc.trim() !== '') ? specialDesc : desc;
-                let cleanD = rawDescToUse ? rawDescToUse.replace(/'/g, "’").replace(/"/g, "&quot;").replace(/\n/g, '<br>').replace(/\r/g, '') : "Опис скоро з’явиться...";
-                const cleanB = brand.replace(/'/g, "’");
-                const cleanN = name.replace(/'/g, "’");
-
-                if (isWeek) {
-                    weekPerfume = { brand, name, cleanB, cleanN, cleanD, img, price, min };
-                }
+                let isNew = dateStr && (today - new Date(dateStr)) / (1000 * 60 * 60 * 24) <= 14;
+                let isTop = TRENDS.some(t => (brand + ' ' + name).toLowerCase().includes(t)) || (top && top.toLowerCase().includes('топ'));
+                let isWeek = top && top.toLowerCase().includes('тиждень');
+                if (isWeek) { isTop = true; weekPerfume = { brand, name, cleanB: brand.replace(/'/g,"’"), cleanN: name.replace(/'/g,"’"), cleanD: (sDesc && sDesc.trim()!=='')?sDesc.replace(/'/g,"’").replace(/\n/g,'<br>'):desc.replace(/'/g,"’").replace(/\n/g,'<br>'), img, price, min }; }
 
                 const div = document.createElement('div');
                 div.className = 'card';
-                div.setAttribute('data-search', fullNameLower);
-                div.setAttribute('data-new', isNew);
-                div.setAttribute('data-top', isTop);
-                div.setAttribute('data-brand', brand); 
+                div.setAttribute('data-search', (brand + ' ' + name).toLowerCase());
+                div.setAttribute('data-new', isNew); div.setAttribute('data-top', isTop); div.setAttribute('data-brand', brand);
                 
                 let optionsHtml = '';
-                [2, 5, 10, 20].forEach(ml => {
-                    if (ml >= min) optionsHtml += `<option value="${ml}">${ml} мл — ${Math.round(ml * price)} грн</option>`;
-                });
-
-                let badgesHtml = '<div class="badges-container">';
-                if (isNew) badgesHtml += '<div class="badge badge-new">Новинка</div>';
-                if (isTop) badgesHtml += '<div class="badge badge-top">Best Seller</div>';
-                badgesHtml += '</div>';
+                [2, 5, 10, 20].forEach(ml => { if (ml >= min) optionsHtml += `<option value="${ml}">${ml} мл — ${Math.round(ml * price)} грн</option>`; });
 
                 div.innerHTML = `
-                    ${badgesHtml}
-                    <img loading="lazy" src="${img}" onclick="showModal('${cleanB}', '${cleanN}', '${cleanD}')" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
-                    <div class="brand">${brand}</div>
-                    <div class="name">${name}</div>
+                    <div class="badges-container">${isNew?'<div class="badge badge-new">Новинка</div>':''}${isTop?'<div class="badge badge-top">Best Seller</div>':''}</div>
+                    <img loading="lazy" src="${img}" onclick="showModal('${brand.replace(/'/g,"’")}', '${name.replace(/'/g,"’")}', '${desc.replace(/'/g,"’").replace(/\n/g,'<br>')}')" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
+                    <div class="brand">${brand}</div><div class="name">${name}</div>
                     <div class="price-ml">1 мл: <b>${Math.round(price)} грн</b></div>
                     <select onchange="updatePrice(this, ${price})">${optionsHtml}</select>
                     <div class="total">${Math.round(min * price)} грн</div>
-                    <button class="order-btn" onclick="order('${cleanB} ${cleanN}', this)">ЗАМОВИТИ</button>
-                `;
+                    <button class="order-btn" onclick="order('${brand} ${name}', this)">ЗАМОВИТИ</button>`;
                 container.appendChild(div);
             });
 
@@ -456,11 +397,8 @@
                 document.getElementById('weekSlideBg').style.backgroundImage = `url('${weekPerfume.img}')`;
                 document.getElementById('weekSlideBottle').src = weekPerfume.img;
                 document.getElementById('weekSlide').style.display = 'flex';
-                
                 const fragUrl = `https://www.fragrantica.ua/search/?query=${encodeURIComponent(weekPerfume.brand + ' ' + weekPerfume.name)}`;
-                
-                const weekContainer = document.getElementById('weekPerfumeContainer');
-                weekContainer.innerHTML = `
+                document.getElementById('weekPerfumeContainer').innerHTML = `
                     <div class="week-card">
                         <div class="week-card-header">⭐ Парфум тижня ⭐</div>
                         <div class="week-card-body">
@@ -476,19 +414,11 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                `;
-                weekContainer.style.display = 'block';
-            } else {
-                if(document.getElementById('weekSlide')) document.getElementById('weekSlide').remove();
+                    </div>`;
+                document.getElementById('weekPerfumeContainer').style.display = 'block';
             }
-
             startHeroCarousel();
-
-        } catch (e) { 
-            console.error(e); 
-            document.getElementById('catalog').innerHTML = "Помилка завантаження даних. Будь ласка, оновіть сторінку.";
-        }
+        } catch (e) { console.error(e); }
     }
 
     function renderBrandSlider(catalog) {
@@ -496,8 +426,7 @@
         const slider = document.getElementById('brandSlider');
         slider.innerHTML = `<button class="brand-btn active" onclick="setBrand('', this)" style="opacity: 1; font-weight: 800;">УСІ БРЕНДИ</button>`;
         brands.forEach(b => {
-            let customClass = '';
-            const lowerB = b.toLowerCase();
+            let customClass = ''; const lowerB = b.toLowerCase();
             if(lowerB.includes('tom ford')) customClass = 'brand-tf';
             else if(lowerB.includes('jo malone')) customClass = 'brand-jm';
             else if(lowerB.includes('creed')) customClass = 'brand-creed';
@@ -513,31 +442,7 @@
         document.querySelectorAll('.brand-btn').forEach(btn => btn.classList.remove('active'));
         btnElement.classList.add('active');
         filterCatalog();
-    }
-
-    function startHeroCarousel() {
-        const slides = document.querySelectorAll('#heroCarousel .slide');
-        if(slides.length === 0) return;
-        let currentSlide = 0;
-        slides[0].classList.add('active');
-        setInterval(() => {
-            slides[currentSlide].classList.remove('active'); 
-            currentSlide = (currentSlide + 1) % slides.length; 
-            slides[currentSlide].classList.add('active'); 
-        }, 5000); 
-    }
-
-    function navigateToCategory(category) {
-        const tabBtn = document.getElementById('tab-' + category);
-        if (tabBtn) {
-            setCategory(category, tabBtn); 
-            window.scrollTo({ top: document.querySelector('.controls-wrapper').offsetTop, behavior: 'smooth' });
-        }
-    }
-
-    function scrollToWeek() {
-        const el = document.getElementById('weekPerfumeContainer');
-        if(el) { el.scrollIntoView({behavior: 'smooth', block: 'start'}); }
+        scrollAfterFilter();
     }
 
     function setCategory(category, btnElement) {
@@ -545,6 +450,7 @@
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         btnElement.classList.add('active');
         filterCatalog();
+        scrollAfterFilter();
     }
 
     function filterCatalog() {
@@ -566,63 +472,31 @@
         setInterval(() => { tooltip.classList.add('show'); setTimeout(() => tooltip.classList.remove('show'), 4000); }, 15000);
     }
 
-    // Оновлена функція: додано параметр isWeek
     function showModal(b, n, d, isWeek = false) {
-        document.getElementById('mB').innerText = b;
-        document.getElementById('mN').innerText = n;
-        
+        document.getElementById('mB').innerText = b; document.getElementById('mN').innerText = n;
         let formattedDesc = d;
-        formattedDesc = formattedDesc.replace(/(Стиль:)/gi, '<br><br><b>$1</b>');
-        formattedDesc = formattedDesc.replace(/(Піраміда аромату:)/gi, '<br><br><b>$1</b>');
-        formattedDesc = formattedDesc.replace(/(Верхні ноти:)/gi, '<br>• <b>$1</b>');
-        formattedDesc = formattedDesc.replace(/(Ноти серця:)/gi, '<br>• <b>$1</b>');
-        formattedDesc = formattedDesc.replace(/(Базові ноти:)/gi, '<br>• <b>$1</b>');
-        formattedDesc = formattedDesc.replace(/(Основні акорди:)/gi, '<br><br><b>$1</b>');
-        
+        formattedDesc = formattedDesc.replace(/(Стиль:)/gi, '<br><br><b>$1</b>').replace(/(Піраміда аромату:)/gi, '<br><br><b>$1</b>').replace(/(Верхні ноти:)/gi, '<br>• <b>$1</b>').replace(/(Ноти серця:)/gi, '<br>• <b>$1</b>').replace(/(Базові ноти:)/gi, '<br>• <b>$1</b>').replace(/(Основні акорди:)/gi, '<br><br><b>$1</b>');
         formattedDesc = formattedDesc.replace(/(Відгуки:)/gi, '<br><br><h4 style="color:var(--gold); margin:0 0 10px; font-family: Georgia, serif; font-size: 15px; text-transform: uppercase;">💬 Відгуки покупців:</h4>');
-        formattedDesc = formattedDesc.replace(/\[\+\](.*?)(?=<br>|\[\=\]|\[\-\]|$)/g, '<div class="review-box pos"><span class="review-positive"><b>🟢 Позитивний:</b></span> $1</div>');
-        formattedDesc = formattedDesc.replace(/\[\=\](.*?)(?=<br>|\[\+\]|\[\-\]|$)/g, '<div class="review-box neu"><span class="review-neutral"><b>🟡 Нейтральний:</b></span> $1</div>');
-        formattedDesc = formattedDesc.replace(/\[\-\](.*?)(?=<br>|\[\+\]|\[\=\]|$)/g, '<div class="review-box neg"><span class="review-negative"><b>🔴 Суперечливий:</b></span> $1</div>');
-        
-        formattedDesc = formattedDesc.replace(/(<br>\s*){3,}/g, '<br><br>');
-        if(formattedDesc.startsWith('<br>')) formattedDesc = formattedDesc.substring(4);
-        if(formattedDesc.startsWith('<br><br>')) formattedDesc = formattedDesc.substring(8);
-
+        formattedDesc = formattedDesc.replace(/\[\+\](.*?)(?=<br>|\[\=\]|\[\-\]|$)/g, '<div class="review-box pos"><span class="review-positive"><b>🟢 Позитивний:</b></span> $1</div>').replace(/\[\=\ Brooklyn(.*?)(?=<br>|\[\+\]|\[\-\]|$)/g, '<div class="review-box neu"><span class="review-neutral"><b>🟡 Нейтральний:</b></span> $1</div>').replace(/\[\-\](.*?)(?=<br>|\[\+\]|\[\=\]|$)/g, '<div class="review-box neg"><span class="review-negative"><b>🔴 Суперечливий:</b></span> $1</div>');
         document.getElementById('mD').innerHTML = formattedDesc;
-        
-        // Логіка відображення жовтої кнопки замовлення
         const orderBtn = document.getElementById('modalOrderBtn');
         if (isWeek) {
-            const orderText = `🛍️ ЗАМОВЛЕННЯ (Парфум тижня):\n${b} ${n}\n\nБажаю уточнити наявність та замовити цей особливий аромат. ✨`;
-            orderBtn.href = `https://t.me/${TG_NICK}?text=${encodeURIComponent(orderText)}`;
+            orderBtn.href = `https://t.me/${TG_NICK}?text=${encodeURIComponent('🛍️ ЗАМОВЛЕННЯ (Парфум тижня):\n'+b+' '+n+'\n\nВікторіє, доброго дня! Бажаю замовити цей аромат! ✨')}`;
             orderBtn.style.display = 'block';
-        } else {
-            orderBtn.style.display = 'none';
-        }
-        
+        } else { orderBtn.style.display = 'none'; }
         document.getElementById('infoModal').style.display = 'flex';
     }
 
-    function orderPerfumeFromNews(query) {
-        document.getElementById('newsModalWindow').style.display = 'none';
-        const q = query.toLowerCase().trim();
-        const item = globalCatalog.find(c => {
-            const fullName = (c.brand + ' ' + c.name).toLowerCase();
-            return fullName.includes(q) || c.name.toLowerCase().includes(q);
-        });
-        const perfumeName = item ? (item.brand + ' ' + item.name) : query;
-        const text = `🛍️ ЗАМОВЛЕННЯ (з Новин):\nАромат: ${perfumeName}\n\nПідкажіть, будь ласка, які об'єми доступні для розпиву?`;
-        window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent(text)}`, '_top');
+    function startHeroCarousel() {
+        const slides = document.querySelectorAll('#heroCarousel .slide');
+        let cur = 0; slides[0].classList.add('active');
+        setInterval(() => { slides[cur].classList.remove('active'); cur = (cur+1)%slides.length; slides[cur].classList.add('active'); }, 5000);
     }
-
     function updatePrice(sel, p) { sel.nextElementSibling.innerText = Math.round(sel.value * p) + ' грн'; }
-
-    function order(item, btn) {
-        const ml = btn.previousElementSibling.previousElementSibling.value;
-        const total = btn.previousElementSibling.innerText;
-        window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent('🛍️ ЗАМОВЛЕННЯ:\n' + item + '\nОб\'єм: ' + ml + ' мл\nСума: ' + total)}`, '_top');
-    }
-
+    function order(item, btn) { window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent('🛍️ ЗАМОВЛЕННЯ:\n'+item+'\nОб\'єм: '+btn.previousElementSibling.previousElementSibling.value+' мл\nСума: '+btn.previousElementSibling.innerText)}`, '_top'); }
+    function orderPerfumeFromNews(q) { window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent('🛍️ ЗАМОВЛЕННЯ (з Новин):\nАромат: '+q+'\n\nВікторіє, які об\'єми доступні?')}`, '_top'); }
+    function scrollToWeek() { document.getElementById('weekPerfumeContainer').scrollIntoView({behavior: 'smooth'}); }
+    function navigateToCategory(c) { const b = document.getElementById('tab-'+c); if(b) setCategory(c, b); }
     load();
 </script>
 </body>

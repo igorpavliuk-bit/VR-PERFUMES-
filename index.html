@@ -70,7 +70,6 @@
             text-decoration: none; border: 1px solid #eee; color: #000; background: transparent; letter-spacing: 1px;
         }
 
-        /* Стікі поле */
         .sticky-active { 
             position: sticky; top: 0; z-index: 1000; 
             background: rgba(255,255,255,0.96); backdrop-filter: blur(10px); 
@@ -83,7 +82,7 @@
             width: 100%; padding: 14px 45px 14px 14px; border: 1px solid #f0f0f0; background: #fafafa; 
             font-size: 13px; outline: none; box-sizing: border-box; font-family: var(--sans);
         }
-        .search-icon { position: absolute; right: 28px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--gold); }
+        .search-icon { position: absolute; right: 28px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--gold); cursor: pointer; }
 
         .brand-slider-wrapper { background: transparent; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
         .brand-slider { display: flex; gap: 30px; overflow-x: auto; padding: 0 20px; scrollbar-width: none; align-items: center; }
@@ -97,7 +96,8 @@
         /* КАТАЛОГ */
         #catalog { display: grid; grid-template-columns: 1fr 1fr; gap: 35px 15px; padding: 20px 15px 40px; }
         .card { position: relative; display: flex; flex-direction: column; background: #fff; }
-        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #fdfdfd; cursor: pointer; }
+        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #fdfdfd; cursor: pointer; transition: 0.3s; }
+        .card img:hover { opacity: 0.9; }
 
         .brand { font-family: var(--serif); font-size: 10px; margin-top: 15px; text-transform: uppercase; color: #777; letter-spacing: 2px; }
         .name { font-family: var(--serif); font-size: 14px; color: #000; margin: 4px 0 10px; min-height: 36px; line-height: 1.3; }
@@ -175,7 +175,7 @@
 <div id="stickyControls" class="sticky-active">
     <div class="search-container">
         <input type="text" id="searchInput" placeholder="Пошук Вашого аромату..." oninput="filterCatalog()">
-        <span class="search-icon">🔍</span>
+        <span class="search-icon" onclick="filterCatalog()">🔍</span>
     </div>
     <div class="brand-slider-wrapper">
         <div class="brand-slider" id="brandSlider"></div>
@@ -196,12 +196,11 @@
         <p><strong>Вітаю всіх в нашому парфумерному барі! Мене звати Вікторія.</strong></p>
         <p>Чи любите ви парфуми так, як люблю їх я? Вони зі мною у кожен момент життя, завжди маю багато різних ароматів і одягаю їх залежно від настрою.</p>
         <div class="about-quote">Кажуть, що жінка може мовчати, але її парфуми все скажуть за неї.</div>
-        <p>Парфуми — моя особлива любов, завжди слідкую за трендами і багато ароматів купляю спочатку у пробніках перш, ніж замовити флакон і запропонувати Вам.</p>
-        <p>✨ Оригінальна нішева парфумерія на розпив від 2мл для знайомства з ароматами!</p>
+        <p>✨ Оригінальна нішева парфумерія на розпив від 2мл.</p>
         <p>💯 Всі парфуми оригінальні, купуються в магазинах Європи та США.</p>
         <div style="display:flex; gap:10px; margin-top:20px;">
-            <a href="https://t.me/viktoriia_viktoriia_r" style="text-decoration:none; color:#000; border:1px solid #ddd; padding:12px; flex:1; text-align:center; font-size:10px; text-transform:uppercase; letter-spacing:1px; font-weight:600;">Telegram</a>
-            <a href="viber://chat?number=%2B380962178464" style="text-decoration:none; color:#000; border:1px solid #ddd; padding:12px; flex:1; text-align:center; font-size:10px; text-transform:uppercase; letter-spacing:1px; font-weight:600;">Viber</a>
+            <a href="https://t.me/viktoriia_viktoriia_r" style="text-decoration:none; color:#000; border:1px solid #ddd; padding:12px; flex:1; text-align:center; font-size:10px; text-transform:uppercase; font-weight:600;">Telegram</a>
+            <a href="viber://chat?number=%2B380962178464" style="text-decoration:none; color:#000; border:1px solid #ddd; padding:12px; flex:1; text-align:center; font-size:10px; text-transform:uppercase; font-weight:600;">Viber</a>
         </div>
     </div>
 </div>
@@ -214,7 +213,8 @@
     const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
     const TG_NICK = 'viktoriia_viktoriia_r'; 
     let globalCatalog = [];
-    let carouselIndex = 0, carouselInterval, startX = 0;
+    let weekPerfumeData = null;
+    let carouselIndex = 0, carouselInterval;
 
     function parseDate(d) {
         if(!d) return new Date('2000-01-01');
@@ -233,10 +233,12 @@
             if (cc == '\n' && !quote) { ++row; col = 0; continue; }
             arr[row][col] += cc;
         }
-        return arr.map(r => r.map(v => v.trim()));
+        return arr.map(r => {
+            while(r.length < 12) r.push(''); // Гарантуємо 12 колонок (до L включно)
+            return r.map(v => v.trim());
+        });
     }
 
-    /* ФІКС КРУЖЕЧКІВ */
     function initCarousel() {
         const slides = Array.from(document.querySelectorAll('#heroCarousel .slide')).filter(s => s.style.display !== 'none');
         const dotsContainer = document.getElementById('carouselDots');
@@ -282,24 +284,24 @@
             catalogDataRaw.sort((a, b) => parseDate(b[6]) - parseDate(a[6]));
             renderBrandSlider(catalogDataRaw);
 
-            // ФОРМУВАННЯ НОВИН (ФІКС КЛІКАБЕЛЬНОСТІ)
+            // НОВИНИ ПАРСИНГ (ФІКС КЛІКАБЕЛЬНОСТІ)
             let rawNews = (rows[0] && rows[0][10]) ? rows[0][10] : "Вітаємо! ✨";
             let newsHTML = '';
             rawNews.split('\n\n').forEach(block => {
                 let lines = block.split('\n');
                 let title = lines[0];
                 let text = lines.slice(1).join('<br>').replace(/\{(.*?)\}/g, (match, p) => `<span class="news-perfume-link" onclick="navigateToPerfume('','${p}')">${p}</span>`);
-                newsHTML += `<div class="news-item"><span class="news-title">${title}</span><div class="news-text">${text}</div></div>`;
+                newsHTML += `<div class="news-item"><span class="news-title">${title}</span><div class="news-text" style="color:#000;">${text}</div></div>`;
             });
             document.getElementById('newsModalContent').innerHTML = newsHTML;
 
             const today = new Date();
             const container = document.getElementById('catalog');
             container.innerHTML = '';
-            let weekPerfume = null; let promoPerfumes = [];
+            let promoPerfumes = [];
 
-            catalogDataRaw.forEach(c => {
-                const brand = c[0].replace(/'/g,"’"), name = c[1].replace(/'/g,"’"), price = parseFloat(c[2].replace(/,/g, '.')) || 0, min = parseInt(c[3]) || 2, desc = c[4], img = c[5], dateStr = c[6], top = c[7], sDesc = c[8], promoImg = c[11];
+            catalogDataRaw.forEach((c, idx) => {
+                const brand = c[0], name = c[1], price = parseFloat(c[2].replace(/,/g, '.')) || 0, min = parseInt(c[3]) || 2, desc = c[4], img = c[5], dateStr = c[6], top = c[7], sDesc = c[8], promoImg = c[11];
                 let isNew = dateStr && (today - parseDate(dateStr)) / 86400000 <= 14;
                 let isTop = (top && top.toLowerCase().includes('топ'));
                 let isWeek = (top && top.toLowerCase().includes('тиждень'));
@@ -307,8 +309,8 @@
                 
                 const finalDesc = (isWeek && sDesc) ? sDesc : desc;
                 if (isWeek) { 
-                    weekPerfume = { brand, name, desc: finalDesc, img, price, min }; 
-                    document.getElementById('weekSlide').onclick = () => showModal(brand, name, finalDesc, true, price, min); 
+                    weekPerfumeData = { brand, name, desc: finalDesc, img, price, min }; 
+                    document.getElementById('weekSlide').onclick = () => openWeekModal();
                 }
                 if (isPromo) { promoPerfumes.push({ brand, name, img: promoImg || img }); }
 
@@ -320,7 +322,7 @@
 
                 div.innerHTML = `
                     <div class="badges-container">${isNew ? '<div class="badge badge-new" style="background:#000;color:#fff;padding:4px 8px;font-size:8px;position:absolute;top:10px;left:10px;z-index:5;">NEW</div>' : ''}</div>
-                    <img loading="lazy" src="${img}" onclick='showModal(${JSON.stringify(brand)}, ${JSON.stringify(name)}, ${JSON.stringify(finalDesc)}, false, ${price}, ${min})'>
+                    <img loading="lazy" src="${img}" onclick="showModal('${brand.replace(/'/g,"\\'")}', '${name.replace(/'/g,"\\'")}', \`${finalDesc}\`, false, ${price}, ${min})">
                     <div class="brand">${brand}</div><div class="name">${name}</div><div class="price-ml">1 мл / ${Math.round(price)} грн</div>
                     <select onchange="updatePrice(this, ${price})">${opts}</select><div class="total">${Math.round(min * price)} грн</div>
                     <button class="order-btn" onclick="order('${brand} ${name}', this)">Замовити</button>
@@ -331,24 +333,23 @@
             promoPerfumes.forEach(promo => {
                 const slide = document.createElement('div'); slide.className = 'slide';
                 slide.innerHTML = `<div class="banner-bg-img" style="background-image: url('${promo.img}')"></div>`;
-                slide.onclick = () => navigateToPerfume(promo.brand, promo.name);
+                slide.onclick = () => navigateToPerfume('', promo.name);
                 document.getElementById('heroCarousel').insertBefore(slide, document.getElementById('weekSlide'));
             });
 
-            /* ФІКС КНОПКИ ОПИСУ ТИЖНЯ */
-            if (weekPerfume) {
-                document.getElementById('weekSlideBg').style.backgroundImage = `url('${weekPerfume.img}')`;
+            if (weekPerfumeData) {
+                document.getElementById('weekSlideBg').style.backgroundImage = `url('${weekPerfumeData.img}')`;
                 document.getElementById('weekSlide').style.display = 'flex';
                 document.getElementById('weekPerfumeContainer').innerHTML = `
                     <div class="week-card" style="padding: 30px 15px; background: #fff; margin-top: 15px; border-bottom: 1px solid #f0f0f0;">
                         <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 3px; color: var(--gold); text-align: center; margin-bottom: 20px;">Парфуми тижня</div>
                         <div style="display:flex; gap:20px; align-items:center; justify-content:center;">
-                            <img src="${weekPerfume.img}" style="width:100px; height:100px; object-fit:cover;">
+                            <img src="${weekPerfumeData.img}" style="width:100px; height:100px; object-fit:cover;">
                             <div style="text-align: left; flex: 1;">
-                                <div class="brand">${weekPerfume.brand}</div><div class="name" style="min-height:auto; margin-bottom:15px;">${weekPerfume.name}</div>
+                                <div class="brand">${weekPerfumeData.brand}</div><div class="name" style="min-height:auto; margin-bottom:15px;">${weekPerfumeData.name}</div>
                                 <div style="display:flex; gap:10px;">
-                                    <button class="week-card-btn" onclick='showModal(${JSON.stringify(weekPerfume.brand)}, ${JSON.stringify(weekPerfume.name)}, ${JSON.stringify(weekPerfume.desc)}, true, ${weekPerfume.price}, ${weekPerfume.min})'>Опис</button>
-                                    <button class="week-card-btn" style="background:#000; color:#fff;" onclick="order('${weekPerfume.brand} ${weekPerfume.name}', this)">Замовити</button>
+                                    <button class="week-card-btn" onclick="openWeekModal()">Опис</button>
+                                    <button class="week-card-btn" style="background:#000; color:#fff;" onclick="order('${weekPerfumeData.brand} ${weekPerfumeData.name}', this)">Замовити</button>
                                 </div>
                             </div>
                         </div>
@@ -356,6 +357,10 @@
             }
             initCarousel();
         } catch (e) { console.error(e); }
+    }
+
+    function openWeekModal() {
+        if(weekPerfumeData) showModal(weekPerfumeData.brand, weekPerfumeData.name, weekPerfumeData.desc, true, weekPerfumeData.price, weekPerfumeData.min);
     }
 
     function renderBrandSlider(cat) {
@@ -413,7 +418,7 @@
         document.getElementById('tab-all').classList.add('active');
         document.getElementById('searchInput').value = name; 
         filterCatalog();
-        document.getElementById('newsModalWindow').style.display = 'none'; // ФІКС ЗАКРИТТЯ НОВИН
+        document.getElementById('newsModalWindow').style.display = 'none';
         window.scrollTo({ top: document.getElementById('stickyControls').offsetTop - 20, behavior: 'smooth' });
     }
 
@@ -425,8 +430,6 @@
     }
 
     function updatePrice(sel, p) { sel.nextElementSibling.innerText = Math.round(sel.value * p) + ' грн'; }
-    
-    /* ФІКС ТЕКСТУ ЗАМОВЛЕННЯ */
     function order(item, btn) { 
         let ml = btn.previousElementSibling?.previousElementSibling?.value || '2';
         let sum = btn.previousElementSibling?.innerText || '';

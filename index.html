@@ -356,7 +356,7 @@
             container.innerHTML = '';
             
             let weekPerfume = null;
-            let promoPerfumes = []; // ТЕПЕР ЦЕ МАСИВ ДЛЯ КІЛЬКОХ БАНЕРІВ
+            let promoPerfumes = [];
 
             catalogData.forEach(c => {
                 const brand = c[0] || '';
@@ -369,7 +369,6 @@
                 const top = c[7] || '';
                 const sDesc = c[8] || '';
                 
-                // Промо-фото з колонки L (індекс 11)
                 const promoImg = c[11] || ''; 
                 
                 const price = parseFloat(pStr.replace(/,/g, '.')) || 0;
@@ -390,7 +389,6 @@
                 }
                 
                 if (isPromo) { 
-                    // Додаємо кожен знайдений промо-банер до списку
                     promoPerfumes.push({ brand, name, img: (promoImg && promoImg.trim() !== '') ? promoImg : img }); 
                 }
 
@@ -424,7 +422,6 @@
                 container.appendChild(div);
             });
 
-            // СТВОРЮЄМО УСІ ЗНАЙДЕНІ ПРОМО-БАНЕРИ
             const heroCarousel = document.getElementById('heroCarousel');
             const weekSlideEl = document.getElementById('weekSlide');
             
@@ -435,7 +432,7 @@
                 slide.style.cursor = 'pointer';
                 slide.innerHTML = `<div class="banner-bg-img" style="background-image: url('${promo.img}')"></div>`;
                 slide.onclick = () => navigateToPerfume(promo.brand, promo.name);
-                heroCarousel.insertBefore(slide, weekSlideEl); // Вставляємо перед "Парфумом тижня"
+                heroCarousel.insertBefore(slide, weekSlideEl);
             });
 
             if (weekPerfume) {
@@ -483,8 +480,10 @@
                     lb.includes('kilian') ? 'brand-kilian' : 
                     (lb.includes('mancera') || lb.includes('montale')) ? 'brand-mm' : 
                     lb.includes('attar') ? 'brand-attar' : '';
-                    
-            s.innerHTML += `<button class="brand-btn ${c}" onclick="setBrand('${b}', this)">${b}</button>`;
+            
+            // Захист від апострофів у назвах брендів
+            const safeB = b.replace(/'/g, "\\'");
+            s.innerHTML += `<button class="brand-btn ${c}" onclick="setBrand('${safeB}', this)">${b}</button>`;
         });
     }
 
@@ -492,6 +491,14 @@
         currentBrand = b; 
         document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active')); 
         btn.classList.add('active'); 
+        
+        // --- ДОДАНО: Скидання на "Усі аромати", щоб точно показати всі парфуми бренду ---
+        currentCategory = 'all';
+        document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
+        const tabAll = document.getElementById('tab-all');
+        if (tabAll) tabAll.classList.add('active');
+        // ---------------------------------------------------------------------------------
+
         filterCatalog(); 
         scrollAfterFilter(); 
     }

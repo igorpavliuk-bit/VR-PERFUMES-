@@ -106,7 +106,7 @@
         .badge-top { background: var(--gold) !important; color: #000 !important; }
 
         .card img { 
-            width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 4px; background: var(--gray-light); cursor: pointer;
+            width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 4px; background: var(--gray-light); cursor: pointer; 
         }
 
         .brand { font-weight: 700; font-size: 9px; margin-top: 10px; text-transform: uppercase; color: #777; letter-spacing: 1px; }
@@ -162,7 +162,27 @@
         <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" class="logo">
         <h1>VR PERFUMES</h1>
     </div>
-    <div class="slide" id="weekSlide" onclick="scrollToWeek()" style="display:none;"><div class="banner-bg-img" id="weekSlideBg"></div><div class="video-overlay" style="background:rgba(0,0,0,0.4)"></div><div class="banner-content"><span class="banner-subtitle">Вибір Вікторії</span><span class="banner-title">ПАРФУМ<br>ТИЖНЯ</span><span class="banner-btn">Дізнатись більше</span></div></div>
+    
+    <div class="slide banner-promo" onclick="navigateToPerfume('BOIS 1920', 'GABA')">
+        <div class="banner-bg-img" style="background-image: url('Images/1774813252917~2.png')"></div>
+        <div class="video-overlay" style="background: rgba(0,0,0,0.1);"></div>
+        <div class="banner-content">
+            <span class="banner-subtitle">Niche Fragrance</span>
+            <span class="banner-title">GABA<br>BOIS 1920</span>
+            <span class="banner-btn">Відкрити аромат</span>
+        </div>
+    </div>
+
+    <div class="slide" id="weekSlide" onclick="scrollToWeek()" style="display:none;">
+        <div class="banner-bg-img" id="weekSlideBg"></div>
+        <div class="video-overlay" style="background:rgba(0,0,0,0.4)"></div>
+        <div class="banner-content">
+            <span class="banner-subtitle">Вибір Вікторії</span>
+            <span class="banner-title">ПАРФУМ<br>ТИЖНЯ</span>
+            <span class="banner-btn">Дізнатись більше</span>
+        </div>
+    </div>
+
     <div class="slide" onclick="navigateToCategory('new')"><div class="banner-content"><span class="banner-subtitle">Зустрічай весну</span><span class="banner-title">Нові<br>Надходження</span><span class="banner-btn">Дивитись</span></div></div>
     <div class="slide" onclick="navigateToCategory('top')"><div class="banner-content"><span class="banner-subtitle">Тренди 2026</span><span class="banner-title">ХІТИ<br>СЕЗОНУ</span><span class="banner-btn">Відкрити</span></div></div>
 </div>
@@ -193,7 +213,6 @@
         <p><strong>Вітаю всіх в нашому парфумерному барі! Мене звати Вікторія.</strong></p>
         <p>Чи любите ви парфуми так, як люблю їх я? Вони зі мною у кожен момент життя, завжди маю багато різних ароматів і одягаю їх залежно від настрою.</p>
         <div class="about-quote">Кажуть, що жінка може мовчати, але її парфуми все скажуть за неї.</div>
-        <p>Парфуми — моя особлива любов, завжди слідкую за трендами і багато ароматів купляю спочатку у пробніках перш, ніж замовити флакон і запропонувати Вам.</p>
         <p>✨ Оригінальна нішева парфумерія на розпив від 2мл для знайомства з ароматами!</p>
         <p>💯 Всі парфуми оригінальні, купуються в магазинах Європи та США.</p>
         <div class="about-contacts">
@@ -216,26 +235,6 @@
     <a href="viber://chat?number=%2B380962178464" class="fab" style="background: var(--viber-color);"><img src="https://cdn-icons-png.flaticon.com/512/733/733641.png"></a>
 </div>
 
-<div id="infoModal" class="modal" onclick="this.style.display='none'">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <h3 id="mB" style="text-align:center;"></h3>
-        <p id="mN" style="text-align:center; color:#666;"></p>
-        <hr style="border:0; height:1px; background:#eee; margin:15px 0;">
-        <div id="mD"></div>
-        <a href="" id="modalOrderBtn" class="modal-order-btn" target="_blank">🛍️ Замовити аромат</a>
-        <button class="close-btn" onclick="document.getElementById('infoModal').style.display='none'">Закрити</button>
-    </div>
-</div>
-
-<div id="newsModalWindow" class="modal" onclick="this.style.display='none'">
-    <div class="modal-content" onclick="event.stopPropagation()">
-        <h3>НОВИНИ</h3>
-        <hr style="border:0; height:1px; background:#eee; margin:20px 0;">
-        <div id="newsModalContent"></div>
-        <button class="close-btn" onclick="document.getElementById('newsModalWindow').style.display='none'">Закрити</button>
-    </div>
-</div>
-
 <script>
     const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
     const TG_NICK = 'viktoriia_viktoriia_r'; 
@@ -243,6 +242,13 @@
     let currentCategory = 'all';
     let currentBrand = ''; 
     const TRENDS = ['baccarat', 'ganymede', 'tonka cola', 'wood sage', 'vanilla vibes', 'musk kashmir', 'blackberry', 'pomelo sorrento', 'soleil de capri', 'pear inc', 'this is her', 'fleur narcotique', 'lost cherry', 'tobacco vanille', 'delina', 'bianco latte', 'kirke', 'musc k'];
+
+    function parseDate(d) {
+        if(!d) return new Date('2000-01-01');
+        const parts = d.split('.');
+        if(parts.length === 3) return new Date(parts[2], parts[1]-1, parts[0]);
+        return new Date(d);
+    }
 
     function safeParseCSV(str) {
         let arr = []; let quote = false; let row = 0, col = 0;
@@ -267,28 +273,37 @@
         }, 100); 
     }
 
-    /* ФУНКЦІЯ НАВІГАЦІЇ З БАНЕРІВ (ВИПРАВЛЕНО) */
+    /* ФУНКЦІЯ НАВІГАЦІЇ: Примусове скидання фільтрів та показ потрібного товару */
     function navigateToPerfume(brand, name) {
-        document.getElementById('searchInput').value = (brand + ' ' + name).trim();
-        currentBrand = ''; 
-        currentCategory = 'all';
+        currentBrand = ''; currentCategory = 'all';
         document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
         document.getElementById('tab-all').classList.add('active');
-        
-        // Знаходимо кнопку "Усі бренди" (вона зазвичай перша)
         const brandAll = document.querySelector('.brand-btn');
         if(brandAll) brandAll.classList.add('active');
-        
+        document.getElementById('searchInput').value = name; 
         filterCatalog();
         scrollAfterFilter();
     }
 
     function navigateToCategory(c) { 
-        document.getElementById('searchInput').value = ''; 
-        currentBrand = '';
+        document.getElementById('searchInput').value = ''; currentBrand = '';
         document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active'));
         setCategory(c, document.getElementById('tab-' + c));
+    }
+
+    /* ВИПРАВЛЕНО: Плавна прокрутка до блоку тижня з врахуванням меню */
+    function scrollToWeek() { 
+        const el = document.getElementById('weekPerfumeContainer');
+        if (el) {
+            const offset = 80; 
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = el.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+
+            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+        }
     }
 
     async function load() {
@@ -298,14 +313,8 @@
             const rows = safeParseCSV(data);
             if(rows[0] && rows[0][9]) document.getElementById('newsTicker').innerText = rows[0][9];
             
-            const catalogDataRaw = rows.slice(1).filter(c => c[0]);
-            
-            /* ЛОГІКА СОРТУВАННЯ ЗА ДАТОЮ (ВИПРАВЛЕНО) */
-            catalogDataRaw.sort((a, b) => {
-                const dateA = new Date(a[6] || '2000-01-01');
-                const dateB = new Date(b[6] || '2000-01-01');
-                return dateB - dateA;
-            });
+            let catalogDataRaw = rows.slice(1).filter(c => c[0]);
+            catalogDataRaw.sort((a, b) => parseDate(b[6]) - parseDate(a[6]));
 
             globalCatalog = catalogDataRaw.map(c => ({
                 brand: (c[0]||'').replace(/'/g,"’"), name: (c[1]||'').replace(/'/g,"’"), desc: c[4]||''
@@ -335,7 +344,7 @@
                 const sDesc = (c[8] || '').replace(/'/g,"’");
                 const promoImg = c[11] || ''; 
                 
-                let isNew = dateStr && (today - new Date(dateStr)) / (1000 * 60 * 60 * 24) <= 14;
+                let isNew = dateStr && (today - parseDate(dateStr)) / (1000 * 60 * 60 * 24) <= 14;
                 let isTop = TRENDS.some(t => (brand + ' ' + name).toLowerCase().includes(t)) || (top && top.toLowerCase().includes('топ'));
                 let isWeek = top && top.toLowerCase().includes('тиждень');
                 let isPromo = top && top.toLowerCase().includes('промо');
@@ -348,9 +357,7 @@
                 const div = document.createElement('div');
                 div.className = 'card';
                 div.setAttribute('data-search', (brand + ' ' + name).toLowerCase());
-                div.setAttribute('data-new', isNew); 
-                div.setAttribute('data-top', isTop); 
-                div.setAttribute('data-brand', brand);
+                div.setAttribute('data-new', isNew); div.setAttribute('data-top', isTop); div.setAttribute('data-brand', brand);
                 
                 let opts = ''; [2, 5, 10, 20].forEach(ml => { if (ml >= min) opts += `<option value="${ml}">${ml} мл — ${Math.round(ml * price)} грн</option>`; });
 
@@ -359,7 +366,7 @@
                         ${isNew ? '<div class="badge badge-new">Новинка</div>' : ''}
                         ${isTop ? '<div class="badge badge-top">Best Seller</div>' : ''}
                     </div>
-                    <img loading="lazy" src="${img}" onclick='showModal(${JSON.stringify(brand)}, ${JSON.stringify(name)}, ${JSON.stringify(finalDesc)})' onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
+                    <img loading="lazy" src="${img}" onclick='showModal(${JSON.stringify(brand)}, ${JSON.stringify(name)}, ${JSON.stringify(finalDesc)})'>
                     <div class="brand">${brand}</div><div class="name">${name}</div><div class="price-ml">1 мл: <b>${Math.round(price)} грн</b></div>
                     <select onchange="updatePrice(this, ${price})">${opts}</select><div class="total">${Math.round(min * price)} грн</div>
                     <button class="order-btn" onclick="order('${brand} ${name}', this)">ЗАМОВИТИ</button>
@@ -384,11 +391,10 @@
                     <div class="week-card">
                         <div class="week-card-header">⭐ ПАРФУМ ТИЖНЯ ⭐</div>
                         <div class="week-card-body">
-                            <div class="week-card-bg-blur" style="background-image: url('${weekPerfume.img}')"></div>
                             <img src="${weekPerfume.img}" class="week-card-img" onclick='showModal(${JSON.stringify(weekPerfume.brand)}, ${JSON.stringify(weekPerfume.name)}, ${JSON.stringify(weekPerfume.desc)}, true)'>
                             <div class="week-card-info">
                                 <div class="week-card-brand">${weekPerfume.brand}</div><div class="week-card-name">${weekPerfume.name}</div>
-                                <button class="btn-week-desc" onclick='showModal(${JSON.stringify(weekPerfume.brand)}, ${JSON.stringify(weekPerfume.name)}, ${JSON.stringify(weekPerfume.desc)}, true)'>Опис та Відгуки</button>
+                                <button class="btn-week-desc" onclick='showModal(${JSON.stringify(weekPerfume.brand)}, ${JSON.stringify(weekPerfume.name)}, ${JSON.stringify(weekPerfume.desc)}, true)'>📝 Опис та Відгуки</button>
                             </div>
                         </div>
                     </div>
@@ -410,15 +416,15 @@
     }
 
     function setBrand(b, btn) { 
-        document.getElementById('searchInput').value = ''; 
-        currentBrand = b; document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); 
+        document.getElementById('searchInput').value = ''; currentBrand = b; 
+        document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); 
         currentCategory = 'all'; document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); document.getElementById('tab-all').classList.add('active');
         filterCatalog(); scrollAfterFilter(); 
     }
 
     function setCategory(cat, btn) { 
-        document.getElementById('searchInput').value = ''; 
-        currentCategory = cat; document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); 
+        document.getElementById('searchInput').value = ''; currentCategory = cat; 
+        document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); 
         filterCatalog(); scrollAfterFilter(); 
     }
 
@@ -453,8 +459,28 @@
     
     function updatePrice(sel, p) { sel.nextElementSibling.innerText = Math.round(sel.value * p) + ' грн'; }
     function order(item, btn) { window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent('🛍️ ЗАМОВЛЕННЯ:\n'+item+'\nОб\'єм: '+btn.previousElementSibling.previousElementSibling.value+' мл\nСума: '+btn.previousElementSibling.innerText)}`, '_top'); }
-    function scrollToWeek() { document.getElementById('weekPerfumeContainer').scrollIntoView({behavior: 'smooth'}); }
     load();
 </script>
+
+<div id="infoModal" class="modal" onclick="this.style.display='none'">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h3 id="mB"></h3>
+        <p id="mN" style="color:#666; font-size:14px; text-align:center;"></p>
+        <hr style="border:0; height:1px; background:#eee; margin:15px 0;">
+        <div id="mD" style="font-size:13px; line-height:1.6; color:#333;"></div>
+        <a href="" id="modalOrderBtn" class="modal-order-btn" target="_blank">🛍️ Замовити аромат</a>
+        <button class="close-btn" onclick="document.getElementById('infoModal').style.display='none'">Закрити</button>
+    </div>
+</div>
+
+<div id="newsModalWindow" class="modal" onclick="this.style.display='none'">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h3>НОВИНИ</h3>
+        <hr style="border:0; height:1px; background:#eee; margin:20px 0;">
+        <div id="newsModalContent"></div>
+        <button class="close-btn" onclick="document.getElementById('newsModalWindow').style.display='none'">Закрити</button>
+    </div>
+</div>
+
 </body>
 </html>

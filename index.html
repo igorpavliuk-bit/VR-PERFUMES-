@@ -130,7 +130,6 @@
         .about-contact-btn { display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1; padding: 12px 10px; border-radius: 4px; text-decoration: none; color: #fff; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; max-width: 150px; }
         .btn-tg { background: var(--tg-color); }
         .btn-vb { background: var(--viber-color); }
-        .about-contact-btn img { width: 16px; height: 16px; filter: brightness(0) invert(1); }
 
         /* ІНШІ ПРОЄКТИ */
         .other-projects { padding: 40px 15px 30px; background: #fff; text-align: center; border-top: 1px solid #eee; }
@@ -147,9 +146,6 @@
         
         .modal-order-btn { background: var(--gold); color: #000; border: none; padding: 14px; width: 100%; margin-top: 25px; cursor: pointer; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; border-radius: 4px; display: none; text-align: center; text-decoration: none; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
 
-        .review-positive { color: #1e7e34; }
-        .review-neutral { color: #d39e00; }
-        .review-negative { color: #c82333; }
         .review-box { background: #f9f9f9; padding: 10px 15px; border-radius: 6px; margin-bottom: 10px; border-left: 3px solid #ccc; font-style: italic; font-size: 12px;}
         .review-box.pos { border-color: #28a745; }
         .review-box.neu { border-color: #ffc107; }
@@ -268,20 +264,51 @@
 <script>
     const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
     const TG_NICK = 'viktoriia_viktoriia_r'; 
-    let globalCatalog = [], currentCategory = 'all', currentBrand = ''; 
+    let globalCatalog = [];
+    let currentCategory = 'all';
+    let currentBrand = ''; 
     const TRENDS = ['baccarat', 'ganymede', 'tonka cola', 'wood sage', 'vanilla vibes', 'musk kashmir', 'blackberry', 'pomelo sorrento', 'soleil de capri', 'pear inc', 'this is her', 'fleur narcotique', 'lost cherry', 'tobacco vanille', 'delina', 'bianco latte', 'kirke', 'musc k'];
 
     function safeParseCSV(str) {
-        let arr = []; let quote = false; let row = 0, col = 0;
+        let arr = []; 
+        let quote = false; 
+        let row = 0, col = 0;
+        
         for (let c = 0; c < str.length; c++) {
             let cc = str[c], nc = str[c+1];
-            arr[row] = arr[row] || []; arr[row][col] = arr[row][col] || '';
-            if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
-            if (cc == '"') { quote = !quote; continue; }
-            if (cc == ',' && !quote) { ++col; continue; }
-            if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; continue; }
-            if (cc == '\n' && !quote) { ++row; col = 0; continue; }
-            if (cc == '\r' && !quote) { ++row; col = 0; continue; }
+            arr[row] = arr[row] || []; 
+            arr[row][col] = arr[row][col] || '';
+            
+            if (cc == '"' && quote && nc == '"') { 
+                arr[row][col] += cc; 
+                ++c; 
+                continue; 
+            }
+            if (cc == '"') { 
+                quote = !quote; 
+                continue; 
+            }
+            if (cc == ',' && !quote) { 
+                ++col; 
+                continue; 
+            }
+            if (cc == '\r' && nc == '\n' && !quote) { 
+                ++row; 
+                col = 0; 
+                ++c; 
+                continue; 
+            }
+            if (cc == '\n' && !quote) { 
+                ++row; 
+                col = 0; 
+                continue; 
+            }
+            if (cc == '\r' && !quote) { 
+                ++row; 
+                col = 0; 
+                continue; 
+            }
+            
             arr[row][col] += cc;
         }
         return arr.map(r => r.map(v => v.trim()));
@@ -300,6 +327,7 @@
     function navigateToPerfume(brand, name) {
         const input = document.getElementById('searchInput');
         const tabAll = document.getElementById('tab-all');
+        
         input.value = brand + ' ' + name;
         setCategory('all', tabAll); 
     }
@@ -309,28 +337,48 @@
             const r = await fetch(SHEET_CSV + '&v=' + Date.now());
             const data = await r.text();
             const rows = safeParseCSV(data);
-            if(rows[0] && rows[0][9]) document.getElementById('newsTicker').innerText = rows[0][9];
+            
+            if(rows[0] && rows[0][9]) {
+                document.getElementById('newsTicker').innerText = rows[0][9];
+            }
 
             const catalogData = rows.slice(1).filter(c => c[0]); 
             globalCatalog = catalogData.map(c => ({brand: c[0]||'', name: c[1]||'', desc: c[4]||''}));
+            
             renderBrandSlider(globalCatalog);
 
             let rawNews = (rows[0] && rows[0][10]) ? rows[0][10] : "Скоро тут з'являться наші новини! ✨";
             document.getElementById('newsTooltip').innerText = rawNews.replace(/[{}]/g, '').substring(0, 45) + '...';
             startNewsTooltipAnimation();
+            
             document.getElementById('newsModalContent').innerHTML = rawNews.replace(/\n/g, '<br>').replace(/\{(.*?)\}/g, (match, p) => `<span class="news-link" onclick="orderPerfumeFromNews('${p}')">${p}</span>`);
 
             catalogData.sort((a, b) => new Date(b[6] || '2000-01-01') - new Date(a[6] || '2000-01-01'));
+            
             const today = new Date();
             const container = document.getElementById('catalog');
             container.innerHTML = '';
+            
             let weekPerfume = null;
             let promoPerfume = null;
 
             catalogData.forEach(c => {
-                const [brand, name, pStr, minStr, desc, img, dateStr, top, sDesc] = c;
+                const brand = c[0] || '';
+                const name = c[1] || '';
+                const pStr = c[2] || '0';
+                const minStr = c[3] || '2';
+                const desc = c[4] || '';
+                const img = c[5] || '';
+                const dateStr = c[6] || '';
+                const top = c[7] || '';
+                const sDesc = c[8] || '';
+                
+                // ТЕПЕР ПРОМО-ФОТО БЕРЕТЬСЯ З КОЛОНКИ L (індекс 11)
+                const promoImg = c[11] || ''; 
+                
                 const price = parseFloat(pStr.replace(/,/g, '.')) || 0;
                 const min = parseInt(minStr) || 2;
+                
                 let isNew = dateStr && (today - new Date(dateStr)) / (1000 * 60 * 60 * 24) <= 14;
                 let isTop = TRENDS.some(t => (brand + ' ' + name).toLowerCase().includes(t)) || (top && top.toLowerCase().includes('топ'));
                 let isWeek = top && top.toLowerCase().includes('тиждень');
@@ -340,23 +388,42 @@
                 const cleanN = name.replace(/'/g,"’");
                 const cleanD = (isWeek && sDesc && sDesc.trim()!=='') ? sDesc.replace(/'/g,"’").replace(/\n/g,'<br>') : desc.replace(/'/g,"’").replace(/\n/g,'<br>');
 
-                if (isWeek) { isTop = true; weekPerfume = { brand, name, cleanB, cleanN, cleanD, img, price, min }; }
-                if (isPromo) { promoPerfume = { brand, name, img }; }
+                if (isWeek) { 
+                    isTop = true; 
+                    weekPerfume = { brand, name, cleanB, cleanN, cleanD, img, price, min }; 
+                }
+                
+                if (isPromo) { 
+                    promoPerfume = { brand, name, img: (promoImg && promoImg.trim() !== '') ? promoImg : img }; 
+                }
 
                 const div = document.createElement('div');
                 div.className = 'card';
                 div.setAttribute('data-search', (brand + ' ' + name).toLowerCase());
-                div.setAttribute('data-new', isNew); div.setAttribute('data-top', isTop); div.setAttribute('data-brand', brand);
-                let opts = ''; [2, 5, 10, 20].forEach(ml => { if (ml >= min) opts += `<option value="${ml}">${ml} мл — ${Math.round(ml * price)} грн</option>`; });
+                div.setAttribute('data-new', isNew); 
+                div.setAttribute('data-top', isTop); 
+                div.setAttribute('data-brand', brand);
+                
+                let opts = ''; 
+                [2, 5, 10, 20].forEach(ml => { 
+                    if (ml >= min) {
+                        opts += `<option value="${ml}">${ml} мл — ${Math.round(ml * price)} грн</option>`; 
+                    }
+                });
 
                 div.innerHTML = `
-                    <div class="badges-container">${isNew?'<div class="badge badge-new">Новинка</div>':''}${isTop?'<div class="badge badge-top">Best Seller</div>':''}</div>
+                    <div class="badges-container">
+                        ${isNew ? '<div class="badge badge-new">Новинка</div>' : ''}
+                        ${isTop ? '<div class="badge badge-top">Best Seller</div>' : ''}
+                    </div>
                     <img loading="lazy" src="${img}" onclick='showModal(${JSON.stringify(cleanB)}, ${JSON.stringify(cleanN)}, ${JSON.stringify(cleanD)})' onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
-                    <div class="brand">${brand}</div><div class="name">${name}</div>
+                    <div class="brand">${brand}</div>
+                    <div class="name">${name}</div>
                     <div class="price-ml">1 мл: <b>${Math.round(price)} грн</b></div>
                     <select onchange="updatePrice(this, ${price})">${opts}</select>
                     <div class="total">${Math.round(min * price)} грн</div>
-                    <button class="order-btn" onclick="order('${brand} ${name}', this)">ЗАМОВИТИ</button>`;
+                    <button class="order-btn" onclick="order('${brand} ${name}', this)">ЗАМОВИТИ</button>
+                `;
                 container.appendChild(div);
             });
 
@@ -386,65 +453,115 @@
                                 </div>
                             </div>
                         </div>
-                    </div>`;
+                    </div>
+                `;
                 document.getElementById('weekPerfumeContainer').style.display = 'block';
             }
+            
             startHeroCarousel();
-        } catch (e) { console.error(e); }
+            
+        } catch (e) { 
+            console.error(e); 
+        }
     }
 
     function renderBrandSlider(cat) {
         const brs = [...new Set(cat.map(c => c.brand))].filter(b => b.trim() !== '').sort();
         const s = document.getElementById('brandSlider');
+        
         s.innerHTML = `<button class="brand-btn active" onclick="setBrand('', this)" style="opacity:1; font-weight:800;">УСІ БРЕНДИ</button>`;
+        
         brs.forEach(b => {
             const lb = b.toLowerCase();
-            let c = lb.includes('tom ford')?'brand-tf':lb.includes('jo malone')?'brand-jm':lb.includes('creed')?'brand-creed':lb.includes('kilian')?'brand-kilian':(lb.includes('mancera')||lb.includes('montale'))?'brand-mm':lb.includes('attar')?'brand-attar':'';
+            let c = lb.includes('tom ford') ? 'brand-tf' : 
+                    lb.includes('jo malone') ? 'brand-jm' : 
+                    lb.includes('creed') ? 'brand-creed' : 
+                    lb.includes('kilian') ? 'brand-kilian' : 
+                    (lb.includes('mancera') || lb.includes('montale')) ? 'brand-mm' : 
+                    lb.includes('attar') ? 'brand-attar' : '';
+                    
             s.innerHTML += `<button class="brand-btn ${c}" onclick="setBrand('${b}', this)">${b}</button>`;
         });
     }
 
-    function setBrand(b, btn) { currentBrand = b; document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); filterCatalog(); scrollAfterFilter(); }
-    function setCategory(cat, btn) { currentCategory = cat; document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); filterCatalog(); scrollAfterFilter(); }
+    function setBrand(b, btn) { 
+        currentBrand = b; 
+        document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active')); 
+        btn.classList.add('active'); 
+        filterCatalog(); 
+        scrollAfterFilter(); 
+    }
+
+    function setCategory(cat, btn) { 
+        currentCategory = cat; 
+        document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); 
+        btn.classList.add('active'); 
+        filterCatalog(); 
+        scrollAfterFilter(); 
+    }
 
     function filterCatalog() {
         const q = document.getElementById('searchInput').value.toLowerCase();
+        
         document.querySelectorAll('.card').forEach(c => {
             const mS = c.getAttribute('data-search').includes(q);
-            const mC = (currentCategory === 'all') || (currentCategory === 'new' && c.getAttribute('data-new') === 'true') || (currentCategory === 'top' && c.getAttribute('data-top') === 'true');
-            c.style.display = (mS && mC && (currentBrand === '' || c.getAttribute('data-brand') === currentBrand)) ? 'flex' : 'none';
+            const mC = (currentCategory === 'all') || 
+                       (currentCategory === 'new' && c.getAttribute('data-new') === 'true') || 
+                       (currentCategory === 'top' && c.getAttribute('data-top') === 'true');
+            const mB = (currentBrand === '' || c.getAttribute('data-brand') === currentBrand);
+            
+            c.style.display = (mS && mC && mB) ? 'flex' : 'none';
         });
     }
 
     function startNewsTooltipAnimation() {
         const t = document.getElementById('newsTooltip');
-        setTimeout(() => { t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 4000); }, 3000);
-        setInterval(() => { t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 4000); }, 15000);
+        setTimeout(() => { 
+            t.classList.add('show'); 
+            setTimeout(() => t.classList.remove('show'), 4000); 
+        }, 3000);
+        
+        setInterval(() => { 
+            t.classList.add('show'); 
+            setTimeout(() => t.classList.remove('show'), 4000); 
+        }, 15000);
     }
 
     function showModal(b, n, d, isWeek = false) {
-        document.getElementById('mB').innerText = b; document.getElementById('mN').innerText = n;
+        document.getElementById('mB').innerText = b; 
+        document.getElementById('mN').innerText = n;
+        
         let f = d;
-        f = f.replace(/(Стиль:)/gi, '<br><br><b>$1</b>').replace(/(Піраміда аромату:)/gi, '<br><br><b>$1</b>').replace(/(Верхні ноти:)/gi, '<br>• <b>$1</b>').replace(/(Ноти серця:)/gi, '<br>• <b>$1</b>').replace(/(Базові ноти:)/gi, '<br>• <b>$1</b>').replace(/(Основні акорди:)/gi, '<br><br><b>$1</b>');
+        f = f.replace(/(Стиль:)/gi, '<br><br><b>$1</b>')
+             .replace(/(Піраміда аромату:)/gi, '<br><br><b>$1</b>')
+             .replace(/(Верхні ноти:)/gi, '<br>• <b>$1</b>')
+             .replace(/(Ноти серця:)/gi, '<br>• <b>$1</b>')
+             .replace(/(Базові ноти:)/gi, '<br>• <b>$1</b>')
+             .replace(/(Основні акорди:)/gi, '<br><br><b>$1</b>');
+             
         f = f.replace(/(Відгуки:)/gi, '<br><br><h4 style="color:var(--gold); margin:0 0 10px; font-family: Georgia, serif; font-size: 15px; text-transform: uppercase;">💬 Відгуки покупців:</h4>');
         
-        /* ВИПРАВЛЕНО: Повернув класи кольорів для відгуків */
         f = f.replace(/\[\+\](.*?)(?=<br>|\[\=\]|\[\-\]|$)/g, '<div class="review-box pos"><span class="review-positive"><b>🟢 Позитивний:</b></span> $1</div>')
              .replace(/\[\=\](.*?)(?=<br>|\[\+\]|\[\-\]|$)/g, '<div class="review-box neu"><span class="review-neutral"><b>🟡 Нейтральний:</b></span> $1</div>')
              .replace(/\[\-\](.*?)(?=<br>|\[\+\]|\[\=\]|$)/g, '<div class="review-box neg"><span class="review-negative"><b>🔴 Суперечливий:</b></span> $1</div>');
-        
+             
         document.getElementById('mD').innerHTML = f;
+        
         const btn = document.getElementById('modalOrderBtn');
         if (isWeek) {
             btn.href = `https://t.me/${TG_NICK}?text=${encodeURIComponent('🛍️ ЗАМОВЛЕННЯ (Парфум тижня):\n'+b+' '+n+'\n\nВікторіє, доброго дня! Бажаю замовити цей аромат! ✨')}`;
             btn.style.display = 'block';
-        } else { btn.style.display = 'none'; }
+        } else { 
+            btn.style.display = 'none'; 
+        }
+        
         document.getElementById('infoModal').style.display = 'flex';
     }
 
     function startHeroCarousel() {
         const slides = Array.from(document.querySelectorAll('#heroCarousel .slide')).filter(s => s.style.display !== 'none');
         if(slides.length <= 1) return;
+        
         let cur = 0;
         setInterval(() => {
             slides[cur].classList.remove('active');
@@ -453,11 +570,28 @@
         }, 5000);
     }
     
-    function updatePrice(sel, p) { sel.nextElementSibling.innerText = Math.round(sel.value * p) + ' грн'; }
-    function order(item, btn) { window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent('🛍️ ЗАМОВЛЕННЯ:\n'+item+'\nОб\'єм: '+btn.previousElementSibling.previousElementSibling.value+' мл\nСума: '+btn.previousElementSibling.innerText)}`, '_top'); }
-    function orderPerfumeFromNews(q) { window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent('🛍️ ЗАМОВЛЕННЯ (з Новин):\nАромат: '+q)}`, '_top'); }
-    function scrollToWeek() { document.getElementById('weekPerfumeContainer').scrollIntoView({behavior: 'smooth'}); }
-    function navigateToCategory(c) { const b = document.getElementById('tab-'+c); if(b) setCategory(c, b); }
+    function updatePrice(sel, p) { 
+        sel.nextElementSibling.innerText = Math.round(sel.value * p) + ' грн'; 
+    }
+    
+    function order(item, btn) { 
+        window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent('🛍️ ЗАМОВЛЕННЯ:\n'+item+'\nОб\'єм: '+btn.previousElementSibling.previousElementSibling.value+' мл\nСума: '+btn.previousElementSibling.innerText)}`, '_top'); 
+    }
+    
+    function orderPerfumeFromNews(q) { 
+        window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent('🛍️ ЗАМОВЛЕННЯ (з Новин):\nАромат: '+q)}`, '_top'); 
+    }
+    
+    function scrollToWeek() { 
+        document.getElementById('weekPerfumeContainer').scrollIntoView({behavior: 'smooth'}); 
+    }
+    
+    function navigateToCategory(c) { 
+        const b = document.getElementById('tab-'+c); 
+        if(b) {
+            setCategory(c, b);
+        }
+    }
     
     load();
 </script>

@@ -7,9 +7,7 @@
     <style>
         :root { 
             --bg: #ffffff; 
-            --gold: #c5a059; /* Матове золото */
-            --tg-color: #26a5e4; 
-            --viber-color: #7360f2;
+            --gold: #c5a059;
             --text-dark: #1a1a1a;
             --text-gray: #757575;
             --gray-light: #fbfbfb;
@@ -21,18 +19,16 @@
             font-family: var(--sans); 
             margin: 0; padding: 0; background: var(--bg); color: var(--text-dark); 
             padding-bottom: 90px; -webkit-tap-highlight-color: transparent;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         .tt-hint { 
-            background: #000; color: #fff; padding: 10px; text-align: center; font-size: 10px; 
-            font-weight: 300; letter-spacing: 1px; text-transform: uppercase;
+            background: #000; color: #fff; padding: 12px; text-align: center; font-size: 10px; 
+            font-weight: 300; letter-spacing: 1.5px; text-transform: uppercase;
         }
 
         /* --- ГЕРОЙ-КАРУСЕЛЬ --- */
-        .hero-carousel {
-            position: relative; height: 300px; overflow: hidden; background: #000;
-        }
+        .hero-carousel { position: relative; height: 300px; overflow: hidden; background: #000; }
         .slide {
             position: absolute; width: 100%; height: 100%; top: 0; left: 0;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -41,88 +37,97 @@
             z-index: 1; pointer-events: none;
         }
         .slide.active { opacity: 1; transform: scale(1); z-index: 2; pointer-events: auto; }
-
-        .bg-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.8; }
+        .bg-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.7; }
         .banner-bg-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: 0; }
-        .video-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.1)); z-index: 1; }
-        
-        .logo { width: 70px; height: auto; margin-bottom: 20px; position: relative; z-index: 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
-        .hero-carousel h1 { font-family: var(--serif); font-size: 20px; font-weight: 400; letter-spacing: 8px; margin: 0; color: #fff; text-transform: uppercase; position: relative; z-index: 2; }
+        .video-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.25); z-index: 1; }
+        .logo { width: 75px; height: auto; margin-bottom: 20px; position: relative; z-index: 2; }
+        .hero-carousel h1 { font-family: var(--serif); font-size: 22px; font-weight: 400; letter-spacing: 10px; margin: 0; color: #fff; text-transform: uppercase; z-index: 2; }
 
-        .banner-content { text-align: center; padding: 20px; width: 100%; color: #fff; position: relative; z-index: 2; }
-        .banner-subtitle { display: block; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 3px; color: var(--gold); margin-bottom: 10px; }
-        .banner-title { display: block; font-size: 32px; font-weight: 300; text-transform: uppercase; letter-spacing: 2px; line-height: 1.1; margin-bottom: 20px; font-family: var(--serif); }
-        .banner-btn { display: inline-block; font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; padding: 10px 24px; border: 1px solid #fff; background: transparent; transition: 0.3s; }
+        .banner-content { text-align: center; padding: 25px; width: 100%; color: #fff; position: relative; z-index: 2; }
+        .banner-subtitle { display: block; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 4px; color: var(--gold); margin-bottom: 12px; }
+        .banner-title { display: block; font-size: 28px; font-weight: 300; text-transform: uppercase; letter-spacing: 2px; line-height: 1.1; margin-bottom: 25px; font-family: var(--serif); }
+        .banner-btn { display: inline-block; font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; padding: 12px 28px; border: 1px solid #fff; background: transparent; transition: 0.3s; }
 
-        .carousel-dots {
-            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-            display: flex; gap: 12px; z-index: 10;
-        }
-        .dot {
-            width: 5px; height: 5px; border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.5); background: transparent;
-            cursor: pointer; transition: 0.3s;
-        }
-        .dot.active { background: #fff; border-color: #fff; transform: scale(1.2); }
+        .carousel-dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 10; }
+        .dot { width: 5px; height: 5px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.6); background: transparent; cursor: pointer; transition: 0.3s; }
+        .dot.active { background: #fff; border-color: #fff; transform: scale(1.3); }
 
-        .news-ticker { background: var(--gray-light); color: var(--text-dark); padding: 10px 0; border-bottom: 1px solid #eee; }
-        .news-ticker-content { display: inline-block; padding-left: 100%; animation: ticker 30s linear infinite; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-weight: 400; }
+        .news-ticker { background: var(--gray-light); color: var(--text-dark); padding: 12px 0; border-bottom: 1px solid #eee; overflow: hidden; }
+        .news-ticker-content { display: inline-block; padding-left: 100%; animation: ticker 30s linear infinite; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; }
         @keyframes ticker { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
         /* Навігація */
-        .controls-wrapper { padding: 20px 15px 10px; position: sticky; top: 0; z-index: 100; background: rgba(255, 255, 255, 0.98); border-bottom: 1px solid #f0f0f0; }
-        #searchInput { width: 100%; padding: 14px; border: none; background: #f7f7f7; font-size: 13px; border-radius: 0; outline: none; box-sizing: border-box; font-family: var(--sans); letter-spacing: 0.5px; }
+        .controls-wrapper { padding: 25px 15px 15px; background: #fff; }
+        .action-buttons { display: flex; gap: 12px; margin-bottom: 5px; } 
+        .viber-link, .news-btn { 
+            flex: 1; display: flex; align-items: center; justify-content: center; 
+            padding: 14px; font-size: 10px; cursor: pointer; text-transform: uppercase; 
+            text-decoration: none; letter-spacing: 2px; border: 1px solid #eee; 
+            color: var(--text-dark); background: transparent; transition: 0.3s;
+        }
+
+        /* STICKY FIELD */
+        .sticky-active { 
+            position: sticky; top: 0; z-index: 1000; 
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(15px); 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); padding-top: 15px; 
+        }
         
-        .action-buttons { display: flex; gap: 12px; margin: 15px 0; } 
-        .viber-link, .news-btn { flex: 1; display: flex; align-items: center; justify-content: center; padding: 12px; border-radius: 0; font-weight: 500; font-size: 10px; cursor: pointer; text-transform: uppercase; text-decoration: none; letter-spacing: 1.5px; }
-        .viber-link { background: var(--text-dark); color: #fff; }
-        .news-btn { background: #fff; border: 1px solid var(--text-dark); color: var(--text-dark); }
+        #searchInput { 
+            width: 100%; padding: 16px; border: 1px solid #f0f0f0; background: #fafafa; 
+            font-size: 14px; outline: none; box-sizing: border-box; font-family: var(--sans);
+        }
         
-        .tabs-container { display: flex; gap: 25px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; justify-content: center; }
-        .tab-btn { background: none; border: none; font-size: 10px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 1.5px; padding: 8px 0; cursor: pointer; white-space: nowrap; border-bottom: 1px solid transparent; transition: 0.3s; }
+        .brand-slider-wrapper { background: transparent; padding: 15px 0; border-bottom: 1px solid #f0f0f0; }
+        .brand-slider { display: flex; gap: 35px; overflow-x: auto; padding: 0 20px; scrollbar-width: none; align-items: center; }
+        .brand-btn { background: none; border: none; cursor: pointer; opacity: 0.35; font-size: 11px; font-weight: 500; text-transform: uppercase; white-space: nowrap; letter-spacing: 1.5px; transition: 0.3s; }
+        .brand-btn.active { opacity: 1; color: var(--gold); letter-spacing: 2px; }
+
+        .tabs-container { display: flex; gap: 30px; overflow-x: auto; padding: 10px 0 15px; scrollbar-width: none; justify-content: center; }
+        .tab-btn { background: none; border: none; font-size: 10px; font-weight: 600; color: #bbb; text-transform: uppercase; letter-spacing: 2px; padding: 8px 0; cursor: pointer; white-space: nowrap; border-bottom: 1px solid transparent; transition: 0.3s; }
         .tab-btn.active { color: var(--text-dark); border-bottom-color: var(--gold); }
 
-        /* Бренди */
-        .brand-slider-wrapper { background: #fff; padding: 15px 0; margin-bottom: 10px; }
-        .brand-slider { display: flex; gap: 35px; overflow-x: auto; padding: 0 20px; scrollbar-width: none; align-items: center; }
-        .brand-btn { background: none; border: none; cursor: pointer; opacity: 0.3; font-size: 11px; font-weight: 500; text-transform: uppercase; color: #000; white-space: nowrap; letter-spacing: 1px; transition: 0.3s; }
-        .brand-btn.active { opacity: 1; letter-spacing: 2px; }
-
         /* КАТАЛОГ */
-        #catalog { display: grid; grid-template-columns: 1fr 1fr; gap: 30px 15px; padding: 10px 15px 40px; }
-        .card { position: relative; display: flex; flex-direction: column; background: #fff; transition: 0.3s; }
-        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #f9f9f9; cursor: pointer; transition: opacity 0.3s; }
-        .card img:active { opacity: 0.8; }
+        #catalog { display: grid; grid-template-columns: 1fr 1fr; gap: 45px 18px; padding: 30px 18px 60px; }
+        .card { position: relative; display: flex; flex-direction: column; background: #fff; }
+        .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #fdfdfd; cursor: pointer; transition: 0.5s; }
+        .card img:hover { opacity: 0.85; }
 
-        .badges-container { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 5px; z-index: 10; }
-        .badge { padding: 4px 10px; font-size: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; border-radius: 0; }
-        .badge-new { background: rgba(0,0,0,0.8); color: #fff; }
+        .badges-container { position: absolute; top: 12px; left: 12px; display: flex; flex-direction: column; gap: 6px; z-index: 10; }
+        .badge { padding: 5px 12px; font-size: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+        .badge-new { background: #1a1a1a; color: #fff; }
         .badge-top { background: var(--gold); color: #fff; }
 
-        .brand { font-family: var(--serif); font-weight: 400; font-size: 10px; margin-top: 15px; text-transform: uppercase; color: var(--text-gray); letter-spacing: 2px; }
-        .name { font-family: var(--serif); font-size: 14px; color: var(--text-dark); height: auto; margin: 4px 0 10px; font-weight: 400; line-height: 1.2; }
-        .price-ml { font-size: 10px; color: var(--text-gray); margin-bottom: 12px; letter-spacing: 0.5px; }
+        .brand { font-family: var(--serif); font-size: 11px; margin-top: 18px; text-transform: uppercase; color: var(--text-gray); letter-spacing: 2.5px; }
+        .name { font-family: var(--serif); font-size: 15px; color: var(--text-dark); margin: 6px 0 12px; font-weight: 400; line-height: 1.3; min-height: 40px; }
+        .price-ml { font-size: 11px; color: var(--text-gray); margin-bottom: 15px; letter-spacing: 0.5px; }
         
-        select { width: 100%; padding: 8px; border: 1px solid #eee; margin-bottom: 12px; font-size: 11px; color: var(--text-dark); background: #fff; font-family: var(--sans); }
-        .total { font-family: var(--sans); font-size: 13px; font-weight: 600; margin-bottom: 12px; color: var(--text-dark); letter-spacing: 0.5px; }
-        .order-btn { border: 1px solid var(--text-dark); background: transparent; color: var(--text-dark); padding: 12px; font-weight: 600; cursor: pointer; text-transform: uppercase; font-size: 9px; letter-spacing: 2px; transition: 0.3s; }
-        .order-btn:active { background: var(--text-dark); color: #fff; }
+        select { width: 100%; padding: 10px; border: 1px solid #f0f0f0; margin-bottom: 15px; font-size: 12px; background: #fff; outline: none; }
+        .total { font-size: 14px; font-weight: 600; margin-bottom: 15px; color: #000; letter-spacing: 0.5px; }
+        .order-btn { border: 1px solid var(--text-dark); background: transparent; color: var(--text-dark); padding: 14px; font-weight: 600; cursor: pointer; text-transform: uppercase; font-size: 9px; letter-spacing: 2.5px; transition: 0.3s; }
+        .order-btn:hover { background: #1a1a1a; color: #fff; }
 
         /* ПРО НАС */
-        .about-section { background: #fdfdfd; padding: 60px 25px; text-align: center; }
-        .about-photo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin: 0 auto 25px; border: 1px solid #eee; padding: 5px; }
-        .about-content { max-width: 500px; margin: 0 auto; font-family: var(--serif); font-size: 15px; line-height: 1.8; color: #444; }
-        .about-quote { font-style: italic; font-size: 16px; margin: 30px 0; color: var(--text-dark); position: relative; }
-        .about-quote::before { content: "“"; font-size: 40px; color: var(--gold); position: absolute; top: -20px; left: 50%; transform: translateX(-50%); opacity: 0.3; }
+        .about-section { background: #fafafa; padding: 100px 30px; text-align: center; border-top: 1px solid #f2f2f2; }
+        .about-photo { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin: 0 auto 35px; border: 1px solid #eee; padding: 6px; background: #fff; }
+        .about-content { max-width: 600px; margin: 0 auto; font-family: var(--serif); font-size: 16px; line-height: 1.9; color: #333; text-align: left; }
+        .about-quote { font-style: italic; font-size: 18px; margin: 45px 0; color: var(--text-dark); text-align: center; font-weight: 300; position: relative; padding: 0 20px; }
+        .about-contacts { display: flex; gap: 15px; justify-content: center; margin-top: 50px; }
+        .about-contact-btn { 
+            flex: 1; display: flex; align-items: center; justify-content: center; 
+            padding: 16px; border: 1px solid #ddd; text-decoration: none; color: #1a1a1a; 
+            font-size: 10px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; transition: 0.3s;
+        }
 
         /* МОДАЛЬНЕ ВІКНО */
-        .modal-content { border-radius: 0; padding: 30px; border: none; }
-        .modal-content h3 { font-family: var(--serif); font-weight: 400; letter-spacing: 2px; font-size: 22px; }
-        .review-box { border-left: 1px solid #eee; background: #fff; font-family: var(--sans); font-size: 12px; padding: 15px; margin-bottom: 15px; }
-        .review-box.pos { border-left-color: #000; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); z-index: 2000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-content { background: #fff; padding: 50px 35px; max-width: 480px; width: 100%; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 30px 70px rgba(0,0,0,0.07); }
+        .close-btn { background: #1a1a1a; color: #fff; border: none; padding: 16px; width: 100%; margin-top: 30px; cursor: pointer; font-size: 10px; text-transform: uppercase; letter-spacing: 2.5px; }
+        .review-box { border-left: 1px solid #1a1a1a; background: #fcfcfc; font-size: 13px; padding: 18px; margin-bottom: 20px; font-style: italic; color: #444; }
 
-        .fab-container { right: 20px; bottom: 20px; }
-        .fab { width: 45px; height: 45px; border-radius: 50%; }
+        .fab-container { position: fixed; bottom: 25px; right: 25px; z-index: 999; }
+        .fab { width: 50px; height: 50px; background: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(0,0,0,0.25); }
+        .fab img { width: 22px; height: 22px; filter: brightness(0) invert(1); }
     </style>
 </head>
 <body>
@@ -136,7 +141,6 @@
         <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" class="logo">
         <h1>VR PERFUMES</h1>
     </div>
-    
     <div class="slide" id="weekSlide">
         <div class="banner-bg-img" id="weekSlideBg"></div>
         <div class="video-overlay"></div>
@@ -146,20 +150,26 @@
             <span class="banner-btn">Опис та Відгуки</span>
         </div>
     </div>
-
     <div class="slide" onclick="navigateToCategory('new')"><div class="banner-content"><span class="banner-subtitle">New Arrivals</span><span class="banner-title">Весняні<br>Новинки</span><span class="banner-btn">Дивитись</span></div></div>
     <div class="slide" onclick="navigateToCategory('top')"><div class="banner-content"><span class="banner-subtitle">Most Wanted</span><span class="banner-title">Хіти<br>Продажів</span><span class="banner-btn">Відкрити</span></div></div>
-    
     <div class="carousel-dots" id="carouselDots"></div>
 </div>
 
-<div class="news-ticker"><div class="news-ticker-content" id="newsTicker">WELCOME TO VR PERFUMES ✨</div></div>
+<div class="news-ticker"><div class="news-ticker-content" id="newsTicker">ЗАВАНТАЖЕННЯ... ✨</div></div>
 
-<div class="controls-wrapper" id="stickyControls">
-    <div class="search-box"><input type="text" id="searchInput" placeholder="Пошук Вашого аромату..." oninput="filterCatalog()"></div>
+<div class="controls-wrapper">
     <div class="action-buttons">
         <a href="https://invite.viber.com/?g2=AQBjzS%2BM5uBAeFRYT57vm5okC%2BGV00WHPJgDJBWE9ptyotTAmhAhpYNBmtPwZxQe" class="viber-link">Community</a>
         <div class="news-btn" onclick="document.getElementById('newsModalWindow').style.display='flex'">News</div>
+    </div>
+</div>
+
+<div id="stickyControls" class="sticky-active">
+    <div style="padding: 0 15px;">
+        <input type="text" id="searchInput" placeholder="Пошук Вашого аромату..." oninput="filterCatalog()">
+    </div>
+    <div class="brand-slider-wrapper">
+        <div class="brand-slider" id="brandSlider"></div>
     </div>
     <div class="tabs-container">
         <button class="tab-btn active" id="tab-all" onclick="setCategory('all', this)">Showcase</button>
@@ -168,35 +178,33 @@
     </div>
 </div>
 
-<div class="brand-slider-wrapper"><div class="brand-slider" id="brandSlider"></div></div>
 <div class="week-card-container" id="weekPerfumeContainer"></div>
 <div id="catalog">Завантаження каталогу...</div>
 
 <div class="about-section">
     <img src="Screenshot_20260328-171201.png" alt="Viktoriia" class="about-photo" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
     <div class="about-content">
-        <p>Мене звати Вікторія, і парфуми — це моя пристрасть. Кожен аромат у нашій колекції — це історія, привезена з кращих магазинів Європи та США.</p>
-        <div class="about-quote">Парфуми говорять про жінку більше, ніж її почерк.</div>
-        <p>Ми пропонуємо тільки оригінальну нішеву парфумерію на розпив від 2мл, щоб ви могли знайти свій ідеальний «парфумерний гардероб».</p>
+        <p><strong>Вітаю всіх в нашому парфумерному барі! Мене звати Вікторія.</strong></p>
+        <p>Чи любите ви парфуми так, як люблю їх я? Вони зі мною у кожен момент життя, завжди маю багато різних ароматів і одягаю їх залежно від настрою.</p>
+        <div class="about-quote">Кажуть, що жінка може мовчати, але її парфуми все скажуть за неї.</div>
+        <p>Парфуми — моя особлива любов, завжди слідкую за трендами і багато ароматів купляю спочатку у пробніках перш, ніж замовити флакон і запропонувати Вам.</p>
+        <p>✨ Оригінальна нішева парфумерія на розпив від 2мл для знайомства з ароматами!</p>
+        <p>💯 Всі парфуми оригінальні, купуються в магазинах Європи та США.</p>
         <div class="about-contacts">
-            <a href="https://t.me/viktoriia_viktoriia_r" class="about-contact-btn btn-tg" style="background: #111;">Telegram</a>
-            <a href="viber://chat?number=%2B380962178464" class="about-contact-btn btn-vb" style="background: #111;">Viber</a>
+            <a href="https://t.me/viktoriia_viktoriia_r" class="about-contact-btn">Telegram</a>
+            <a href="viber://chat?number=%2B380962178464" class="about-contact-btn">Viber</a>
         </div>
     </div>
 </div>
 
 <div class="fab-container">
-    <a href="https://t.me/viktoriia_viktoriia_r" class="fab" style="background: #000;"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png"></a>
+    <a href="https://t.me/viktoriia_viktoriia_r" class="fab"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png"></a>
 </div>
 
 <script>
     const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
     const TG_NICK = 'viktoriia_viktoriia_r'; 
     let globalCatalog = [];
-    let currentCategory = 'all';
-    let currentBrand = ''; 
-    const TRENDS = ['baccarat', 'ganymede', 'tonka cola', 'wood sage', 'vanilla vibes', 'musk kashmir', 'blackberry', 'pomelo sorrento', 'soleil de capri', 'pear inc', 'this is her', 'fleur narcotique', 'lost cherry', 'tobacco vanille', 'delina', 'bianco latte', 'kirke', 'musc k'];
-
     let carouselIndex = 0;
     let carouselInterval;
     let startX = 0;
@@ -204,8 +212,7 @@
     function parseDate(d) {
         if(!d) return new Date('2000-01-01');
         const parts = d.split('.');
-        if(parts.length === 3) return new Date(parts[2], parts[1]-1, parts[0]);
-        return new Date(d);
+        return parts.length === 3 ? new Date(parts[2], parts[1]-1, parts[0]) : new Date(d);
     }
 
     function safeParseCSV(str) {
@@ -224,32 +231,10 @@
         return arr.map(r => r.map(v => v.trim()));
     }
 
-    function scrollAfterFilter() {
-        setTimeout(() => {
-            const el = document.getElementById('stickyControls');
-            if(el) window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset, behavior: "smooth" });
-        }, 100); 
-    }
-
-    function navigateToPerfume(brand, name) {
-        currentBrand = ''; currentCategory = 'all';
-        document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
-        document.getElementById('tab-all').classList.add('active');
-        document.getElementById('searchInput').value = name; 
-        filterCatalog();
-        scrollAfterFilter();
-    }
-
-    function navigateToCategory(c) { 
-        document.getElementById('searchInput').value = ''; currentBrand = '';
-        document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active'));
-        setCategory(c, document.getElementById('tab-' + c));
-    }
-
     function initCarousel() {
         const slides = Array.from(document.querySelectorAll('#heroCarousel .slide')).filter(s => s.style.display !== 'none');
         const dotsContainer = document.getElementById('carouselDots');
+        if(!dotsContainer) return;
         dotsContainer.innerHTML = '';
         slides.forEach((_, i) => {
             const dot = document.createElement('div');
@@ -257,6 +242,7 @@
             dot.onclick = () => goToSlide(i);
             dotsContainer.appendChild(dot);
         });
+        
         const hero = document.getElementById('heroCarousel');
         hero.addEventListener('touchstart', (e) => startX = e.touches[0].clientX);
         hero.addEventListener('touchend', (e) => {
@@ -293,17 +279,12 @@
             const data = await r.text();
             const rows = safeParseCSV(data);
             if(rows[0] && rows[0][9]) document.getElementById('newsTicker').innerText = rows[0][9];
-            
             let catalogDataRaw = rows.slice(1).filter(c => c[0]);
             catalogDataRaw.sort((a, b) => parseDate(b[6]) - parseDate(a[6]));
 
-            globalCatalog = catalogDataRaw.map(c => ({
-                brand: (c[0]||'').replace(/'/g,"’"), name: (c[1]||'').replace(/'/g,"’"), desc: c[4]||''
-            }));
-            
-            renderBrandSlider(globalCatalog);
+            renderBrandSlider(catalogDataRaw);
 
-            let rawNews = (rows[0] && rows[0][10]) ? rows[0][10] : "Welcome to our Bar! ✨";
+            let rawNews = (rows[0] && rows[0][10]) ? rows[0][10] : "WELCOME TO VR PERFUMES ✨";
             document.getElementById('newsModalContent').innerHTML = rawNews.replace(/\n/g, '<br>').replace(/\{(.*?)\}/g, (match, p) => `<span style="color:var(--gold);cursor:pointer;" onclick="navigateToPerfume('','${p}')">${p}</span>`);
 
             const today = new Date();
@@ -314,28 +295,14 @@
             let promoPerfumes = [];
 
             catalogDataRaw.forEach(c => {
-                const brand = (c[0] || '').replace(/'/g,"’");
-                const name = (c[1] || '').replace(/'/g,"’");
-                const price = parseFloat((c[2] || '0').replace(/,/g, '.')) || 0;
-                const min = parseInt(c[3]) || 2;
-                const desc = (c[4] || '').replace(/'/g,"’");
-                const img = c[5] || '';
-                const dateStr = c[6] || '';
-                const top = c[7] || '';
-                const sDesc = (c[8] || '').replace(/'/g,"’");
-                const promoImg = c[11] || ''; 
+                const brand = c[0].replace(/'/g,"’"), name = c[1].replace(/'/g,"’"), price = parseFloat(c[2].replace(/,/g, '.')) || 0, min = parseInt(c[3]) || 2, desc = c[4], img = c[5], dateStr = c[6], top = c[7], sDesc = c[8], promoImg = c[11];
+                let isNew = dateStr && (today - parseDate(dateStr)) / 86400000 <= 14;
+                let isTop = (top && top.toLowerCase().includes('топ'));
+                let isWeek = (top && top.toLowerCase().includes('тиждень'));
+                let isPromo = (top && top.toLowerCase().includes('промо'));
                 
-                let isNew = dateStr && (today - parseDate(dateStr)) / (1000 * 60 * 60 * 24) <= 14;
-                let isTop = TRENDS.some(t => (brand + ' ' + name).toLowerCase().includes(t)) || (top && top.toLowerCase().includes('топ'));
-                let isWeek = top && top.toLowerCase().includes('тиждень');
-                let isPromo = top && top.toLowerCase().includes('промо');
-                
-                const finalDesc = (isWeek && sDesc && sDesc.trim()!=='') ? sDesc.replace(/\n/g,'<br>') : desc.replace(/\n/g,'<br>');
-
-                if (isWeek) { 
-                    weekPerfume = { brand, name, desc: finalDesc, img, price, min }; 
-                    document.getElementById('weekSlide').onclick = () => showModal(brand, name, finalDesc, true);
-                }
+                const finalDesc = (isWeek && sDesc) ? sDesc : desc;
+                if (isWeek) { weekPerfume = { brand, name, desc: finalDesc, img }; document.getElementById('weekSlide').onclick = () => showModal(brand, name, finalDesc, true); }
                 if (isPromo) { promoPerfumes.push({ brand, name, img: promoImg || img }); }
 
                 const div = document.createElement('div');
@@ -346,10 +313,7 @@
                 let opts = ''; [2, 5, 10, 20].forEach(ml => { if (ml >= min) opts += `<option value="${ml}">${ml} мл — ${Math.round(ml * price)} грн</option>`; });
 
                 div.innerHTML = `
-                    <div class="badges-container">
-                        ${isNew ? '<div class="badge badge-new">New</div>' : ''}
-                        ${isTop ? '<div class="badge badge-top">Top Selection</div>' : ''}
-                    </div>
+                    <div class="badges-container">${isNew ? '<div class="badge badge-new">New</div>' : ''}${isTop ? '<div class="badge badge-top">Top Picks</div>' : ''}</div>
                     <img loading="lazy" src="${img}" onclick='showModal(${JSON.stringify(brand)}, ${JSON.stringify(name)}, ${JSON.stringify(finalDesc)})'>
                     <div class="brand">${brand}</div><div class="name">${name}</div><div class="price-ml">1 мл / ${Math.round(price)} грн</div>
                     <select onchange="updatePrice(this, ${price})">${opts}</select><div class="total">${Math.round(min * price)} грн</div>
@@ -358,61 +322,54 @@
                 container.appendChild(div);
             });
 
-            const heroCarousel = document.getElementById('heroCarousel');
-            const weekSlideEl = document.getElementById('weekSlide');
             promoPerfumes.forEach(promo => {
                 const slide = document.createElement('div');
                 slide.className = 'slide';
                 slide.innerHTML = `<div class="banner-bg-img" style="background-image: url('${promo.img}')"></div>`;
                 slide.onclick = () => navigateToPerfume(promo.brand, promo.name);
-                heroCarousel.insertBefore(slide, weekSlideEl);
+                document.getElementById('heroCarousel').insertBefore(slide, document.getElementById('weekSlide'));
             });
 
             if (weekPerfume) {
                 document.getElementById('weekSlideBg').style.backgroundImage = `url('${weekPerfume.img}')`;
                 document.getElementById('weekSlide').style.display = 'flex';
                 document.getElementById('weekPerfumeContainer').innerHTML = `
-                    <div class="week-card" style="margin-top: 20px;">
-                        <div class="week-card-header">⭐ ПАРФУМ ТИЖНЯ ⭐</div>
-                        <div class="week-card-body">
-                            <img src="${weekPerfume.img}" class="week-card-img" onclick='showModal(${JSON.stringify(weekPerfume.brand)}, ${JSON.stringify(weekPerfume.name)}, ${JSON.stringify(weekPerfume.desc)}, true)'>
-                            <div class="week-card-info">
-                                <div class="week-card-brand">${weekPerfume.brand}</div><div class="week-card-name">${weekPerfume.name}</div>
-                                <button class="btn-week-desc" onclick='showModal(${JSON.stringify(weekPerfume.brand)}, ${JSON.stringify(weekPerfume.name)}, ${JSON.stringify(weekPerfume.desc)}, true)'>Опис та Відгуки</button>
+                    <div class="week-card" style="padding: 40px 15px; background: #fff; margin-top: 15px; border-bottom: 1px solid #f0f0f0;">
+                        <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 4px; color: var(--gold); text-align: center; margin-bottom: 25px;">Selection of the week</div>
+                        <div style="display:flex; gap:25px; align-items:center; justify-content:center;">
+                            <img src="${weekPerfume.img}" style="width:110px; height:110px; object-fit:cover;">
+                            <div style="text-align: left;">
+                                <div class="brand">${weekPerfume.brand}</div><div class="name" style="min-height:auto; margin-bottom:18px;">${weekPerfume.name}</div>
+                                <button class="order-btn" style="padding:10px 20px; font-size:8px;" onclick='showModal(${JSON.stringify(weekPerfume.brand)}, ${JSON.stringify(weekPerfume.name)}, ${JSON.stringify(weekPerfume.desc)}, true)'>Details</button>
                             </div>
                         </div>
-                    </div>
-                `;
-                document.getElementById('weekPerfumeContainer').style.display = 'block';
+                    </div>`;
             }
             initCarousel();
         } catch (e) { console.error(e); }
     }
 
     function renderBrandSlider(cat) {
-        const brs = [...new Set(cat.map(c => c.brand))].filter(b => b).sort();
+        const brs = [...new Set(cat.map(c => c[0]))].filter(b => b).sort();
         const s = document.getElementById('brandSlider');
         s.innerHTML = `<button class="brand-btn active" onclick="setBrand('', this)">All Brands</button>`;
-        brs.forEach(b => {
-            s.innerHTML += `<button class="brand-btn" onclick="setBrand('${b}', this)">${b}</button>`;
-        });
+        brs.forEach(b => { s.innerHTML += `<button class="brand-btn" onclick="setBrand('${b}', this)">${b}</button>`; });
     }
 
     function setBrand(b, btn) { 
         document.getElementById('searchInput').value = ''; currentBrand = b; 
         document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); 
-        currentCategory = 'all'; document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); document.getElementById('tab-all').classList.add('active');
-        filterCatalog(); scrollAfterFilter(); 
+        filterCatalog(); 
     }
 
     function setCategory(cat, btn) { 
         document.getElementById('searchInput').value = ''; currentCategory = cat; 
         document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); 
-        filterCatalog(); scrollAfterFilter(); 
+        filterCatalog(); 
     }
 
     function filterCatalog() {
-        const q = document.getElementById('searchInput').value.toLowerCase().replace(/'/g,"’");
+        const q = document.getElementById('searchInput').value.toLowerCase();
         document.querySelectorAll('.card').forEach(c => {
             const mS = c.getAttribute('data-search').includes(q);
             const mC = (currentCategory === 'all') || (currentCategory === 'new' && c.getAttribute('data-new') === 'true') || (currentCategory === 'top' && c.getAttribute('data-top') === 'true');
@@ -423,42 +380,42 @@
 
     function showModal(b, n, d, isWeek = false) {
         document.getElementById('mB').innerText = b; document.getElementById('mN').innerText = n;
-        let f = d.replace(/(Стиль:|Піраміда:|Верхні:|Ноти серця:|Базові:|Акорди:)/gi, '<br><b>$1</b>');
-        f = f.replace(/(Відгуки:)/gi, '<br><br><h4 style="color:var(--gold);margin:0;letter-spacing:1px;">💬 ВІДГУКИ:</h4>');
-        f = f.replace(/\[\+\](.*?)(?=<br>|\[\=\]|\[\-\]|$)/g, '<div class="review-box pos">🟢 $1</div>')
-             .replace(/\[\=\](.*?)(?=<br>|\[\+\]|\[\-\]|$)/g, '<div class="review-box neu">🟡 $1</div>')
-             .replace(/\[\-\](.*?)(?=<br>|\[\+\]|\[\=\]|$)/g, '<div class="review-box neg">🔴 $1</div>');
+        // Виправлене форматування піраміди (Базові, Base, Серце, Верхні)
+        let f = d.replace(/(Стиль:|Піраміда:|Верхні ноти:|Верхні:|Ноти серця:|Серце:|Базові ноти:|Базові:|Base:|Base notes:|Акорди:)/gi, '<br><b style="color:#000; text-transform:uppercase; font-size:10px; letter-spacing:1px;">$1</b>');
+        f = f.replace(/(Відгуки:)/gi, '<br><br><h4 style="letter-spacing:2px; font-size:11px; color:#000; border-bottom: 1px solid #eee; padding-bottom:10px;">💬 ВІДГУКИ:</h4>');
+        f = f.replace(/\[\+\](.*?)(?=<br>|\[\=\]|\[\-\]|$)/g, '<div class="review-box">🟢 $1</div>');
         document.getElementById('mD').innerHTML = f;
-        const btn = document.getElementById('modalOrderBtn');
-        if (isWeek) { 
-            btn.href = `https://t.me/${TG_NICK}?text=${encodeURIComponent('🛍️ ЗАМОВЛЕННЯ (Тиждень): '+b+' '+n)}`; 
-            btn.style.display = 'block'; 
-        } else { btn.style.display = 'none'; }
         document.getElementById('infoModal').style.display = 'flex';
     }
 
+    function navigateToPerfume(brand, name) {
+        currentBrand = ''; currentCategory = 'all';
+        document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
+        document.getElementById('tab-all').classList.add('active');
+        document.getElementById('searchInput').value = name; 
+        filterCatalog();
+        window.scrollTo({ top: document.getElementById('stickyControls').offsetTop - 20, behavior: 'smooth' });
+    }
+
     function updatePrice(sel, p) { sel.nextElementSibling.innerText = Math.round(sel.value * p) + ' грн'; }
-    function order(item, btn) { window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent('🛍️ ЗАМОВЛЕННЯ:\n'+item+'\nОб\'єм: '+btn.previousElementSibling.previousElementSibling.value+' мл\nСума: '+btn.previousElementSibling.innerText)}`, '_top'); }
+    function order(item, btn) { window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent('🛍️ ЗАМОВЛЕННЯ:\n'+item+'\nСума: '+btn.previousElementSibling.innerText)}`, '_top'); }
     load();
 </script>
 
 <div id="infoModal" class="modal" onclick="this.style.display='none'">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h3 id="mB"></h3>
-        <p id="mN"></p>
-        <hr style="border:0; height:1px; background:#f0f0f0; margin:15px 0;">
+        <h3 id="mB" style="text-align:center; font-family:var(--serif); margin-bottom:5px;"></h3>
+        <p id="mN" style="text-align:center; font-size:11px; color:#888; text-transform:uppercase; letter-spacing:1px; margin-bottom:20px;"></p>
         <div id="mD"></div>
-        <a href="" id="modalOrderBtn" class="modal-order-btn" target="_blank">🛒 Замовити аромат</a>
-        <button class="close-btn" onclick="document.getElementById('infoModal').style.display='none'">Закрити</button>
+        <button class="close-btn" onclick="document.getElementById('infoModal').style.display='none'">Close</button>
     </div>
 </div>
 
 <div id="newsModalWindow" class="modal" onclick="this.style.display='none'">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h3>НОВИНИ</h3>
-        <hr style="border:0; height:1px; background:#f0f0f0; margin:20px 0;">
-        <div id="newsModalContent"></div>
-        <button class="close-btn" onclick="document.getElementById('newsModalWindow').style.display='none'">Закрити</button>
+        <h3>NEWS</h3><hr style="border:0; height:1px; background:#f0f0f0; margin:20px 0;">
+        <div id="newsModalContent"></div><button class="close-btn" onclick="document.getElementById('newsModalWindow').style.display='none'">Close</button>
     </div>
 </div>
 

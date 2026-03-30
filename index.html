@@ -9,6 +9,7 @@
             --bg: #ffffff; --gold: #c5a059; --text-dark: #1a1a1a;
             --text-gray: #757575; --gray-light: #fbfbfb;
             --serif: "Georgia", serif; --sans: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+            --badge-new-bg: #333333; /* Глибокий графітовий для новинок */
         }
         body { font-family: var(--sans); margin: 0; padding: 0; background: var(--bg); color: var(--text-dark); padding-bottom: 90px; -webkit-tap-highlight-color: transparent; line-height: 1.6; }
         .tt-hint { background: #fff; color: #444; padding: 12px 15px; text-align: center; font-size: 11px; border-bottom: 1px solid #f2f2f2; letter-spacing: 0.3px; position: relative; z-index: 1001; }
@@ -37,9 +38,9 @@
         @keyframes ticker { 0% { transform: translate(0,0); } 100% { transform: translate(-100%,0); } }
         .action-buttons { display: flex; gap: 10px; padding: 20px; background: #fff; }
         .viber-link, .news-btn { flex: 1; border: 1px solid #eee; padding: 14px; text-align: center; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; color: #000; cursor: pointer; }
+        
         .sticky-active { position: sticky; top: 0; z-index: 1000; background: #fff; padding-top: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
         #searchInput { width: calc(100% - 40px); margin: 0 20px; padding: 12px 0; border: none; border-bottom: 1px solid #eee; font-size: 14px; outline: none; letter-spacing: 1px; }
-        #searchInput:focus { border-bottom-color: var(--gold); }
         .brand-slider { display: flex; gap: 30px; overflow-x: auto; padding: 15px 20px; scrollbar-width: none; align-items: center; }
         .brand-btn { background: none; border: none; opacity: 0.4; font-size: 11px; text-transform: uppercase; white-space: nowrap; letter-spacing: 1px; cursor: pointer; }
         .brand-btn.active { opacity: 1; color: var(--gold); font-weight: 700; }
@@ -47,24 +48,61 @@
         .tab-btn { background: none; border: none; font-size: 10px; font-weight: 600; color: #ccc; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; border-bottom: 1px solid transparent; }
         .tab-btn.active { color: #000; border-bottom-color: var(--gold); }
 
-        /* CATALOG */
+        /* CATALOG & NEW BADGES */
         #catalog { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 15px; padding: 20px; }
         .card { position: relative; display: flex; flex-direction: column; }
         .card img { width: 100%; aspect-ratio: 1; object-fit: cover; background: #f9f9f9; cursor: pointer; }
-        .badge { position: absolute; top: 10px; left: 10px; padding: 2px 7px; font-size: 8px; border: 1px solid #000; text-transform: uppercase; z-index: 5; }
-        .badge-top { color: var(--gold); border-color: var(--gold); }
+        
+        /* НОВИЙ СТИЛЬ БЕЙДЖІВ «СТРИМАНА ПОМІТНІСТЬ» */
+        .badge { 
+            position: absolute; left: 10px;
+            padding: 3px 10px; 
+            font-size: 8px; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            z-index: 5; 
+            font-weight: 700;
+            background: #fff; /* Дефолт для Hit */
+            border: 1px solid transparent;
+        }
+        /* Бейдж Новинка (Темний) */
+        .card .badge-new { 
+            top: 10px;
+            background: var(--badge-new-bg);
+            color: #ffffff; 
+            border: none;
+        }
+        /* Бейдж Хіт (Золотий на білому) */
+        .card .badge-top { 
+            top: 10px;
+            color: var(--gold); 
+            border: 1px solid var(--gold); /* Тонка золота рамка */
+        }
+        /* Якщо обидва бейджі активні, Hit зміщується вниз */
+        .card .badge-new + .badge-top {
+            top: 35px; /* Висота першого + відступ */
+        }
+        
         .brand { font-family: var(--serif); font-size: 10px; color: var(--text-gray); text-transform: uppercase; margin-top: 12px; letter-spacing: 1px; }
         .name { font-family: var(--serif); font-size: 15px; margin: 5px 0 10px; min-height: 40px; }
         .order-btn { border: 1px solid #000; background: transparent; padding: 12px; font-size: 9px; text-transform: uppercase; font-weight: 700; letter-spacing: 2px; cursor: pointer; }
 
-        /* ABOUT & MODALS */
+        /* VOLUME & PRICE */
+        .vol-container { margin: 20px 0; }
+        .vol-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-gray); display: block; margin-bottom: 10px; }
+        .vol-grid { display: flex; gap: 8px; flex-wrap: wrap; }
+        .vol-chip { padding: 8px 15px; border: 1px solid #eee; font-size: 11px; cursor: pointer; transition: 0.3s; }
+        .vol-chip.active { border-color: var(--gold); color: var(--gold); font-weight: 700; background: #fefaf4; }
+        .price-display { font-size: 20px; font-family: var(--serif); color: var(--gold); margin: 15px 0; font-weight: 400; }
+
+        /* MODALS */
         .about-section { background: #fafafa; padding: 60px 20px; text-align: center; border-top: 1px solid #eee; }
         .about-photo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 4px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .about-text-collapse { display: none; text-align: left; max-width: 500px; margin: 0 auto; }
         .toggle-about { display: block; margin: 20px auto; color: var(--gold); font-size: 11px; text-transform: uppercase; cursor: pointer; font-weight: 700; }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.98); z-index: 2000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         .modal-content { background: #fff; padding: 40px 25px; max-width: 450px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
-        .modal-btn-full { display: flex; width: 100%; height: 50px; margin-top: 10px; align-items: center; justify-content: center; font-size: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; text-decoration: none; border: none; }
+        .modal-btn-full { display: flex; width: 100%; height: 50px; margin-top: 10px; align-items: center; justify-content: center; font-size: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; text-decoration: none; border: none; cursor: pointer; }
         .modal-order-btn { background: var(--gold); color: #fff; }
         .close-btn { background: #000; color: #fff; }
         .review-box { border-left: 3px solid var(--gold); background: #f9f9f9; padding: 15px; margin: 15px 0; font-style: italic; font-size: 13px; }
@@ -110,9 +148,8 @@
     <img src="Screenshot_20260328-171201.png" class="about-photo" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
     <p><strong>Мене звати Вікторія. Вітаю у нашому парфумерному барі!</strong></p>
     <div id="aboutMore" class="about-text-collapse">
-        <p>Парфуми — моя пристрасть. Я особисто тестую кожен аромат, перш ніж запропонувати його Вам.</p>
         <p>💯 Всі парфуми оригінальні, купуються виключно в офіційних магазинах Європи та США.</p>
-        <p>✨ Розпив від 2мл — ідеальний спосіб знайти свій аромат без зайвих витрат.</p>
+        <p>✨ Розпив від 2мл — ідеальний спосіб знайти свій аромат!</p>
     </div>
     <span class="toggle-about" id="toggleBtn" onclick="toggleAbout()">Наша історія ↓</span>
 </div>
@@ -121,6 +158,7 @@
     const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
     const TG_NICK = 'viktoriia_viktoriia_r'; 
     let carouselIndex = 0, carouselInterval, currentCategory = 'all', currentBrand = '', touchstartX = 0, touchendX = 0;
+    let selectedVol = "5 мл", currentBasePrice = 0;
 
     function initSwipe() {
         const s = document.getElementById('heroCarousel');
@@ -149,6 +187,15 @@
         return arr.map(r => r.map(v => v.trim()));
     }
 
+    function calculatePrice(pricePerMl, vol) {
+        if (vol === "Флакон") return "Ціна за запитом";
+        let v = parseInt(vol);
+        let base = parseFloat(pricePerMl);
+        if (isNaN(base)) return "---";
+        let atomizer = v === 2 ? 30 : (v === 5 ? 40 : 50);
+        return Math.round(base * v + atomizer) + " грн";
+    }
+
     async function load() {
         try {
             const r = await fetch(SHEET_CSV + '&v=' + Date.now()), data = await r.text(), rows = safeParseCSV(data);
@@ -159,19 +206,33 @@
             container.innerHTML = '';
 
             catalogData.forEach(c => {
-                const [brand, name, price, , desc, img, , top] = c;
-                const isNew = top.toLowerCase().includes('новинка'), isTop = top.toLowerCase().includes('топ'), isPromo = top.toLowerCase().includes('промо'), isWeek = top.toLowerCase().includes('тиждень');
+                const [brand, name, price, , desc, img, dateStr, top] = c;
+                
+                // ЛОГІКА ДАТИ ТА БЕЙДЖІВ (10 ДНІВ)
+                const perfumeDate = new Date(dateStr);
+                const isActuallyNew = (new Date() - perfumeDate) / (1000 * 60 * 60 * 24) <= 10;
+                const isTop = top.toLowerCase().includes('топ');
+                const isPromo = top.toLowerCase().includes('промо');
+                const isWeek = top.toLowerCase().includes('тиждень');
 
                 if (isPromo || isWeek) {
-                    promoSlidesHTML += `<div class="slide"><div class="banner-bg-img" style="background-image:url('${img}')"></div><div class="video-overlay"></div><div class="banner-content"><span class="banner-subtitle">${isWeek?'WEEKLY PICK':'PROMO'}</span><span class="banner-title">${name}</span><span class="banner-btn" onclick='showModal(${JSON.stringify(brand)},${JSON.stringify(name)},${JSON.stringify(desc)},true)'>ДЕТАЛЬНІШЕ</span></div></div>`;
+                    promoSlidesHTML += `<div class="slide"><div class="banner-bg-img" style="background-image:url('${img}')"></div><div class="video-overlay"></div><div class="banner-content"><span class="banner-subtitle">${isWeek?'WEEKLY PICK':'PROMO'}</span><span class="banner-title">${name}</span><span class="banner-btn" onclick='showModal(${JSON.stringify(c)})'>ДЕТАЛЬНІШЕ</span></div></div>`;
                 }
                 if (isWeek) {
-                    document.getElementById('weekPerfumeContainer').innerHTML = `<div class="week-spotlight"><span class="week-label">Ексклюзив тижня</span><img src="${img}" class="week-img"><div class="brand">${brand}</div><div class="name" style="font-size:20px;">${name}</div><div class="week-btn-container"><button class="week-card-btn" onclick='showModal(${JSON.stringify(brand)},${JSON.stringify(name)},${JSON.stringify(desc)},true)'>Опис</button><button class="week-card-btn primary" onclick="order('${brand} ${name}')">Замовити</button></div></div>`;
+                    document.getElementById('weekPerfumeContainer').innerHTML = `<div class="week-spotlight"><span class="week-label">Ексклюзив тижня</span><img src="${img}" class="week-img" onclick='showModal(${JSON.stringify(c)})'><div class="brand">${brand}</div><div class="name">${name}</div><div class="week-btn-container"><button class="week-card-btn" onclick='showModal(${JSON.stringify(c)})'>Опис</button><button class="week-card-btn primary" onclick="orderDirect(${JSON.stringify(c)})">Замовити</button></div></div>`;
                 }
 
                 const div = document.createElement('div');
-                div.className = 'card'; div.setAttribute('data-brand', brand); div.setAttribute('data-category', top.toLowerCase());
-                div.innerHTML = `${isNew?'<div class="badge">New</div>':''}${isTop?'<div class="badge badge-top">Top</div>':''}<img loading="lazy" src="${img}" onclick='showModal(${JSON.stringify(brand)},${JSON.stringify(name)},${JSON.stringify(desc)},false)'><div class="brand">${brand}</div><div class="name">${name}</div><button class="order-btn" onclick="order('${brand} ${name}')">Замовити</button>`;
+                div.className = 'card'; div.setAttribute('data-brand', brand); 
+                div.setAttribute('data-category', (isActuallyNew ? 'new ' : '') + top.toLowerCase());
+                
+                div.innerHTML = `
+                    ${isActuallyNew ? '<div class="badge badge-new">New</div>' : ''}
+                    ${isTop ? '<div class="badge badge-top">Hit</div>' : ''}
+                    <img loading="lazy" src="${img}" onclick='showModal(${JSON.stringify(c)})'>
+                    <div class="brand">${brand}</div><div class="name">${name}</div>
+                    <button class="order-btn" onclick='showModal(${JSON.stringify(c)})'>Замовити</button>
+                `;
                 container.appendChild(div);
             });
 
@@ -194,6 +255,47 @@
         document.getElementById('newsModalContent').innerHTML = html;
     }
 
+    function showModal(perfumeArray) {
+        const [brand, name, price, , desc, img] = perfumeArray;
+        currentBasePrice = price;
+        selectedVol = "5 мл";
+        
+        document.getElementById('mB').innerText = brand;
+        document.getElementById('mN').innerText = name;
+        
+        let f = desc.replace(/(Опис:|Піраміда:|Верхні ноти:|Серце:|Базові ноти:|Акорди:)/gi, '<br><b style="color:var(--gold);text-transform:uppercase;font-size:10px;display:block;margin-top:10px;">$1</b>');
+        f = f.replace(/\[\+\](.*?)(?=<br>|$)/g, '<div class="review-box">$1</div>');
+
+        const volHTML = `
+            <div class="vol-container">
+                <span class="vol-label">Оберіть об'єм:</span>
+                <div class="vol-grid">
+                    <div class="vol-chip" onclick="selectVol(this, '2 мл')">2 мл</div>
+                    <div class="vol-chip active" onclick="selectVol(this, '5 мл')">5 мл</div>
+                    <div class="vol-chip" onclick="selectVol(this, '10 мл')">10 мл</div>
+                    <div class="vol-chip" onclick="selectVol(this, 'Флакон')">Флакон</div>
+                </div>
+            </div>
+            <div class="price-display" id="modalPrice">${calculatePrice(price, '5 мл')}</div>`;
+
+        document.getElementById('mD').innerHTML = f + volHTML;
+        document.getElementById('modalOrderBtn').onclick = () => order(brand, name);
+        document.getElementById('infoModal').style.display = 'flex';
+    }
+
+    function selectVol(el, vol) {
+        selectedVol = vol;
+        document.querySelectorAll('.vol-chip').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById('modalPrice').innerText = calculatePrice(currentBasePrice, vol);
+    }
+
+    function order(b, n) {
+        const p = document.getElementById('modalPrice').innerText;
+        const msg = `🛍️ ЗАМОВЛЕННЯ:\n${b} ${n}\nОб'єм: ${selectedVol}\nЦіна: ${p}`;
+        window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent(msg)}`, '_top');
+    }
+
     function navigateToPerfume(n) { document.getElementById('searchInput').value = n; filterCatalog(); document.getElementById('newsModalWindow').style.display='none'; window.scrollTo({top:document.getElementById('stickyControls').offsetTop-10, behavior:'smooth'}); }
     function setCategory(c, b) { document.getElementById('searchInput').value = ''; currentCategory = c; document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); filterCatalog(); window.scrollTo({top:document.getElementById('stickyControls').offsetTop-10, behavior:'smooth'}); }
     function setBrand(b, btn) { document.getElementById('searchInput').value = ''; currentBrand = b; document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); filterCatalog(); window.scrollTo({top:document.getElementById('stickyControls').offsetTop-10, behavior:'smooth'}); }
@@ -201,22 +303,13 @@
     function filterCatalog() {
         const q = document.getElementById('searchInput').value.toLowerCase();
         document.querySelectorAll('.card').forEach(c => {
-            const mS = c.innerText.toLowerCase().includes(q), mB = currentBrand === '' || c.getAttribute('data-brand') === currentBrand, mC = currentCategory === 'all' || c.getAttribute('data-category').includes(currentCategory);
+            const mS = c.innerText.toLowerCase().includes(q), 
+                  mB = currentBrand === '' || c.getAttribute('data-brand') === currentBrand, 
+                  mC = currentCategory === 'all' || c.getAttribute('data-category').includes(currentCategory);
             c.style.display = (mS && mB && mC) ? 'flex' : 'none';
         });
     }
 
-    function showModal(b, n, d, isO) {
-        document.getElementById('mB').innerText = b; document.getElementById('mN').innerText = n;
-        let f = d.replace(/(Опис:|Піраміда:|Верхні ноти:|Ноти серця:|Серце:|Базові ноти:|Акорди:)/gi, '<br><b style="color:var(--gold);text-transform:uppercase;font-size:10px;display:block;margin-top:10px;">$1</b>');
-        f = f.replace(/(Відгуки:)/gi, '<br><br><span style="font-weight:700;text-transform:uppercase;font-size:11px;">💬 Відгуки:</span>').replace(/\[\+\](.*?)(?=<br>|$)/g, '<div class="review-box">$1</div>');
-        document.getElementById('mD').innerHTML = f;
-        const btn = document.getElementById('modalOrderBtn'); btn.style.display = isO ? 'flex' : 'none';
-        btn.href = `https://t.me/${TG_NICK}?text=${encodeURIComponent('🛍️ ЗАМОВЛЕННЯ:\n'+b+' '+n)}`;
-        document.getElementById('infoModal').style.display = 'flex';
-    }
-
-    function order(i) { window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent('🛍️ ЗАМОВЛЕННЯ:\n'+i)}`, '_top'); }
     function initCarousel() {
         const s = document.querySelectorAll('.slide'), d = document.getElementById('carouselDots');
         if(!d) return; d.innerHTML = '';
@@ -237,7 +330,7 @@
     load();
 </script>
 
-<div id="infoModal" class="modal" onclick="this.style.display='none'"><div class="modal-content" onclick="event.stopPropagation()"><h3 id="mB" style="text-align:center;font-family:var(--serif);margin-bottom:5px;"></h3><p id="mN" style="text-align:center;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;"></p><div id="mD" style="font-size:13px;"></div><a id="modalOrderBtn" href="#" class="modal-btn-full modal-order-btn" target="_blank">Замовити аромат</a><button class="modal-btn-full close-btn" onclick="document.getElementById('infoModal').style.display='none'">Закрити</button></div></div>
+<div id="infoModal" class="modal" onclick="this.style.display='none'"><div class="modal-content" onclick="event.stopPropagation()"><h3 id="mB" style="text-align:center;font-family:var(--serif);margin-bottom:5px;"></h3><p id="mN" style="text-align:center;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;"></p><div id="mD" style="font-size:13px;"></div><button id="modalOrderBtn" class="modal-btn-full modal-order-btn">Замовити аромат</button><button class="modal-btn-full close-btn" onclick="document.getElementById('infoModal').style.display='none'">Закрити</button></div></div>
 <div id="newsModalWindow" class="modal" onclick="this.style.display='none'"><div class="modal-content" onclick="event.stopPropagation()"><h3 style="font-family:var(--serif);text-align:center;text-transform:uppercase;letter-spacing:1px;">Новини та акції</h3><hr style="border:0;height:1px;background:#eee;margin:15px 0;"><div id="newsModalContent"></div><button class="modal-btn-full close-btn" onclick="document.getElementById('newsModalWindow').style.display='none'">Закрити</button></div></div>
 </body>
 </html>

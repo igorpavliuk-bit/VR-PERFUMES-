@@ -35,7 +35,7 @@
         .modal-content { background: #fff; padding: 30px 20px; width: 100%; max-width: 450px; max-height: 85vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .review-item { padding: 10px; margin: 8px 0; font-size: 12px; font-style: italic; border-left: 3px solid #eee; }
         .rev-pos { border-left-color: #4CAF50; background: #f8fff8; }
-        .rev-neg { border-left-color: #F44336; background: #fffaf9; }
+        .rev-neg { border-left-color: #F44336; background: #fff8f8; }
         .rev-neut { border-left-color: #9E9E9E; background: #f9f9f9; }
         .gold-label { color: var(--gold); text-transform: uppercase; font-size: 9px; font-weight: 700; display: block; margin-top: 12px; }
 
@@ -60,9 +60,9 @@
 <div class="sticky-active" style="position: sticky; top: 0; z-index: 1000; background: #fff; padding: 10px 0; border-bottom: 1px solid #f2f2f2;">
     <input type="text" id="searchInput" placeholder="ПОШУК АРОМАТУ..." oninput="renderCatalog()" style="width: calc(100% - 40px); margin: 0 20px; padding: 10px 0; border: none; outline: none; font-size: 13px;">
     <div class="tabs-container" style="display: flex; gap: 20px; justify-content: center; padding: 10px 0;">
-        <button onclick="setCategory('all', this)" style="background: none; border: none; font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; border-bottom: 1px solid transparent; color: #1a1a1a;" id="defaultTab">Усі</button>
-        <button onclick="setCategory('new', this)" style="background: none; border: none; font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; border-bottom: 1px solid transparent; color: #1a1a1a;">Новинки</button>
-        <button onclick="setCategory('top', this)" style="background: none; border: none; font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; border-bottom: 1px solid transparent; color: #1a1a1a;">Хіти</button>
+        <button onclick="setCategory('all', this)" style="background: none; border: none; font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; border-bottom: 1px solid transparent;" class="active">Усі</button>
+        <button onclick="setCategory('new', this)" style="background: none; border: none; font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; border-bottom: 1px solid transparent;">Новинки</button>
+        <button onclick="setCategory('top', this)" style="background: none; border: none; font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; border-bottom: 1px solid transparent;">Хіти</button>
     </div>
 </div>
 
@@ -71,10 +71,10 @@
 <div class="about-section">
     <img src="Screenshot_20260328-171201.png" class="about-photo" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
     <div class="about-content">
-        <p style="text-align:center;"><strong>Вітаю всіх в нашому парфумерному барі! Мене звати Вікторія.</strong></p>
+        <p style="text-align:center;"><strong>Мене звати Вікторія. Вітаю у нашому парфумерному барі!</strong></p>
         <div id="aboutMore" style="display:none;">
             <p>Парфуми зі мною у кожен момент життя. Всі аромати оригінальні, купуються в магазинах Європи та США.</p>
-            <p style="font-style:italic; border-left:2px solid var(--gold); padding-left:15px; margin:15px 0;">Кажуть, жінка може мовчати, але її парфуми все скажуть за неї.</p>
+            <p style="font-style:italic; border-left:2px solid var(--gold); padding-left:15px; margin:20px 0;">Кажуть, жінка може мовчати, але її парфуми все скажуть за неї.</p>
             <p>✨ Розпив від 2мл — ідеальний спосіб знайти свій аромат.</p>
         </div>
         <span onclick="document.getElementById('aboutMore').style.display='block'; this.style.display='none';" id="toggleBtn" style="display: block; margin: 15px auto; color: var(--gold); font-size: 9px; text-transform: uppercase; cursor: pointer; font-weight: 700;">Наша історія ↓</span>
@@ -108,11 +108,6 @@
         const text = await r.text();
         const rows = text.split('\n').map(row => row.split(',').map(cell => cell.replace(/^"|"$/g, '').trim()));
         allData = rows.slice(1).filter(r => r[0]);
-
-        // ПРИНЦИП СОРТУВАННЯ: ВІД НОВИХ ДО СТАРИХ
-        allData.sort((a, b) => new Date(b[6]) - new Date(a[6]));
-
-        document.getElementById('defaultTab').style.borderBottomColor = '#c5a059';
         renderCatalog();
     }
 

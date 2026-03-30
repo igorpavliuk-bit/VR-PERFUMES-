@@ -486,7 +486,47 @@
         brs.forEach(b => { s.innerHTML += `<button class="brand-btn" onclick="setBrand('${b}', this)">${b}</button>`; });
     }
 
-    load();
+// --- ФІКС НОВИН (ВСТАВИТИ В КІНЕЦЬ СКРИПТА) ---
+const originalLoad = load;
+load = async function() {
+    await originalLoad();
+    const rows = await fetch(SHEET_CSV + '&v=' + Date.now()).then(r => r.text()).then(safeParseCSV);
+    let rawNews = (rows[0] && rows[0][10]) ? rows[0][10] : "";
+    let newsHTML = '';
+    
+    // Розбиваємо текст на блоки (враховуємо будь-які переноси рядків)
+    rawNews.split(/\n\s*\n/).forEach(block => {
+        let lines = block.split('\n').filter(l => l.trim() !== '');
+        if (lines.length > 0) {
+            let title = lines[0];
+            let bodyLines = lines.length > 1 ? lines.slice(1) : [title];
+            let displayTitle = lines.length > 1 ? title : "VR NEWS";
+            
+            // Робимо посилання в дужках золотими та клікабельними
+            let bodyText = bodyLines.join('<br>').replace(/\{(.*?)\}/g, (m, p) => {
+                return `<span style="color:#c5a059; cursor:pointer; font-weight:700; text-decoration:underline;" 
+                onclick="navigateToPerfume('${p.replace(/'/g, "\\'")}')">${p}</span>`;
+            });
+            
+            newsHTML += `
+                <div class="news-item" style="margin-bottom:30px; border-bottom:1px solid #f0f0f0; padding-bottom:20px;">
+                    <span class="news-title" style="font-family:Georgia, serif; font-size:18px; color:#c5a059; display:block; margin-bottom:10px; font-weight:500;">${displayTitle}</span>
+                    <div class="news-text" style="font-size:14px; line-height:1.7; color:#444;">${bodyText}</div>
+                </div>`;
+        }
+    });
+    document.getElementById('newsModalContent').innerHTML = newsHTML;
+};
+
+// Перевизначаємо функцію переходу, щоб вона точно закривала вікно
+function navigateToPerfume(name) {
+    document.getElementById('searchInput').value = name;
+    if (typeof filterCatalog === 'function') filterCatalog();
+    document.getElementById('newsModalWindow').style.display = 'none';
+    const sticky = document.getElementById('stickyControls');
+    if (sticky) window.scrollTo({ top: sticky.offsetTop - 10, behavior: 'smooth' });
+}
+
 </script>
 
 <div id="infoModal" class="modal" onclick="this.style.display='none'">

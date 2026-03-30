@@ -28,11 +28,15 @@
         .banner-title { font-size: 24px; font-family: var(--serif); font-weight: 300; display: block; margin-bottom: 25px; letter-spacing: 2px; }
         .banner-btn { display: inline-block; font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; padding: 12px 30px; border: 1px solid #fff; color: #fff; text-decoration: none; cursor: pointer; }
 
-        /* ACTION BUTTONS (VIBER & NEWS) */
+        .carousel-dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 10; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.5); cursor: pointer; transition: 0.3s; }
+        .dot.active { background: #fff; transform: scale(1.2); }
+
+        /* ACTION BUTTONS */
         .action-buttons { display: flex; gap: 10px; padding: 20px 15px; background: #fff; }
         .viber-link, .news-btn { flex: 1; border: 1px solid #eee; padding: 14px; text-align: center; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; color: #000; cursor: pointer; font-weight: 600; }
 
-        /* WEEKLY SPOTLIGHT (ДИНАМІЧНИЙ) */
+        /* WEEKLY SPOTLIGHT */
         .week-spotlight { padding: 15px 10px; background: #fafafa; border-bottom: 1px solid #eee; text-align: center; margin-bottom: 10px; }
         .week-label { font-size: 8px; text-transform: uppercase; letter-spacing: 3px; color: var(--gold); margin-bottom: 10px; display: block; font-weight: 700; }
         .week-img { max-height: 160px; width: auto; max-width: 80%; margin-bottom: 10px; cursor: pointer; }
@@ -75,7 +79,6 @@
         .modal-order-btn { background: var(--gold); color: #fff; }
         .close-btn { background: #000; color: #fff; }
 
-        /* ABOUT & FLOATING */
         .about-section { background: #fafafa; padding: 60px 20px; text-align: center; border-top: 1px solid #eee; }
         .about-photo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 4px solid #fff; }
         .floating-tg { position: fixed; bottom: 25px; right: 25px; width: 50px; height: 50px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1500; }
@@ -126,8 +129,8 @@
         </div>
         <span onclick="toggleAbout()" id="toggleBtn" style="display: block; text-align: center; color: var(--gold); font-size: 9px; text-transform: uppercase; cursor: pointer; font-weight: 700; margin: 15px 0;">Наша історія ↓</span>
         <div style="display:flex; gap:10px; justify-content:center;">
-            <a href="https://t.me/viktoriia_viktoriia_r" class="contact-btn">Telegram</a>
-            <a href="viber://chat?number=%2B380962178464" class="contact-btn">Viber</a>
+            <a href="https://t.me/viktoriia_viktoriia_r" style="border:1px solid #ddd; padding:10px 15px; text-decoration:none; color:#000; font-size:9px; font-weight:700;">TELEGRAM</a>
+            <a href="viber://chat?number=%2B380962178464" style="border:1px solid #ddd; padding:10px 15px; text-decoration:none; color:#000; font-size:9px; font-weight:700;">VIBER</a>
         </div>
     </div>
 </div>
@@ -138,7 +141,6 @@
 
 <script>
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
-    const TG_NICK = 'viktoriia_viktoriia_r'; 
     let allData = [], selVol = "5 мл", curPrice = 0, currentCat = 'all', carouselIndex = 0, carouselInterval;
 
     function initSwipe() {
@@ -189,7 +191,6 @@
         const query = document.getElementById('searchInput').value.toLowerCase();
         const container = document.getElementById('catalog'), weekContainer = document.getElementById('weekSpotlight');
         container.innerHTML = '';
-        
         const weekly = allData.find(d => d[7] && d[7].toLowerCase().includes('тиждень'));
         if (weekly && query === "" && currentCat === 'all') {
             weekContainer.innerHTML = `<div class="week-spotlight"><span class="week-label">Ексклюзив тижня</span><img src="${weekly[5]}" class="week-img" onclick="showModalById('${weekly[1]}', true)"><div class="name" style="font-size:14px; margin-bottom:10px;">${weekly[0]} ${weekly[1]}</div><div class="week-btns"><div class="w-btn w-btn-white" onclick="showModalById('${weekly[1]}', true)">Опис</div><div class="w-btn w-btn-black" onclick="orderNow('${weekly[0]}', '${weekly[1]}', 'Замовлення тижня')">Замовити</div></div></div>`;
@@ -200,13 +201,9 @@
             const isTop = d[7].toLowerCase().includes('топ') || d[7].toLowerCase().includes('top');
             const matchesSearch = d[1].toLowerCase().includes(query) || d[0].toLowerCase().includes(query);
             let matchesCat = currentCat === 'all' || (currentCat === 'new' && isNew) || (currentCat === 'top' && isTop);
-
             if (matchesSearch && matchesCat) {
                 const minPrice = Math.round(parseFloat(d[2]) * 2);
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `${isNew ? '<div class="badge badge-new">New</div>' : ''}${isTop ? '<div class="badge badge-top">Hit</div>' : ''}<img src="${d[5]}" onclick="showModalById('${d[1]}')"><div class="card-price">від ${minPrice} грн</div><div class="brand">${d[0]}</div><div class="name">${d[1]}</div><button class="order-btn" onclick="showModalById('${d[1]}')">Детальніше</button>`;
-                container.appendChild(card);
+                container.innerHTML += `<div class="card">${isNew ? '<div class="badge badge-new">New</div>' : ''}${isTop ? '<div class="badge badge-top">Hit</div>' : ''}<img src="${d[5]}" onclick="showModalById('${d[1]}')"><div class="card-price">від ${minPrice} грн</div><div class="brand">${d[0]}</div><div class="name">${d[1]}</div><button class="order-btn" onclick="showModalById('${d[1]}')">Детальніше</button></div>`;
             }
         });
     }
@@ -256,7 +253,6 @@
         });
         document.getElementById('newsModalContent').innerHTML = html;
     }
-
     loadData();
 </script>
 

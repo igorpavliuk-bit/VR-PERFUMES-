@@ -25,8 +25,38 @@
         .logo { width: 80px; position: relative; z-index: 2; margin-bottom: 20px; }
         .hero-carousel h1 { font-family: var(--serif); font-size: 22px; letter-spacing: 10px; color: #fff; text-transform: uppercase; z-index: 2; margin: 0; }
         .banner-content { text-align: center; padding: 20px; color: #fff; position: relative; z-index: 2; width: 100%; box-sizing: border-box; }
-        .banner-subtitle { font-size: 10px; text-transform: uppercase; letter-spacing: 4px; color: var(--gold); display: block; margin-bottom: 10px; }
-        .banner-title { font-size: 24px; font-family: var(--serif); font-weight: 300; display: block; margin-bottom: 25px; letter-spacing: 2px; }
+        
+        .banner-subtitle { 
+            font-size: 11px; 
+            text-transform: uppercase; 
+            letter-spacing: 4px; 
+            color: var(--gold); 
+            display: block; 
+            margin-bottom: 12px; 
+        }
+        
+        .banner-title { 
+            font-size: 32px; 
+            font-family: var(--serif); 
+            font-weight: 700; 
+            display: block; 
+            margin-bottom: 10px; /* Зменшено відступ, щоб вмістити назву парфуму */
+            letter-spacing: -1px; 
+            text-transform: uppercase; 
+            line-height: 1.1; 
+        }
+
+        /* НОВИЙ СТИЛЬ ДЛЯ НАЗВИ ПАРФУМУ НА БАНЕРІ */
+        .banner-name {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #eeeeee;
+            margin-bottom: 25px;
+            font-weight: 400;
+        }
+        
         .banner-btn { display: inline-block; font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; padding: 12px 30px; border: 1px solid #fff; color: #fff; text-decoration: none; cursor: pointer; }
 
         /* ЗМЕНШЕНИЙ SPOTLIGHT (ЕКСКЛЮЗИВ ТИЖНЯ) */
@@ -85,10 +115,7 @@
         .vol-grid { display: flex; gap: 8px; flex-wrap: wrap; }
         .vol-chip { padding: 9px 14px; border: 1px solid #eee; font-size: 11px; cursor: pointer; transition: 0.3s; background: #fff; }
         .vol-chip.active { border-color: var(--gold); color: var(--gold); font-weight: 700; background: #fefaf4; }
-        
-        /* НОВИЙ СТИЛЬ ДЛЯ НЕАКТИВНОЇ КНОПКИ 2 МЛ */
         .vol-chip.disabled { opacity: 0.3; pointer-events: none; background: #fafafa; color: #ccc; border-color: #eee; text-decoration: line-through; }
-        
         .price-display { font-size: 20px; font-family: var(--serif); color: var(--gold); margin: 15px 0 2px 0; font-weight: 400; }
         .price-sub { font-size: 11px; color: #bbb; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
 
@@ -203,7 +230,6 @@
         return Math.round(base * v) + " грн";
     }
 
-    // АВТОПРОКРУТКА
     function scrollToFirstCards() {
         const stickyH = document.getElementById('stickyControls').offsetHeight;
         const catTop = document.getElementById('catalog').offsetTop;
@@ -219,7 +245,6 @@
             let catalogData = rows.slice(1).filter(c => c[0]), promoSlidesHTML = '';
             container.innerHTML = '';
 
-            // СОРТУВАННЯ ЗА ДАТОЮ ВІД НАЙНОВІШИХ
             catalogData.sort((a, b) => new Date(b[6]) - new Date(a[6]));
 
             catalogData.forEach(c => {
@@ -227,25 +252,32 @@
                 const pDate = new Date(dateStr), isNew = (new Date() - pDate) / (1000*60*60*24) <= 10;
                 const isTop = top && top.toLowerCase().includes('топ'), isPromo = top && top.toLowerCase().includes('промо'), isWeek = top && top.toLowerCase().includes('тиждень');
                 
-                // ЛОГІКА БЛОКУВАННЯ 2 МЛ ДЛЯ КАРТОК
                 const startsFrom5 = minVol && String(minVol).includes('5');
                 const minPriceLabel = calculatePrice(price, startsFrom5 ? '5 мл' : '2 мл');
 
-                // ФІКС ЛАПОК ТА АПОСТРОФІВ
                 const safeData = JSON.stringify(c).replace(/'/g, "&#39;");
 
                 if (isPromo || isWeek) {
-                    promoSlidesHTML += `<div class="slide"><div class="banner-bg-img" style="background-image:url('${img}')" onclick='showModal(${safeData}, ${isWeek})'></div><div class="video-overlay"></div><div class="banner-content"><span class="banner-subtitle">${isWeek?'WEEKLY PICK':'PROMO'}</span><span class="banner-title">${name}</span><span class="banner-btn" onclick='showModal(${safeData}, ${isWeek})'>ДЕТАЛЬНІШЕ</span></div></div>`;
+                    let catchyHeading = name; 
+
+                    if (isPromo && !isWeek) {
+                        const catchyMatch = desc.match(/^(?!.*(Стиль:|Напрямок:|Опис:|Піраміда:|Верхні ноти:|Ноти серця:|Серце:|Середні ноти:|Базові ноти:|Ноти бази:|Акорди:|Відгуки:))([^*<\.]+)/i);
+                        if (catchyMatch && catchyMatch[2] && catchyMatch[2].trim().length > 10) {
+                            catchyHeading = catchyMatch[2].trim();
+                        }
+                    }
+
+                    // --- ТУТ ДОДАНО <span class="banner-name">${name}</span> ---
+                    promoSlidesHTML += `<div class="slide"><div class="banner-bg-img" style="background-image:url('${img}')" onclick="showModal(${safeData}, ${isWeek})"></div><div class="video-overlay"></div><div class="banner-content"><span class="banner-subtitle">${isWeek?'WEEKLY PICK':'PROMO'}</span><span class="banner-title">${catchyHeading}</span><span class="banner-name">${name}</span><span class="banner-btn" onclick="showModal(${safeData}, ${isWeek})">ДЕТАЛЬНІШЕ</span></div></div>`;
                 }
                 if (isWeek) {
-                    document.getElementById('weekPerfumeContainer').innerHTML = `<div class="week-spotlight"><span class="week-label">Ексклюзив тижня</span><img src="${img}" class="week-img" onclick='showModal(${safeData}, true)'><div class="brand">${brand}</div><div class="name">${name}</div><div class="week-btn-container"><button class="week-card-btn" onclick='showModal(${safeData}, true)'>Опис</button><button class="week-card-btn primary" onclick='showModal(${safeData}, true)'>Замовити</button></div></div>`;
+                    document.getElementById('weekPerfumeContainer').innerHTML = `<div class="week-spotlight"><span class="week-label">Ексклюзив тижня</span><img src="${img}" class="week-img" onclick="showModal(${safeData}, true)"><div class="brand">${brand}</div><div class="name">${name}</div><div class="week-btn-container"><button class="week-card-btn" onclick="showModal(${safeData}, true)">Опис</button><button class="week-card-btn primary" onclick="showModal(${safeData}, true)">Замовити</button></div></div>`;
                 }
 
                 const div = document.createElement('div');
                 div.className = 'card'; div.setAttribute('data-brand', brand); 
-                // ФІКС ВІДОБРАЖЕННЯ КАРТОК У ВКЛАДЦІ "ХІТИ"
                 div.setAttribute('data-category', (isNew ? 'new ' : '') + (isTop ? 'top ' : '') + (top ? top.toLowerCase() : ''));
-                div.innerHTML = `${isNew?'<div class="badge badge-new">New</div>':''}${isTop?'<div class="badge badge-top">Hit</div>':''}<img loading="lazy" src="${img}" onclick='showModal(${safeData})'><div class="card-price-label">від ${minPriceLabel}</div><div class="brand">${brand}</div><div class="name">${name}</div><button class="order-btn" onclick='showModal(${safeData})'>Детальніше</button>`;
+                div.innerHTML = `${isNew?'<div class="badge badge-new">New</div>':''}${isTop?'<div class="badge badge-top">Hit</div>':''}<img loading="lazy" src="${img}" onclick="showModal(${safeData})"><div class="card-price-label">від ${minPriceLabel}</div><div class="brand">${brand}</div><div class="name">${name}</div><button class="order-btn" onclick="showModal(${safeData})">Детальніше</button>`;
                 container.appendChild(div);
             });
 
@@ -283,7 +315,6 @@
         f = f.replace(/\[-\](.*?)(?=<br>|$)/g, '<div class="review-box review-neg">$1</div>');
         f = f.replace(/\[=\](.*?)(?=<br>|$)/g, '<div class="review-box">$1</div>');
         
-        // ПЕРЕВІРКА: ЧИ БЛОКУВАТИ КНОПКУ 2 МЛ?
         const disable2ml = minVol && String(minVol).includes('5');
 
         const volHTML = `
@@ -305,7 +336,7 @@
     }
 
     function selectVol(el, vol) {
-        if (el.classList.contains('disabled')) return; // ЗАХИСТ ВІД КЛІКІВ НА 2 МЛ
+        if (el.classList.contains('disabled')) return; 
         selectedVol = vol; document.querySelectorAll('.vol-chip').forEach(c => c.classList.remove('active'));
         el.classList.add('active'); 
         document.getElementById('modalPrice').innerText = "Ціна: " + calculatePrice(currentBasePrice, vol);
@@ -333,7 +364,8 @@
         const s = document.querySelectorAll('.slide'), d = document.getElementById('carouselDots');
         if(!d) return; d.innerHTML = '';
         s.forEach((_, i) => { const dot = document.createElement('div'); dot.className = `dot ${i===0?'active':''}`; dot.onclick = () => goToSlide(i); d.appendChild(dot); });
-        clearInterval(carouselInterval); carouselInterval = setInterval(() => goToSlide((carouselIndex+1)%s.length), 7000);
+        clearInterval(carouselInterval); 
+        carouselInterval = setInterval(() => goToSlide((carouselIndex+1)%s.length), 4000);
     }
     function goToSlide(i) {
         const s = document.querySelectorAll('.slide'), dots = document.querySelectorAll('.dot');

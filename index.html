@@ -208,22 +208,28 @@
             let catalogData = rows.slice(1).filter(c => c[0]), promoSlidesHTML = '';
             container.innerHTML = '';
 
+            // СОРТУВАННЯ ЗА ДАТОЮ (найновіші перші)
+            catalogData.sort((a, b) => new Date(b[6]) - new Date(a[6]));
+
             catalogData.forEach(c => {
                 const [brand, name, price, , desc, img, dateStr, top, weekText] = c;
                 const pDate = new Date(dateStr), isNew = (new Date() - pDate) / (1000*60*60*24) <= 10;
-                const isTop = top.toLowerCase().includes('топ'), isPromo = top.toLowerCase().includes('промо'), isWeek = top.toLowerCase().includes('тиждень');
+                const isTop = top && top.toLowerCase().includes('топ'), isPromo = top && top.toLowerCase().includes('промо'), isWeek = top && top.toLowerCase().includes('тиждень');
                 const minPriceLabel = calculatePrice(price, '2 мл');
 
+                // ФІКС АПОСТРОФІВ: безпечне пакування даних
+                const safeData = JSON.stringify(c).replace(/'/g, "&#39;");
+
                 if (isPromo || isWeek) {
-                    promoSlidesHTML += `<div class="slide"><div class="banner-bg-img" style="background-image:url('${img}')" onclick='showModal(${JSON.stringify(c)}, ${isWeek})'></div><div class="video-overlay"></div><div class="banner-content"><span class="banner-subtitle">${isWeek?'WEEKLY PICK':'PROMO'}</span><span class="banner-title">${name}</span><span class="banner-btn" onclick='showModal(${JSON.stringify(c)}, ${isWeek})'>ДЕТАЛЬНІШЕ</span></div></div>`;
+                    promoSlidesHTML += `<div class="slide"><div class="banner-bg-img" style="background-image:url('${img}')" onclick='showModal(${safeData}, ${isWeek})'></div><div class="video-overlay"></div><div class="banner-content"><span class="banner-subtitle">${isWeek?'WEEKLY PICK':'PROMO'}</span><span class="banner-title">${name}</span><span class="banner-btn" onclick='showModal(${safeData}, ${isWeek})'>ДЕТАЛЬНІШЕ</span></div></div>`;
                 }
                 if (isWeek) {
-                    document.getElementById('weekPerfumeContainer').innerHTML = `<div class="week-spotlight"><span class="week-label">Ексклюзив тижня</span><img src="${img}" class="week-img" onclick='showModal(${JSON.stringify(c)}, true)'><div class="brand">${brand}</div><div class="name">${name}</div><div class="week-btn-container"><button class="week-card-btn" onclick='showModal(${JSON.stringify(c)}, true)'>Опис</button><button class="week-card-btn primary" onclick='showModal(${JSON.stringify(c)}, true)'>Замовити</button></div></div>`;
+                    document.getElementById('weekPerfumeContainer').innerHTML = `<div class="week-spotlight"><span class="week-label">Ексклюзив тижня</span><img src="${img}" class="week-img" onclick='showModal(${safeData}, true)'><div class="brand">${brand}</div><div class="name">${name}</div><div class="week-btn-container"><button class="week-card-btn" onclick='showModal(${safeData}, true)'>Опис</button><button class="week-card-btn primary" onclick='showModal(${safeData}, true)'>Замовити</button></div></div>`;
                 }
 
                 const div = document.createElement('div');
-                div.className = 'card'; div.setAttribute('data-brand', brand); div.setAttribute('data-category', (isNew ? 'new ' : '') + top.toLowerCase());
-                div.innerHTML = `${isNew?'<div class="badge badge-new">New</div>':''}${isTop?'<div class="badge badge-top">Hit</div>':''}<img loading="lazy" src="${img}" onclick='showModal(${JSON.stringify(c)})'><div class="card-price-label">від ${minPriceLabel}</div><div class="brand">${brand}</div><div class="name">${name}</div><button class="order-btn" onclick='showModal(${JSON.stringify(c)})'>Детальніше</button>`;
+                div.className = 'card'; div.setAttribute('data-brand', brand); div.setAttribute('data-category', (isNew ? 'new ' : '') + (top ? top.toLowerCase() : ''));
+                div.innerHTML = `${isNew?'<div class="badge badge-new">New</div>':''}${isTop?'<div class="badge badge-top">Hit</div>':''}<img loading="lazy" src="${img}" onclick='showModal(${safeData})'><div class="card-price-label">від ${minPriceLabel}</div><div class="brand">${brand}</div><div class="name">${name}</div><button class="order-btn" onclick='showModal(${safeData})'>Детальніше</button>`;
                 container.appendChild(div);
             });
 

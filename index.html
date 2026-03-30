@@ -163,8 +163,7 @@
         <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" class="logo">
         <h1>VR PERFUMES</h1>
     </div>
-    <div class="carousel-dots" id="carouselDots"></div>
-</div>
+    </div>
 
 <div class="news-ticker"><div class="news-ticker-content" id="newsTicker">ВІТАЄМО ✨</div></div>
 
@@ -254,20 +253,22 @@
         window.scrollTo({top: catTop - stickyH - 15, behavior: 'smooth'});
     }
 
-    // НОВА БЕЗПЕЧНА ФУНКЦІЯ ВІДКРИТТЯ ВІКНА
-    function showModalEncoded(encData, isWeekly = false) {
-        const data = JSON.parse(decodeURIComponent(encData));
-        showModal(data, isWeekly);
-    }
-
     async function load() {
         try {
             const r = await fetch(SHEET_CSV + '&v=' + Date.now()), data = await r.text(), rows = safeParseCSV(data);
             if(rows[0] && rows[0][9]) document.getElementById('newsTicker').innerText = rows[0][9];
             
-            const container = document.getElementById('catalog'), carousel = document.getElementById('heroCarousel');
-            let catalogData = rows.slice(1).filter(c => c[0]), promoSlidesHTML = '';
+            const container = document.getElementById('catalog');
+            const carousel = document.getElementById('heroCarousel');
+            const wContainer = document.getElementById('weekPerfumeContainer');
+            let catalogData = rows.slice(1).filter(c => c[0]);
+            
+            // Зберігаємо перше відео (лого) і очищаємо контейнери
+            const logoSlide = carousel.querySelector('.logo-slide').cloneNode(true);
+            carousel.innerHTML = '';
+            carousel.appendChild(logoSlide);
             container.innerHTML = '';
+            wContainer.innerHTML = '';
 
             catalogData.sort((a, b) => new Date(b[6]) - new Date(a[6]));
 
@@ -276,27 +277,24 @@
                 const pDate = new Date(dateStr), isNew = (new Date() - pDate) / (1000*60*60*24) <= 10;
                 const isTop = top && top.toLowerCase().includes('топ'), isPromo = top && top.toLowerCase().includes('промо'), isWeek = top && top.toLowerCase().includes('тиждень');
                 
+                // ЛОГІКА 2 МЛ - ПЕРЕВІРКА МІНІМУМУ
                 const startsFrom5 = minVol && String(minVol).includes('5');
                 const minPriceLabel = calculatePrice(price, startsFrom5 ? '5 мл' : '2 мл');
-                
-                // ЗАЛІЗОБЕТОННЕ КОДУВАННЯ (без лапок у HTML)
-                const encData = encodeURIComponent(JSON.stringify(c));
+                const safeImg = img.replace(/'/g, "%27");
 
+                // 1. БУДУЄМО СЛАЙДИ ДЛЯ КАРУСЕЛІ
                 if (isPromo || isWeek) {
                     let catchyHeading = ""; 
 
                     if (isPromo && !isWeek && desc) {
                         let cleanDesc = desc.replace(/<[^>]+>/g, ' ').replace(/\[[+\-=]\]/g, '');
                         cleanDesc = cleanDesc.replace(/(Опис:|Стиль:|Напрямок:|Піраміда:|Верхні ноти:|Ноти серця:|Серце:|Середні ноти:|Базові ноти:|Ноти бази:|Акорди:|Відгуки:)/gi, '');
-                        // ВИРІЗАЄМО РОКИ (2024, 2024р, тощо)
                         cleanDesc = cleanDesc.replace(/\b20\d{2}\s*р?\.?\b/gi, ''); 
                         cleanDesc = cleanDesc.replace(/\s+/g, ' ').trim();
                         
-                        // РОЗБИВАЄМО НА РЕЧЕННЯ І ШУКАЄМО ТЕ, ДЕ Є СЛОВА
                         let sentences = cleanDesc.split(/[.!?<]/);
                         for (let s of sentences) {
                             let candidate = s.trim();
-                            // Речення має бути довшим за 15 символів і містити хоча б одне слово з 4+ букв
                             if (candidate.length > 15 && /[а-яіїєґa-z]{4,}/i.test(candidate)) {
                                 catchyHeading = candidate.length > 60 ? candidate.substring(0, 60).trim() + '...' : candidate;
                                 break;
@@ -309,32 +307,52 @@
 
                     let overlayOpacity = isPromo ? '0.5' : '0.3';
 
-                    promoSlidesHTML += `
-                    <div class="slide">
-                        <div class="banner-bg-img" style="background-image:url('${img}')" onclick="showModalEncoded('${encData}', ${isWeek})"></div>
-                        <div class="video-overlay" style="background:rgba(0,0,0,${overlayOpacity})"></div>
-                        <div class="banner-content">
-                            <span class="banner-brand">${isWeek ? 'WEEKLY PICK' : brand}</span>
-                            <span class="banner-title">${name}</span>
-                            <span class="banner-catchy">${catchyHeading}</span>
-                            <span class="banner-btn" onclick="showModalEncoded('${encData}', ${isWeek})">СПРОБУВАТИ АРОМАТ</span>
-                        </div>
-                    </div>`;
+                    // СТВОРЮЄМО СЛАЙД ЧЕРЕЗ JAVASCRIPT
+                    const slide = document.createElement('div');
+                    slide.className = 'slide';
+                    slide.innerHTML = `<div class="banner-bg-img" style="background-image:url('${safeImg}')"></div><div class="video-overlay" style="background:rgba(0,0,0,${overlayOpacity})"></div><div class="banner-content"><span class="banner-brand">${isWeek ? 'WEEKLY PICK' : brand}</span><span class="banner-title">${name}</span><span class="banner-catchy">${catchyHeading}</span><span class="banner-btn">СПРОБУВАТИ АРОМАТ</span></div>`;
+                    
+                    // ПРИВ'ЯЗУЄМО КЛІКИ НАПРЯМУ (без HTML)
+                    slide.querySelector('.banner-bg-img').onclick = () => showModal(c, isWeek);
+                    slide.querySelector('.banner-btn').onclick = () => showModal(c, isWeek);
+                    
+                    carousel.appendChild(slide);
                 }
                 
+                // 2. БУДУЄМО ЕКСКЛЮЗИВ ТИЖНЯ
                 if (isWeek) {
-                    document.getElementById('weekPerfumeContainer').innerHTML = `<div class="week-spotlight"><span class="week-label">Ексклюзив тижня</span><img src="${img}" class="week-img" onclick="showModalEncoded('${encData}', true)"><div class="brand">${brand}</div><div class="name">${name}</div><div class="week-btn-container"><button class="week-card-btn" onclick="showModalEncoded('${encData}', true)">Опис</button><button class="week-card-btn primary" onclick="showModalEncoded('${encData}', true)">Замовити</button></div></div>`;
+                    const wDiv = document.createElement('div');
+                    wDiv.className = 'week-spotlight';
+                    wDiv.innerHTML = `<span class="week-label">Ексклюзив тижня</span><img src="${safeImg}" class="week-img"><div class="brand">${brand}</div><div class="name">${name}</div><div class="week-btn-container"><button class="week-card-btn primary">ОПИС</button></div>`;
+                    
+                    // ПРИВ'ЯЗУЄМО КЛІКИ НАПРЯМУ
+                    wDiv.querySelector('.week-img').onclick = () => showModal(c, true);
+                    wDiv.querySelector('.week-card-btn').onclick = () => showModal(c, true);
+                    wContainer.appendChild(wDiv);
                 }
 
+                // 3. БУДУЄМО ЗВИЧАЙНУ КАРТКУ
                 const div = document.createElement('div');
                 div.className = 'card'; div.setAttribute('data-brand', brand); 
                 div.setAttribute('data-category', (isNew ? 'new ' : '') + (isTop ? 'top ' : '') + (top ? top.toLowerCase() : ''));
-                div.innerHTML = `${isNew?'<div class="badge badge-new">New</div>':''}${isTop?'<div class="badge badge-top">Hit</div>':''}<img loading="lazy" src="${img}" onclick="showModalEncoded('${encData}')"><div class="card-price-label">від ${minPriceLabel}</div><div class="brand">${brand}</div><div class="name">${name}</div><button class="order-btn" onclick="showModalEncoded('${encData}')">Детальніше</button>`;
+                div.innerHTML = `${isNew?'<div class="badge badge-new">New</div>':''}${isTop?'<div class="badge badge-top">Hit</div>':''}<img loading="lazy" src="${safeImg}"><div class="card-price-label">від ${minPriceLabel}</div><div class="brand">${brand}</div><div class="name">${name}</div><button class="order-btn">Детальніше</button>`;
+                
+                // ПРИВ'ЯЗУЄМО КЛІКИ НАПРЯМУ
+                div.querySelector('img').onclick = () => showModal(c);
+                div.querySelector('.order-btn').onclick = () => showModal(c);
                 container.appendChild(div);
             });
 
-            carousel.innerHTML = carousel.querySelector('.logo-slide').outerHTML + promoSlidesHTML + `<div class="carousel-dots" id="carouselDots"></div>`;
-            renderBrandSlider(catalogData); initCarousel(); initSwipe(); formatNews(rows[0][10]);
+            // Додаємо крапки до каруселі
+            const dots = document.createElement('div');
+            dots.className = 'carousel-dots';
+            dots.id = 'carouselDots';
+            carousel.appendChild(dots);
+
+            renderBrandSlider(catalogData); 
+            initCarousel(); 
+            initSwipe(); 
+            formatNews(rows[0][10]);
         } catch (e) { console.error(e); }
     }
 
@@ -367,6 +385,7 @@
         f = f.replace(/\[-\](.*?)(?=<br>|$)/g, '<div class="review-box review-neg">$1</div>');
         f = f.replace(/\[=\](.*?)(?=<br>|$)/g, '<div class="review-box">$1</div>');
         
+        // ПЕРЕВІРКА В МОДАЛЬНОМУ ВІКНІ
         const disable2ml = minVol && String(minVol).includes('5');
 
         const volHTML = `
@@ -388,7 +407,9 @@
     }
 
     function selectVol(el, vol) {
+        // БЛОКУВАННЯ КЛІКУ, ЯКЩО КНОПКА ДЕЗАКТИВОВАНА
         if (el.classList.contains('disabled')) return; 
+        
         selectedVol = vol; document.querySelectorAll('.vol-chip').forEach(c => c.classList.remove('active'));
         el.classList.add('active'); 
         document.getElementById('modalPrice').innerText = "Ціна: " + calculatePrice(currentBasePrice, vol);
@@ -401,7 +422,9 @@
     }
 
     function navigateToPerfume(n) { document.getElementById('searchInput').value = n; filterCatalog(); document.getElementById('newsModalWindow').style.display='none'; scrollToFirstCards(); }
+    
     function setCategory(c, b) { document.getElementById('searchInput').value = ''; currentCategory = c; document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); filterCatalog(); scrollToFirstCards(); }
+    
     function setBrand(b, btn) { document.getElementById('searchInput').value = ''; currentBrand = b; document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); filterCatalog(); scrollToFirstCards(); }
     
     function filterCatalog() {
@@ -419,16 +442,32 @@
         clearInterval(carouselInterval); 
         carouselInterval = setInterval(() => goToSlide((carouselIndex+1)%s.length), 4000);
     }
+    
     function goToSlide(i) {
         const s = document.querySelectorAll('.slide'), dots = document.querySelectorAll('.dot');
         if(!s[i] || !dots[i]) return;
         s[carouselIndex].classList.remove('active'); dots[carouselIndex].classList.remove('active');
         carouselIndex = i; s[carouselIndex].classList.add('active'); dots[carouselIndex].classList.add('active');
     }
+    
+    // БЕЗПЕЧНИЙ РЕНДЕР БРЕНДІВ
     function renderBrandSlider(cat) {
         const brs = [...new Set(cat.map(c => c[0]))].sort(), s = document.getElementById('brandSlider');
-        s.innerHTML = `<button class="brand-btn active" onclick="setBrand('', this)">Усі бренди</button>`;
-        brs.forEach(b => { s.innerHTML += `<button class="brand-btn" onclick="setBrand('${b}', this)">${b}</button>`; });
+        s.innerHTML = '';
+        
+        const btnAll = document.createElement('button');
+        btnAll.className = 'brand-btn active';
+        btnAll.innerText = 'Усі бренди';
+        btnAll.onclick = function() { setBrand('', this); };
+        s.appendChild(btnAll);
+
+        brs.forEach(b => { 
+            const btn = document.createElement('button');
+            btn.className = 'brand-btn';
+            btn.innerText = b;
+            btn.onclick = function() { setBrand(b, this); };
+            s.appendChild(btn);
+        });
     }
     load();
 </script>

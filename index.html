@@ -472,6 +472,7 @@
 
                     const slide = document.createElement('div');
                     slide.className = 'slide';
+                    // ДОДАНО ЦІНУ ЗА 1 МЛ В БАНЕР
                     slide.innerHTML = `<div class="banner-bg-img" style="background-image:url('${safeImg}')"></div><div class="video-overlay" style="background:rgba(0,0,0,${overlayOpacity})"></div><div class="banner-content"><span class="banner-brand">${isWeek ? 'WEEKLY PICK' : brand}</span><span class="banner-title">${name}</span><span class="banner-catchy">${catchyHeading}</span><span class="banner-btn">СПРОБУВАТИ АРОМАТ</span><span class="banner-price-sub">${price} грн / 1 мл</span></div>`;
                     
                     slide.querySelector('.banner-bg-img').onclick = () => showModal(c, isWeek);
@@ -704,9 +705,11 @@
 
     function navigateToPerfume(n) { document.getElementById('searchInput').value = n; handleSearchInput(); document.getElementById('newsModalWindow').style.display='none'; scrollToFirstCards(); }
     
-    function setCategory(c, b) { document.getElementById('searchInput').value = ''; handleSearchInput(); currentCategory = c; document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); scrollToFirstCards(); }
+    // Оновлена логіка миттєвого перемикання категорій
+    function setCategory(c, b) { currentCategory = c; document.getElementById('searchInput').value = ''; handleSearchInput(); document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); scrollToFirstCards(); }
     
-    function setBrand(b, btn) { document.getElementById('searchInput').value = ''; handleSearchInput(); currentBrand = b; document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); scrollToFirstCards(); }
+    // Оновлена логіка миттєвого перемикання брендів
+    function setBrand(b, btn) { currentBrand = b; document.getElementById('searchInput').value = ''; handleSearchInput(); document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); scrollToFirstCards(); }
     
     function filterCatalog() {
         const q = document.getElementById('searchInput').value.toLowerCase();

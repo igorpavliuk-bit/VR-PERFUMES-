@@ -694,7 +694,6 @@
     }
 
     function initCarousel() {
-    // 1. Фільтруємо дані: шукаємо "промо", "тиждень" або "скоро"
     const promos = globalCatalogData.filter(c => c[7] && (
         c[7].toLowerCase().includes('промо') || 
         c[7].toLowerCase().includes('тиждень') || 
@@ -703,21 +702,16 @@
     
     const carousel = document.getElementById('heroCarousel');
     const logoSlide = carousel.querySelector('.logo-slide').cloneNode(true);
+    
     carousel.innerHTML = ''; 
     carousel.appendChild(logoSlide);
 
-    // 2. Створюємо слайди
     promos.forEach(p => {
         const isComingSoon = p[7].toLowerCase().includes('скоро');
         const mediaUrl = p[5];
-        
-        // Визначаємо контент: відео чи фото
-        let mediaHtml = '';
-        if (mediaUrl.toLowerCase().includes('.mp4')) {
-            mediaHtml = `<video class="banner-bg-img" autoplay muted loop playsinline><source src="${mediaUrl}" type="video/mp4"></video>`;
-        } else {
-            mediaHtml = `<div class="banner-bg-img" style="background-image:url('${mediaUrl}')"></div>`;
-        }
+        let mediaHtml = mediaUrl.toLowerCase().includes('.mp4') 
+            ? `<video class="banner-bg-img" autoplay muted loop playsinline><source src="${mediaUrl}" type="video/mp4"></video>`
+            : `<div class="banner-bg-img" style="background-image:url('${mediaUrl}')"></div>`;
 
         const slide = document.createElement('div');
         slide.className = 'slide';
@@ -736,27 +730,33 @@
         carousel.appendChild(slide);
     });
 
-    // 3. Логіка автоматичного перемикання
+    // Створюємо контейнер для кружечків
+    let dotsContainer = document.querySelector('.carousel-dots');
+    if (!dotsContainer) {
+        dotsContainer = document.createElement('div');
+        dotsContainer.className = 'carousel-dots';
+        carousel.appendChild(dotsContainer);
+    }
+
+    // Малюємо кружечки
+    const slides = document.querySelectorAll('.slide');
+    dotsContainer.innerHTML = '';
+    slides.forEach((_, index) => {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (index === carouselIndex ? ' active' : '');
+        dot.onclick = () => goToSlide(index);
+        dotsContainer.appendChild(dot);
+    });
+
     clearInterval(carouselInterval);
     carouselInterval = setInterval(() => {
-        const slides = document.querySelectorAll('.slide');
-        if (slides.length < 2) return;
-        slides[carouselIndex].classList.remove('active');
-        carouselIndex = (carouselIndex + 1) % slides.length;
-        slides[carouselIndex].classList.add('active');
-        
-        // Оновлюємо крапки (якщо вони є)
-        const dots = document.querySelectorAll('.dot');
-        if (dots.length > 0) {
-            dots.forEach((d, i) => d.classList.toggle('active', i === carouselIndex));
-        }
+        const allSlides = document.querySelectorAll('.slide');
+        if (allSlides.length < 2) return;
+        let nextIndex = (carouselIndex + 1) % allSlides.length;
+        goToSlide(nextIndex);
     }, 4000);
-    
-    // Малюємо крапки заново під нову кількість слайдів
-    if (typeof renderDots === "function") renderDots();
 }
 
-    
     
     function goToSlide(i) {
         const s = document.querySelectorAll('.slide'), dots = document.querySelectorAll('.dot');

@@ -69,8 +69,30 @@
         .action-buttons { display: flex; gap: 10px; padding: 20px 15px; background: #fff; }
         .viber-link, .news-btn { flex: 1; border: 1px solid #eee; padding: 14px; text-align: center; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; color: #000; cursor: pointer; }
         
+        /* SEARCH & STICKY NAV */
         .sticky-active { position: sticky; top: 0; z-index: 1000; background: #fff; padding-top: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
-        #searchInput { width: calc(100% - 40px); margin: 0 20px; padding: 12px 0; border: none; border-bottom: 1px solid #eee; font-size: 14px; outline: none; letter-spacing: 1px; }
+        
+        .search-wrapper { position: relative; margin: 0 20px; }
+        #searchInput { width: 100%; padding: 12px 0; border: none; border-bottom: 1px solid #eee; font-size: 14px; outline: none; letter-spacing: 1px; box-sizing: border-box; }
+        
+        /* ВИПАДАЮЧИЙ СПИСОК ПОШУКУ */
+        .search-dropdown {
+            display: none; position: absolute; top: 100%; left: 0; right: 0;
+            background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 0 0 8px 8px; max-height: 320px; overflow-y: auto; z-index: 2000;
+            border: 1px solid #eee; border-top: none;
+        }
+        .search-item {
+            display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #f9f9f9; cursor: pointer; transition: 0.2s;
+        }
+        .search-item:last-child { border-bottom: none; }
+        .search-item:active { background: #fdfdfd; }
+        .search-item img { width: 35px; height: 35px; object-fit: contain; margin-right: 12px; border-radius: 4px; }
+        .search-item-info { flex: 1; overflow: hidden; }
+        .search-item-brand { font-size: 8px; color: var(--gold); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 2px; }
+        .search-item-name { font-size: 13px; font-family: var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #1a1a1a; }
+        .search-item-price { font-size: 10px; color: #999; white-space: nowrap; margin-left: 10px; font-weight: 600; }
+        .search-empty { padding: 25px 15px; text-align: center; font-size: 13px; color: #666; font-family: var(--serif); }
 
         .brand-slider { display: flex; gap: 30px; overflow-x: auto; padding: 15px 20px; scrollbar-width: none; align-items: center; }
         .brand-btn { background: none; border: none; opacity: 0.4; font-size: 11px; text-transform: uppercase; white-space: nowrap; letter-spacing: 1px; cursor: pointer; }
@@ -126,7 +148,7 @@
         .price-display { font-size: 20px; font-family: var(--serif); color: var(--gold); margin: 15px 0 2px 0; font-weight: 400; }
         .price-sub { font-size: 11px; color: #bbb; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
 
-        /* ABOUT SECTION */
+        /* ABOUT & PROJECTS */
         .about-section { background: #fafafa; padding: 60px 20px; text-align: center; border-top: 1px solid #eee; }
         .about-photo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 4px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .about-content { max-width: 500px; margin: 0 auto; text-align: left; font-size: 14px; line-height: 1.8; color: #333; }
@@ -177,7 +199,10 @@
 </div>
 
 <div id="stickyControls" class="sticky-active">
-    <input type="text" id="searchInput" placeholder="ПОШУК АРОМАТУ..." oninput="filterCatalog()">
+    <div class="search-wrapper">
+        <input type="text" id="searchInput" placeholder="ПОШУК АРОМАТУ АБО БРЕНДУ..." oninput="handleSearchInput()">
+        <div id="searchResults" class="search-dropdown"></div>
+    </div>
     <div class="brand-slider" id="brandSlider"></div>
     <div class="tabs-container">
         <button class="tab-btn active" onclick="setCategory('all', this)">Усі</button>
@@ -237,6 +262,9 @@
     const TG_NICK = 'viktoriia_viktoriia_r'; 
     let carouselIndex = 0, carouselInterval, currentCategory = 'all', currentBrand = '', touchstartX = 0, touchendX = 0;
     let selectedVol = "5 мл", currentBasePrice = 0;
+    
+    // Зберігаємо глобальну базу даних для живого пошуку
+    let globalCatalogData = []; 
 
     function initSwipe() {
         const s = document.getElementById('heroCarousel');
@@ -288,6 +316,8 @@
             const wContainer = document.getElementById('weekPerfumeContainer');
             let catalogData = rows.slice(1).filter(c => c[0]);
             
+            globalCatalogData = catalogData; // Зберігаємо дані для пошуку
+
             const logoSlide = carousel.querySelector('.logo-slide').cloneNode(true);
             carousel.innerHTML = '';
             carousel.appendChild(logoSlide);
@@ -454,11 +484,72 @@
         window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent(msg)}`, '_top');
     }
 
-    function navigateToPerfume(n) { document.getElementById('searchInput').value = n; filterCatalog(); document.getElementById('newsModalWindow').style.display='none'; scrollToFirstCards(); }
+    // НОВА ЛОГІКА ЖИВОГО ПОШУКУ
+    function handleSearchInput() {
+        const q = document.getElementById('searchInput').value.toLowerCase().trim();
+        const resContainer = document.getElementById('searchResults');
+        
+        filterCatalog(); // продовжуємо фільтрувати сітку на фоні
+        
+        if (!q) {
+            resContainer.style.display = 'none';
+            return;
+        }
+
+        // Шукаємо по бренду або назві парфуму
+        const matches = globalCatalogData.filter(c => {
+            const searchStr = (c[0] + " " + c[1]).toLowerCase();
+            return searchStr.includes(q);
+        });
+
+        resContainer.innerHTML = '';
+        
+        if (matches.length === 0) {
+            resContainer.innerHTML = '<div class="search-empty">Аромат не знайдено 😔<br><span style="font-size:10px; margin-top:5px; display:block;">Спробуйте змінити запит</span></div>';
+        } else {
+            matches.forEach(c => {
+                const [brand, name, price, minVol, desc, img] = c;
+                const startsFrom5 = minVol && String(minVol).includes('5');
+                const minPriceLabel = calculatePrice(price, startsFrom5 ? '5 мл' : '2 мл');
+                
+                const item = document.createElement('div');
+                item.className = 'search-item';
+                item.innerHTML = `
+                    <img src="${img.replace(/'/g, "%27")}" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
+                    <div class="search-item-info">
+                        <div class="search-item-brand">${brand}</div>
+                        <div class="search-item-name">${name}</div>
+                    </div>
+                    <div class="search-item-price">від ${minPriceLabel}</div>
+                `;
+                
+                // При натисканні на результат - відкриваємо модалку і закриваємо пошук
+                item.onclick = () => {
+                    showModal(c);
+                    resContainer.style.display = 'none';
+                    document.getElementById('searchInput').value = '';
+                    filterCatalog();
+                };
+                resContainer.appendChild(item);
+            });
+        }
+        resContainer.style.display = 'block';
+    }
+
+    // Ховаємо список пошуку, якщо клікаємо деінде
+    document.addEventListener('click', function(e) {
+        const controls = document.getElementById('stickyControls');
+        if (controls && !controls.contains(e.target)) {
+            const res = document.getElementById('searchResults');
+            if (res) res.style.display = 'none';
+        }
+    });
+
+    function navigateToPerfume(n) { document.getElementById('searchInput').value = n; handleSearchInput(); document.getElementById('newsModalWindow').style.display='none'; scrollToFirstCards(); }
     
-    function setCategory(c, b) { document.getElementById('searchInput').value = ''; currentCategory = c; document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); filterCatalog(); scrollToFirstCards(); }
+    function setCategory(c, b) { document.getElementById('searchInput').value = ''; handleSearchInput(); currentCategory = c; document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); scrollToFirstCards(); }
     
-    function setBrand(b, btn) { document.getElementById('searchInput').value = ''; currentBrand = b; document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); filterCatalog(); scrollToFirstCards(); }
+    function setBrand(b, btn) { document.getElementById('searchInput').value = ''; handleSearchInput(); currentBrand = b; document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); scrollToFirstCards(); }
     
     function filterCatalog() {
         const q = document.getElementById('searchInput').value.toLowerCase();

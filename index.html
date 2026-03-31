@@ -74,7 +74,19 @@
         .viber-link, .news-btn { flex: 1; border: 1px solid #eee; padding: 14px; text-align: center; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; color: #000; cursor: pointer; }
         
         /* SEARCH & STICKY NAV */
-        .sticky-active { position: sticky; top: 0; z-index: 1000; background: #fff; padding-top: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+                /* СКЛЯНА ПАНЕЛЬ НАВІГАЦІЇ (FROSTED GLASS) */
+        .sticky-active { 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            background: rgba(255, 255, 255, 0.8); /* Напівпрозорий білий */
+            backdrop-filter: blur(12px); /* Ефект розмиття фону */
+            -webkit-backdrop-filter: blur(12px); 
+            padding-top: 10px; 
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
         .search-wrapper { position: relative; margin: 0 20px; }
         #searchInput { width: 100%; padding: 12px 30px 12px 0; border: none; border-bottom: 1px solid #eee; font-size: 14px; outline: none; letter-spacing: 1px; box-sizing: border-box; }
         #clearSearchBtn { position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: 16px; color: #999; cursor: pointer; display: none; z-index: 10; padding: 5px; }

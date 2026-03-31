@@ -789,12 +789,13 @@
             }
         }
     }, 15000); 
-    // --- НОВЕ: Компактне рекламне вікно Tom Ford ---
+        // --- ФІНАЛЬНА ВЕРСІЯ: Картка Tom Ford 2025 з правильним посиланням ---
     setTimeout(() => {
-        // Створюємо саму картку
+        if (document.getElementById('promoCard')) return;
+
         const promo = document.createElement('div');
         promo.id = 'promoCard';
-        // Стилі компактної картки (не на весь екран)
+        
         Object.assign(promo.style, {
             position: 'fixed',
             bottom: '20px',
@@ -824,26 +825,26 @@
             <div style="position:relative; z-index:2; height:100%; display:flex; flex-direction:column; justify-content:space-between; align-items:center; padding:30px 15px; text-align:center; pointer-events:none;">
                 <div>
                     <h3 style="margin:0; font-size:12px; color:#fff; letter-spacing:3px; opacity:0.8;">TOM FORD</h3>
-                    <h2 style="margin:5px 0; font-size:28px; color:#fff; font-weight:900; line-height:0.9;">SOLEIL BLANC</h2>
+                    <h2 style="margin:5px 0; font-size:24px; color:#fff; font-weight:900; line-height:1.0;">EAU DE<br>SOLEIL BLANC</h2>
                     <div style="background:#c5a059; color:#fff; display:inline-block; padding:5px 10px; transform:rotate(-3deg); font-weight:700; font-size:11px; margin-top:10px; text-transform:uppercase;">Скоро у розпиві!</div>
                 </div>
 
                 <img src="https://raw.githubusercontent.com/VRPERFUMES/VR-PERFUMES-/main/Images/dark-375x500.103777.2x%20(1).avif" style="max-height:160px; filter:drop-shadow(0 10px 20px rgba(0,0,0,0.5));">
 
                 <div style="pointer-events:auto; width:100%;">
-                    <button onclick="document.getElementById('promoCard').remove()" style="background:#fff; color:#000; border:none; padding:12px 0; width:100%; font-weight:900; text-transform:uppercase; letter-spacing:1px; border-radius:10px; cursor:pointer; font-size:11px;">Дізнатися більше</button>
+                    <button onclick="window.open('https://www.fragrantica.ua/perfumes/Tom-Ford/Eau-de-Soleil-Blanc-2025-103777.html', '_blank'); document.getElementById('promoCard').remove();" style="background:#fff; color:#000; border:none; padding:12px 0; width:100%; font-weight:900; text-transform:uppercase; letter-spacing:1px; border-radius:10px; cursor:pointer; font-size:11px; box-shadow: 0 10px 20px rgba(0,0,0,0.3);">Дізнатися більше</button>
                 </div>
             </div>
         `;
 
         document.body.appendChild(promo);
 
-        // Анімація появи
         setTimeout(() => {
             promo.style.opacity = '1';
             promo.style.transform = 'translateY(0) scale(1)';
         }, 100);
     }, 3000);
+
 
 </script>
 

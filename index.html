@@ -390,14 +390,16 @@
     </div>
     <div class="cart-items" id="cartItemsList">
         </div>
+    
     <div class="cart-footer">
         <div class="cart-total-row">
             <span>Всього:</span>
             <strong id="cartTotalSum">0 грн</strong>
         </div>
+        <input type="text" id="cartContact" class="cart-comment-input" placeholder="Ваш Telegram нік або номер телефону *" style="margin-bottom: 10px; border-color: #1a1a1a;" required>
         <textarea id="cartComment" class="cart-comment-input" rows="2" placeholder="Місто, відділення НП, самовивіз або ваш коментар..."></textarea>
         
-        <button class="cart-checkout-btn" onclick="checkoutCart()">Оформити замовлення</button>
+        <button class="cart-checkout-btn" id="checkoutBtn" onclick="checkoutCart()">Відправити замовлення</button>
     </div>
 </div>
 
@@ -467,7 +469,7 @@
         document.getElementById('reviewHiddenParts').style.display = 'block';
     }
 
-    // ВИПРАВЛЕНО: Надійна відправка відгуку в TG + Копіювання в буфер
+    // Відправка відгуку (тут залишив перехід в TG + копіювання, бо це просто відгук)
     function submitReview(b, n) {
         const text = document.getElementById('reviewText').value.trim();
         const rating = document.querySelector('input[name="rating"]:checked');
@@ -478,12 +480,10 @@
         const stars = rating.value;
         const msg = `📝 НОВИЙ ВІДГУК:\n${b} ${n}\nОцінка: ${stars}⭐\nТекст: ${text}`;
         
-        // 1. Копіюємо текст у буфер обміну (страховка)
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(msg).catch(err => console.log('Clipboard error', err));
         }
         
-        // 2. Викликаємо Telegram через tg://resolve
         const encodedMsg = encodeURIComponent(msg);
         const tgAppUrl = `tg://resolve?domain=${TG_NICK}&text=${encodedMsg}`;
         
@@ -493,7 +493,6 @@
         link.click();
         document.body.removeChild(link);
 
-        // Фолбек для ПК або якщо не встановлено додаток
         setTimeout(() => {
             window.location.href = `https://t.me/${TG_NICK}?text=${encodedMsg}`;
         }, 500);
@@ -778,8 +777,8 @@
         const btn = document.getElementById('modalOrderBtn');
         const originalText = btn.innerText;
         btn.innerText = '✓ ДОДАНО В КОШИК';
-        btn.style.background = '#1a1a1a'; // Стильний чорний
-        btn.style.color = 'var(--gold)';  // Золотий текст
+        btn.style.background = '#1a1a1a';
+        btn.style.color = 'var(--gold)'; 
         
         setTimeout(() => {
             btn.innerText = originalText;
@@ -834,52 +833,79 @@
         document.getElementById('cartTotalSum').innerText = total > 0 ? total + ' грн' : '0 грн';
     }
 
-    // ВИПРАВЛЕНО: Надійна відправка замовлення в TG + Копіювання в буфер
-    function checkoutCart() {
+    // ==========================================
+    // НОВА АСИНХРОННА ФУНКЦІЯ ВІДПРАВКИ "ТИХЕ ЗАМОВЛЕННЯ"
+    // ==========================================
+    async function checkoutCart() {
         if (cart.length === 0) return;
+        
+        // Перевіряємо, чи введено контакт
+        const contact = document.getElementById('cartContact').value.trim();
+        if (!contact) {
+            alert('Будь ласка, вкажіть ваш Telegram нік або номер телефону для зв\'язку!');
+            return;
+        }
         
         gtag('event', 'conversion', {'send_to': 'AW-16525383566/vI-KCN_Yw70ZEM6lyuU9'});
         
-        let msg = `🛍️ *НОВЕ ЗАМОВЛЕННЯ*\n\n`;
-        let total = 0;
-        cart.forEach((item, i) => {
-            msg += `${i+1}. ${item.brand} - ${item.name}\n   Об'єм: ${item.volume} (${item.priceText})\n`;
-            total += item.price;
-        });
-        msg += `\n💰 *Загальна сума: ${total > 0 ? total + ' грн' : 'За запитом'}*`;
+        // Візуальна зміна кнопки (щоб не тиснули двічі)
+        const btn = document.getElementById('checkoutBtn');
+        const originalText = btn.innerText;
+        btn.innerText = 'ВІДПРАВКА...';
+        btn.style.opacity = '0.7';
+        btn.style.pointerEvents = 'none';
 
+        // Формуємо дані
+        let orderDetails = cart.map((item, i) => `${i+1}. ${item.brand} - ${item.name}\n   Об'єм: ${item.volume} (${item.priceText})`).join('\n');
+        let total = cart.reduce((sum, item) => sum + item.price, 0);
         const comment = document.getElementById('cartComment').value.trim();
-        if (comment) {
-            msg += `\n\n📍 *Доставка/Коментар:*\n${comment}`;
-        }
-        
-        // 1. Копіюємо текст у буфер обміну (страховка)
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(msg).catch(err => console.log('Clipboard error', err));
-        }
-        
-        // 2. Викликаємо Telegram через tg://resolve
-        const encodedMsg = encodeURIComponent(msg);
-        const tgAppUrl = `tg://resolve?domain=${TG_NICK}&text=${encodedMsg}`;
-        
-        const link = document.createElement('a');
-        link.href = tgAppUrl;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
 
-        // Фолбек для ПК або якщо не встановлено додаток
-        setTimeout(() => {
-            window.location.href = `https://t.me/${TG_NICK}?text=${encodedMsg}`;
-        }, 500);
-        
-        // Очищаємо кошик із затримкою
-        setTimeout(() => {
-            cart = [];
-            saveCart();
-            document.getElementById('cartComment').value = ''; 
-            toggleCart();
-        }, 1500); 
+        const payload = {
+            contact: contact,
+            order: orderDetails,
+            total: total > 0 ? total + ' грн' : 'За запитом',
+            comment: comment
+        };
+
+        try {
+            // ВАШЕ ПОСИЛАННЯ ВЖЕ ІНТЕГРОВАНО ТУТ:
+            const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxkgKiJknK8v-YZDeZQZSylsY-0U-q2axf6P-ihJJBXDueEyQRU_NIb0khqlEmFQD_n9Q/exec'; 
+            
+            await fetch(WEBAPP_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Спеціальний режим, щоб браузер не блокував відправку на Google
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            // Показуємо успіх
+            btn.innerText = '✓ ЗАМОВЛЕННЯ ПРИЙНЯТО';
+            btn.style.background = '#1a1a1a';
+            btn.style.color = 'var(--gold)';
+
+            setTimeout(() => {
+                cart = [];
+                saveCart();
+                document.getElementById('cartContact').value = '';
+                document.getElementById('cartComment').value = '';
+                btn.innerText = originalText;
+                btn.style.background = '#000';
+                btn.style.color = '#fff';
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+                toggleCart();
+                alert('Дякуємо! Ваше замовлення успішно відправлено. Вікторія скоро з вами зв\'яжеться ✨');
+            }, 2000);
+
+        } catch (error) {
+            console.error('Помилка відправки:', error);
+            alert('Сталася помилка при відправці. Перевірте з\'єднання з інтернетом.');
+            btn.innerText = originalText;
+            btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
+        }
     }
 
     function handleSearchInput() {

@@ -467,6 +467,7 @@
         document.getElementById('reviewHiddenParts').style.display = 'block';
     }
 
+    // ВИПРАВЛЕНО: Надійна відправка відгуку в TG + Копіювання в буфер
     function submitReview(b, n) {
         const text = document.getElementById('reviewText').value.trim();
         const rating = document.querySelector('input[name="rating"]:checked');
@@ -477,13 +478,30 @@
         const stars = rating.value;
         const msg = `📝 НОВИЙ ВІДГУК:\n${b} ${n}\nОцінка: ${stars}⭐\nТекст: ${text}`;
         
-        // ВИПРАВЛЕНО: Надійна відправка повідомлення
-        window.location.href = `https://t.me/${TG_NICK}?text=${encodeURIComponent(msg)}`;
+        // 1. Копіюємо текст у буфер обміну (страховка)
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(msg).catch(err => console.log('Clipboard error', err));
+        }
+        
+        // 2. Викликаємо Telegram через tg://resolve
+        const encodedMsg = encodeURIComponent(msg);
+        const tgAppUrl = `tg://resolve?domain=${TG_NICK}&text=${encodedMsg}`;
+        
+        const link = document.createElement('a');
+        link.href = tgAppUrl;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Фолбек для ПК або якщо не встановлено додаток
+        setTimeout(() => {
+            window.location.href = `https://t.me/${TG_NICK}?text=${encodedMsg}`;
+        }, 500);
         
         setTimeout(() => {
             document.getElementById('reviewText').value = '';
-            document.querySelector('.review-form-container').innerHTML = '<div style="text-align:center; padding: 20px 0; color: var(--gold); font-weight: 600; font-size: 13px;">Дякуємо! Ваш відгук відправлено на модерацію ✨</div>';
-        }, 1500); // Додано затримку, щоб браузер телефону не переривав Telegram
+            document.querySelector('.review-form-container').innerHTML = '<div style="text-align:center; padding: 20px 0; color: var(--gold); font-weight: 600; font-size: 13px;">Дякуємо! Ваш відгук відправлено на модерацію ✨<br><span style="font-size:10px; color:#999;">(Текст збережено в буфер обміну)</span></div>';
+        }, 1500);
     }
 
     function safeParseCSV(str) {
@@ -816,7 +834,7 @@
         document.getElementById('cartTotalSum').innerText = total > 0 ? total + ' грн' : '0 грн';
     }
 
-    // ВИПРАВЛЕНО: Функція відправки замовлення
+    // ВИПРАВЛЕНО: Надійна відправка замовлення в TG + Копіювання в буфер
     function checkoutCart() {
         if (cart.length === 0) return;
         
@@ -835,12 +853,27 @@
             msg += `\n\n📍 *Доставка/Коментар:*\n${comment}`;
         }
         
-        // 1. Формуємо безпечне посилання і переходимо до Telegram
-        const tgUrl = `https://t.me/${TG_NICK}?text=${encodeURIComponent(msg)}`;
-        window.location.href = tgUrl;
+        // 1. Копіюємо текст у буфер обміну (страховка)
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(msg).catch(err => console.log('Clipboard error', err));
+        }
         
-        // 2. ВАЖЛИВО: Очищаємо кошик із затримкою! 
-        // Це дає браузеру телефону час "перекинути" довгий текст у Telegram.
+        // 2. Викликаємо Telegram через tg://resolve
+        const encodedMsg = encodeURIComponent(msg);
+        const tgAppUrl = `tg://resolve?domain=${TG_NICK}&text=${encodedMsg}`;
+        
+        const link = document.createElement('a');
+        link.href = tgAppUrl;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Фолбек для ПК або якщо не встановлено додаток
+        setTimeout(() => {
+            window.location.href = `https://t.me/${TG_NICK}?text=${encodedMsg}`;
+        }, 500);
+        
+        // Очищаємо кошик із затримкою
         setTimeout(() => {
             cart = [];
             saveCart();

@@ -103,8 +103,8 @@
         .brand-btn { background: none; border: none; opacity: 0.4; font-size: 11px; text-transform: uppercase; white-space: nowrap; letter-spacing: 1px; cursor: pointer; }
         .brand-btn.active { opacity: 1; color: var(--gold); font-weight: 700; }
 
-        .tabs-container { display: flex; gap: 25px; justify-content: center; padding-bottom: 15px; }
-        .tab-btn { background: none; border: none; font-size: 10px; font-weight: 600; color: #ccc; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; }
+        .tabs-container { display: flex; gap: 20px; justify-content: center; padding-bottom: 15px; }
+        .tab-btn { background: none; border: none; font-size: 10px; font-weight: 600; color: #ccc; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; padding: 5px 0;}
         .tab-btn.active { color: #000; border-bottom: 1px solid var(--gold); }
 
         /* CATALOG */
@@ -120,6 +120,11 @@
         .card .badge-new { top: 10px; background: var(--badge-new-bg); color: #fff; }
         .card .badge-top { top: 10px; color: var(--gold); border: 1px solid var(--gold); background: #fff; }
         .card .badge-new + .badge-top { top: 35px; }
+
+        /* WISHLIST BUTTON (НОВЕ) */
+        .wishlist-btn { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.95); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; z-index: 15; font-size: 16px; color: #ccc; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .wishlist-btn:active { transform: scale(0.8); }
+        .wishlist-btn.active { color: var(--gold); border-color: rgba(197,160,89,0.3); }
 
         /* SKELETON LOADER */
         .skeleton { animation: pulse 1.5s infinite ease-in-out; background: #f0f0f0; border-radius: 4px; }
@@ -197,7 +202,8 @@
         .floating-tg { position: fixed; bottom: 25px; right: 25px; width: 50px; height: 50px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(197,160,89,0.4); z-index: 1500; text-decoration: none; }
         .floating-tg svg { width: 22px; height: 22px; fill: white; }
         
-        #scrollTopBtn { display: none; position: fixed; bottom: 85px; right: 30px; background: #1a1a1a; color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 1400; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: 0.3s; }
+        /* Виправлено Z-index і піднято, щоб не перекривало Telegram */
+        #scrollTopBtn { display: none; position: fixed; bottom: 150px; right: 25px; background: rgba(26, 26, 26, 0.8); backdrop-filter: blur(5px); color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 1400; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: 0.3s; }
         #scrollTopBtn:active { transform: scale(0.9); }
 
         .modal-btn-full { display: flex; width: 100%; height: 50px; align-items: center; justify-content: center; font-size: 11px; text-transform: uppercase; font-weight: 900; letter-spacing: 1.5px; text-decoration: none; border: none; cursor: pointer; transition: 0.3s; }
@@ -229,6 +235,45 @@
         .bubble-text b { color: var(--text-dark); font-size: 12px; display: inline-block; margin-bottom: 2px; }
         .bubble-close { position: absolute; top: 6px; right: 10px; font-size: 12px; color: #ccc; cursor: pointer; transition: 0.2s; padding: 2px; }
         .bubble-close:hover { color: #000; }
+
+        /* CART STYLES + ANIMATION (НОВЕ) */
+        @keyframes cartPulse { 0% {transform: scale(1);} 50% {transform: scale(1.15); box-shadow: 0 0 20px rgba(197,160,89,0.8);} 100% {transform: scale(1);} }
+        .cart-pulse-anim { animation: cartPulse 0.4s ease-in-out; }
+        
+        .cart-floating-btn { position: fixed; bottom: 25px; left: 25px; width: 50px; height: 50px; background: #1a1a1a; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 20px rgba(0,0,0,0.3); z-index: 1500; cursor: pointer; transition: transform 0.3s; border: 1px solid var(--gold); }
+        .cart-floating-btn:active { transform: scale(0.9); }
+        .cart-floating-btn svg { width: 22px; height: 22px; fill: var(--gold); }
+        .cart-badge { position: absolute; top: -5px; right: -5px; background: var(--gold); color: #fff; font-size: 10px; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; }
+        
+        .cart-drawer { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background: #fff; z-index: 3500; transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.1); }
+        .cart-drawer.open { right: 0; }
+        .cart-drawer-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3499; display: none; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+        .cart-drawer-backdrop.show { display: block; }
+        
+        .cart-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .cart-title { font-family: var(--serif); font-size: 18px; color: #000; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
+        .cart-close { background: none; border: none; font-size: 24px; color: #999; cursor: pointer; padding: 0 10px; }
+        
+        .cart-items { flex: 1; overflow-y: auto; padding: 20px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px solid #f9f9f9; }
+        .cart-item-info { flex: 1; padding-right: 15px; }
+        .cart-item-brand { font-size: 9px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+        .cart-item-name { font-size: 13px; font-family: var(--serif); color: #1a1a1a; line-height: 1.2; margin: 3px 0; }
+        .cart-item-vol { font-size: 11px; color: #777; }
+        .cart-item-price { font-size: 13px; font-weight: 700; color: #000; }
+        .cart-item-remove { background: none; border: none; color: #ff4d4d; font-size: 22px; cursor: pointer; padding: 5px; opacity: 0.6; }
+        .cart-item-remove:active { opacity: 1; }
+        
+        .cart-empty-msg { text-align: center; color: #999; font-size: 13px; margin-top: 40px; }
+        
+        .cart-footer { padding: 20px; border-top: 1px solid #eee; background: #fafafa; }
+        .cart-total-row { display: flex; justify-content: space-between; font-size: 16px; font-family: var(--serif); color: #000; margin-bottom: 15px; }
+        
+        .cart-comment-input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-family: var(--sans); font-size: 13px; resize: none; margin-bottom: 15px; outline: none; background: #fff; }
+        .cart-comment-input:focus { border-color: var(--gold); }
+
+        .cart-checkout-btn { display: flex; width: 100%; padding: 18px 0; align-items: center; justify-content: center; font-size: 11px; text-transform: uppercase; font-weight: 900; letter-spacing: 1.5px; background: #000; color: #fff; border: none; cursor: pointer; border-radius: 8px; transition: 0.3s; }
+        .cart-checkout-btn:active { background: var(--gold); }
 
     </style>
 </head>
@@ -263,6 +308,7 @@
         <button class="tab-btn active" onclick="setCategory('all', this)">Усі</button>
         <button class="tab-btn" onclick="setCategory('new', this)">Новинки</button>
         <button class="tab-btn" onclick="setCategory('top', this)">Хіти</button>
+        <button class="tab-btn" onclick="setCategory('wishlist', this)">Улюблені ♡</button>
     </div>
 </div>
 
@@ -333,6 +379,31 @@
     <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.13-.31-1.08-.66.02-.18.27-.36.74-.55 2.91-1.27 4.85-2.11 5.81-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
 </a>
 
+<div class="cart-floating-btn" onclick="toggleCart()">
+    <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1.003 1.003 0 0 0 20 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+    <div class="cart-badge" id="cartBadge">0</div>
+</div>
+
+<div class="cart-drawer-backdrop" id="cartBackdrop" onclick="toggleCart()"></div>
+
+<div class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+        <h3 class="cart-title">Ваш кошик</h3>
+        <button class="cart-close" onclick="toggleCart()">×</button>
+    </div>
+    <div class="cart-items" id="cartItemsList">
+        </div>
+    <div class="cart-footer">
+        <div class="cart-total-row">
+            <span>Всього:</span>
+            <strong id="cartTotalSum">0 грн</strong>
+        </div>
+        <textarea id="cartComment" class="cart-comment-input" rows="2" placeholder="Місто, відділення НП, самовивіз або ваш коментар..."></textarea>
+        
+        <button class="cart-checkout-btn" onclick="checkoutCart()">Оформити замовлення</button>
+    </div>
+</div>
+
 <div id="tgChatBubble" class="tg-chat-bubble">
     <span class="bubble-close" onclick="document.getElementById('tgChatBubble').classList.remove('show')">✕</span>
     <img src="Screenshot_20260328-171201.png" alt="Вікторія" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
@@ -350,6 +421,10 @@
     let selectedVol = "5 мл", currentBasePrice = 0;
     
     let globalCatalogData = []; 
+    
+    // Ініціалізація кошика та вішліста
+    let cart = JSON.parse(localStorage.getItem('vr_cart')) || [];
+    let wishlist = JSON.parse(localStorage.getItem('vr_wishlist')) || [];
 
     window.onscroll = function() {
         const btn = document.getElementById("scrollTopBtn");
@@ -438,6 +513,25 @@
         window.scrollTo({top: catTop - stickyH - 15, behavior: 'smooth'});
     }
 
+    // НОВЕ: Логіка вішліста (сердечка)
+    function toggleWishlist(e, b, n, btn) {
+        e.stopPropagation(); // щоб не відкривалася картка
+        const id = b + ' ' + n;
+        const idx = wishlist.indexOf(id);
+        
+        if(idx > -1) {
+            wishlist.splice(idx, 1);
+            btn.classList.remove('active');
+            btn.innerText = '♡';
+        } else {
+            wishlist.push(id);
+            btn.classList.add('active');
+            btn.innerText = '♥';
+        }
+        localStorage.setItem('vr_wishlist', JSON.stringify(wishlist));
+        if (currentCategory === 'wishlist') filterCatalog(); // якщо ми у вкладці "Улюблені", одразу оновлюємо вигляд
+    }
+
     async function load() {
         try {
             const r = await fetch(SHEET_CSV + '&v=' + Date.now()), data = await r.text(), rows = safeParseCSV(data);
@@ -466,6 +560,12 @@
                 const startsFrom5 = minVol && String(minVol).includes('5');
                 const minPriceLabel = calculatePrice(price, startsFrom5 ? '5 мл' : '2 мл');
                 const safeImg = img.replace(/'/g, "%27");
+                
+                // Перевірка, чи є товар у вішлісті
+                const cardId = brand + ' ' + name;
+                const isWished = wishlist.includes(cardId);
+                // Очищаємо опис від тегів для пошуку по нотах
+                const safeDesc = desc ? desc.replace(/<[^>]*>?/gm, ' ').replace(/"/g, '&quot;') : '';
 
                 if (isPromo || isWeek) {
                     let catchyHeading = ""; 
@@ -512,9 +612,22 @@
                 }
 
                 const div = document.createElement('div');
-                div.className = 'card'; div.setAttribute('data-brand', brand); 
+                div.className = 'card'; 
+                div.setAttribute('data-brand', brand); 
+                div.setAttribute('data-id', cardId); // Для вішліста
+                div.setAttribute('data-desc', safeDesc); // Для пошуку по нотах
                 div.setAttribute('data-category', (isNew ? 'new ' : '') + (isTop ? 'top ' : '') + (top ? top.toLowerCase() : ''));
-                div.innerHTML = `${isNew?'<div class="badge badge-new">New</div>':''}${isTop?'<div class="badge badge-top">Hit</div>':''}<img loading="lazy" src="${safeImg}"><div class="card-price-label">від ${minPriceLabel}</div><div class="brand">${brand}</div><div class="name">${name}</div><button class="order-btn">Детальніше</button>`;
+                
+                div.innerHTML = `
+                    ${isNew?'<div class="badge badge-new">New</div>':''}
+                    ${isTop?'<div class="badge badge-top">Hit</div>':''}
+                    <div class="wishlist-btn ${isWished ? 'active' : ''}" onclick="toggleWishlist(event, '${brand.replace(/'/g, "\\'")}', '${name.replace(/'/g, "\\'")}', this)">${isWished ? '♥' : '♡'}</div>
+                    <img loading="lazy" src="${safeImg}">
+                    <div class="card-price-label">від ${minPriceLabel}</div>
+                    <div class="brand">${brand}</div>
+                    <div class="name">${name}</div>
+                    <button class="order-btn">Детальніше</button>
+                `;
                 
                 div.querySelector('img').onclick = () => showModal(c);
                 div.querySelector('.order-btn').onclick = () => showModal(c);
@@ -531,6 +644,7 @@
             initSwipe(); 
             init3DEffect();
             formatNews(rows[0][10]);
+            updateCartUI();
         } catch (e) { console.error(e); }
     }
 
@@ -634,12 +748,103 @@
     }
 
     function order(b, n) {
-        gtag('event', 'conversion', {'send_to': 'AW-16525383566/vI-KCN_Yw70ZEM6lyuU9'});
-        const p = document.getElementById('modalPrice').innerText;
-        const msg = `🛍️ ЗАМОВЛЕННЯ:\n${b} ${n}\nОб'єм: ${selectedVol}\n${p}`;
-        window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent(msg)}`, '_top');
+        const pText = document.getElementById('modalPrice').innerText;
+        let priceNum = parseInt(pText.replace(/\D/g, ''));
+        if(isNaN(priceNum)) priceNum = 0; 
+        
+        cart.push({ brand: b, name: n, volume: selectedVol, price: priceNum, priceText: pText.replace('Ціна: ', '') });
+        saveCart();
+        
+        // НОВЕ: Мікро-анімація іконки кошика (пульсація)
+        const cartFloatingBtn = document.querySelector('.cart-floating-btn');
+        cartFloatingBtn.classList.remove('cart-pulse-anim');
+        void cartFloatingBtn.offsetWidth; // перезапуск анімації
+        cartFloatingBtn.classList.add('cart-pulse-anim');
+        
+        const btn = document.getElementById('modalOrderBtn');
+        const originalText = btn.innerText;
+        btn.innerText = '✓ ДОДАНО В КОШИК';
+        btn.style.background = '#4CAF50'; 
+        
+        setTimeout(() => {
+            btn.innerText = originalText;
+            btn.style.background = 'var(--gold)';
+            document.getElementById('infoModal').style.display = 'none';
+            toggleCart();
+        }, 600);
     }
 
+    function saveCart() {
+        localStorage.setItem('vr_cart', JSON.stringify(cart));
+        updateCartUI();
+    }
+
+    function toggleCart() {
+        document.getElementById('cartDrawer').classList.toggle('open');
+        document.getElementById('cartBackdrop').classList.toggle('show');
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        saveCart();
+    }
+
+    function updateCartUI() {
+        document.getElementById('cartBadge').innerText = cart.length;
+        const list = document.getElementById('cartItemsList');
+        let total = 0;
+        
+        if (cart.length === 0) {
+            list.innerHTML = '<div class="cart-empty-msg">Ваш кошик порожній ✨<br><span style="font-size:10px; display:block; margin-top:10px; cursor:pointer; color:var(--gold);" onclick="toggleCart()">Повернутися до каталогу</span></div>';
+        } else {
+            let html = '';
+            cart.forEach((item, index) => {
+                html += `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-brand">${item.brand}</div>
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-vol">Об'єм: ${item.volume}</div>
+                        </div>
+                        <div class="cart-item-price">${item.priceText}</div>
+                        <button class="cart-item-remove" onclick="removeFromCart(${index})">×</button>
+                    </div>
+                `;
+                total += item.price;
+            });
+            list.innerHTML = html;
+        }
+        
+        document.getElementById('cartTotalSum').innerText = total > 0 ? total + ' грн' : '0 грн';
+    }
+
+    function checkoutCart() {
+        if (cart.length === 0) return;
+        
+        gtag('event', 'conversion', {'send_to': 'AW-16525383566/vI-KCN_Yw70ZEM6lyuU9'});
+        
+        let msg = `🛍️ *НОВЕ ЗАМОВЛЕННЯ*\n\n`;
+        let total = 0;
+        cart.forEach((item, i) => {
+            msg += `${i+1}. ${item.brand} - ${item.name}\n   Об'єм: ${item.volume} (${item.priceText})\n`;
+            total += item.price;
+        });
+        msg += `\n💰 *Загальна сума: ${total > 0 ? total + ' грн' : 'За запитом'}*`;
+
+        const comment = document.getElementById('cartComment').value.trim();
+        if (comment) {
+            msg += `\n\n📍 *Доставка/Коментар:*\n${comment}`;
+        }
+        
+        window.open(`https://t.me/${TG_NICK}?text=${encodeURIComponent(msg)}`, '_blank');
+        
+        cart = [];
+        saveCart();
+        document.getElementById('cartComment').value = ''; 
+        toggleCart();
+    }
+
+    // НОВЕ: Пошук тепер шукає і по нотах аромату
     function handleSearchInput() {
         const inputField = document.getElementById('searchInput');
         const clearBtn = document.getElementById('clearSearchBtn');
@@ -653,7 +858,8 @@
         if (!q) { resContainer.style.display = 'none'; return; }
 
         const matches = globalCatalogData.filter(c => {
-            const searchStr = (c[0] + " " + c[1]).toLowerCase();
+            // Додали c[4] (опис/ноти) до стрічки пошуку
+            const searchStr = (c[0] + " " + c[1] + " " + (c[4] || "")).toLowerCase();
             return searchStr.includes(q);
         });
 
@@ -684,28 +890,33 @@
 
     function navigateToPerfume(n) { document.getElementById('searchInput').value = n; handleSearchInput(); document.getElementById('newsModalWindow').style.display='none'; scrollToFirstCards(); }
     
-    // Оновлена логіка миттєвого перемикання категорій
     function setCategory(c, b) { currentCategory = c; document.getElementById('searchInput').value = ''; handleSearchInput(); document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); scrollToFirstCards(); }
     
-    // Оновлена логіка миттєвого перемикання брендів
     function setBrand(b, btn) { currentBrand = b; document.getElementById('searchInput').value = ''; handleSearchInput(); document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); scrollToFirstCards(); }
     
+    // Оновлений фільтр (враховує вкладку Улюблені та ноти аромату)
     function filterCatalog() {
         const q = document.getElementById('searchInput').value.toLowerCase();
         document.querySelectorAll('.card').forEach(c => {
-            const mS = c.innerText.toLowerCase().includes(q), mB = currentBrand === '' || c.getAttribute('data-brand') === currentBrand, mC = currentCategory === 'all' || c.getAttribute('data-category').includes(currentCategory);
+            const searchData = (c.innerText + " " + (c.getAttribute('data-desc') || "")).toLowerCase();
+            const mS = searchData.includes(q);
+            const mB = currentBrand === '' || c.getAttribute('data-brand') === currentBrand;
+            
+            const isWished = wishlist.includes(c.getAttribute('data-id'));
+            const mC = currentCategory === 'all' || (currentCategory === 'wishlist' ? isWished : c.getAttribute('data-category').includes(currentCategory));
+            
             c.style.display = (mS && mB && mC) ? 'flex' : 'none';
         });
     }
 
-    // --- 3D ефект карток (Tilt) ---
     function init3DEffect() {
         const cards = document.querySelectorAll('.card');
         cards.forEach(card => {
-            card.addEventListener('mousemove', e => {
+            
+            function handleMove(clientX, clientY) {
                 const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left; 
-                const y = e.clientY - rect.top;
+                const x = clientX - rect.left; 
+                const y = clientY - rect.top;
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
                 const rotateX = ((y - centerY) / centerY) * -8; 
@@ -715,14 +926,24 @@
                 card.style.transition = 'none';
                 card.style.zIndex = '10';
                 card.style.boxShadow = '0 15px 30px rgba(0,0,0,0.1)';
-            });
-            
-            card.addEventListener('mouseleave', () => {
+            }
+
+            function resetEffect() {
                 card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
                 card.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease';
                 card.style.zIndex = '1';
                 card.style.boxShadow = 'none';
-            });
+            }
+
+            card.addEventListener('mousemove', e => handleMove(e.clientX, e.clientY));
+            card.addEventListener('mouseleave', resetEffect);
+
+            card.addEventListener('touchmove', e => {
+                const touch = e.touches[0];
+                handleMove(touch.clientX, touch.clientY);
+            }, { passive: true });
+            
+            card.addEventListener('touchend', resetEffect);
         });
     }
 
@@ -763,7 +984,6 @@
         carousel.appendChild(slide);
     });
 
-    // Створюємо контейнер для кружечків
     let dotsContainer = document.querySelector('.carousel-dots');
     if (!dotsContainer) {
         dotsContainer = document.createElement('div');
@@ -771,7 +991,6 @@
         carousel.appendChild(dotsContainer);
     }
 
-    // Малюємо кружечки
     const slides = document.querySelectorAll('.slide');
     dotsContainer.innerHTML = '';
     slides.forEach((_, index) => {
@@ -810,21 +1029,21 @@
     }
     load();
 
-    // Логіка появи хмаринки Telegram (1 раз за сесію, поява через 15 сек)
     setTimeout(() => {
         if (!sessionStorage.getItem('chatBubbleShown')) {
             const bubble = document.getElementById('tgChatBubble');
             if (bubble) {
                 bubble.classList.add('show');
                 sessionStorage.setItem('chatBubbleShown', 'true');
-                // Автоматично ховаємо хмаринку через 15 секунд після її появи
                 setTimeout(() => { bubble.classList.remove('show'); }, 15000);
             }
         }
     }, 15000); 
-        // --- ФІНАЛЬНА ВЕРСІЯ: Картка Tom Ford 2025 з правильним посиланням ---
+
+    // НОВЕ: Захист від спаму — промо Tom Ford з'явиться лише 1 раз за візит
     setTimeout(() => {
-        if (document.getElementById('promoCard')) return;
+        if (document.getElementById('promoCard') || sessionStorage.getItem('promoCardShown')) return;
+        sessionStorage.setItem('promoCardShown', 'true'); // Фіксуємо показ
 
         const promo = document.createElement('div');
         promo.id = 'promoCard';
@@ -886,7 +1105,7 @@
         <h3 id="mB" style="text-align:center;font-family:var(--serif);margin-bottom:5px;"></h3>
         <p id="mN" style="text-align:center;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:20px;"></p>
         <div id="mD" style="font-size:13.5px;"></div>
-        <button id="modalOrderBtn" class="modal-btn-full modal-order-btn">Замовити аромат</button>
+        <button id="modalOrderBtn" class="modal-btn-full modal-order-btn">ДОДАТИ В КОШИК</button>
         <div id="reviewFormContainerHTML"></div>
         <button class="modal-btn-full close-btn" onclick="document.getElementById('infoModal').style.display='none'">Закрити</button>
     </div>

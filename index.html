@@ -931,7 +931,7 @@ catalogData.forEach(c => {
         const isLastDrops = top && top.toLowerCase().includes('останн');
         
         // НОВИЙ РЯДОК: Визначаємо, чи це набір
-        const isSetType = (minVol && String(minVol).toLowerCase().includes('тільки')) || brand.toLowerCase().includes('SET');
+       const isSetType = (minVol && String(minVol).toLowerCase().includes('тільки')) || brand.toLowerCase().includes('set');
 
         // ФОРМУЄМО КНОПКИ: Якщо сет — одна кнопка, якщо ні — всі доступні
         let volButtons = '';
@@ -949,8 +949,7 @@ catalogData.forEach(c => {
                 ${isBottleAvailable ? `<div class="vol-chip bottle-special" onclick="selectVol(this, 'Рідний флакон (${bottleMl} мл)', ${bottlePrice})">Залишок у рідному флаконі (${bottleMl} мл)</div>` : ''}
             `;
         }
-
-        const volHTML = `
+const volHTML = `
             <div class="vol-container"><span class="vol-label">Оберіть об'єм:</span>
                 <div class="vol-grid">
                     ${volButtons}

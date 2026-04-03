@@ -931,7 +931,10 @@ catalogData.forEach(c => {
         const isLastDrops = top && top.toLowerCase().includes('останн');
         
         // НОВИЙ РЯДОК: Визначаємо, чи це набір
-       const isSetType = (minVol && String(minVol).toLowerCase().includes('тільки')) || brand.toLowerCase().includes('set');
+       const isSetType = (minVol && String(minVol).toLowerCase().includes('тільки')) || 
+                  brand.toLowerCase().includes('set') || 
+                  brand.toLowerCase().includes('сет') || 
+                  name.toLowerCase().includes('сет');
 
         // ФОРМУЄМО КНОПКИ: Якщо сет — одна кнопка, якщо ні — всі доступні
         let volButtons = '';
@@ -983,12 +986,17 @@ const volHTML = `
         document.getElementById('infoModal').style.display = 'flex';
     }
 
-    function selectVol(el, vol, fixedP = 0) {
+   function selectVol(el, vol, fixedP = 0) {
         if (el.classList.contains('disabled')) return; 
-        selectedVol = vol; document.querySelectorAll('.vol-chip').forEach(c => c.classList.remove('active'));
+        selectedVol = vol; 
+        document.querySelectorAll('.vol-chip').forEach(c => c.classList.remove('active'));
         el.classList.add('active'); 
         
-        if (fixedP > 0) {
+        if (vol === "Набір") {
+            currentFixedPrice = 0;
+            // Для сетів ми примусово кажемо рахувати як за 2 мл (це наша повна ціна боксу)
+            document.getElementById('modalPrice').innerText = "Ціна: " + calculatePrice(currentBasePrice, "2 мл");
+        } else if (fixedP > 0) {
             currentFixedPrice = fixedP;
             document.getElementById('modalPrice').innerText = "Ціна: " + fixedP + " грн";
         } else {
@@ -996,7 +1004,6 @@ const volHTML = `
             document.getElementById('modalPrice').innerText = "Ціна: " + calculatePrice(currentBasePrice, vol);
         }
     }
-
     function animateFlyToCart() {
         const cartBtn = document.getElementById('cartFloatingBtn');
         const startRect = document.getElementById('modalOrderBtn').getBoundingClientRect();

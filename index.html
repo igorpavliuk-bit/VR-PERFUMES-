@@ -491,7 +491,19 @@
     </div>
     
     <div class="cart-items" id="cartItemsList"></div>
-    
+
+    <div id="cartUpsellBlock" style="display: none; margin: 0 20px 15px; padding: 12px; border: 1px dashed var(--gold); border-radius: 6px; background: #fdfbf7;">
+        <div style="font-size: 9px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-weight: 700; letter-spacing: 1px; text-align: center;">Додати на пробу? ✨</div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <img id="upsellImg" src="" style="width: 45px; height: 45px; object-fit: cover; border-radius: 4px; border: 1px solid #eee;">
+            <div style="flex: 1; overflow: hidden;">
+                <div id="upsellBrand" style="font-size: 9px; color: #999; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
+                <div id="upsellName" style="font-size: 11px; font-family: var(--serif); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 2px 0;"></div>
+                <div id="upsellPrice" style="font-size: 11px; color: #000; font-weight: 700;"></div>
+            </div>
+            <button id="upsellAddBtn" style="background: #1a1a1a; color: #fff; border: none; padding: 8px 12px; font-size: 9px; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-weight: 700; transition: 0.2s;">+ 2 мл</button>
+        </div>
+    </div>
     <div class="cart-footer">
         <label class="gift-wrap-container">
             <input type="checkbox" id="giftWrapCheckbox" onchange="updateCartUI()">
@@ -1045,6 +1057,7 @@
         const shippingText = document.getElementById('shippingText');
         const shippingFill = document.getElementById('shippingFill');
         const giftBox = document.getElementById('giftWrapCheckbox');
+        const upsellBlock = document.getElementById('cartUpsellBlock'); 
         
         let total = 0;
         
@@ -1052,6 +1065,7 @@
             list.innerHTML = '<div class="cart-empty-msg">Ваш кошик порожній ✨<br><span style="font-size:10px; display:block; margin-top:10px; cursor:pointer; color:var(--gold);" onclick="toggleCart()">Повернутися до каталогу</span></div>';
             shippingContainer.style.display = 'none';
             giftBox.checked = false;
+            if(upsellBlock) upsellBlock.style.display = 'none'; 
         } else {
             let html = '';
             cart.forEach((item, index) => {
@@ -1083,6 +1097,35 @@
                 shippingText.innerHTML = `Додайте ще на <b>${1500 - total} грн</b> для безкоштовної доставки`;
                 shippingText.style.color = '#555';
                 shippingText.style.fontWeight = '600';
+            }
+
+            if(upsellBlock) {
+                const cartItemNames = cart.map(item => item.name);
+                const candidates = globalCatalogData.filter(c => {
+                    const isTop = c[7] && (c[7].toLowerCase().includes('топ') || c[7].toLowerCase().includes('хіт'));
+                    const has2ml = c[3] && !String(c[3]).includes('5');
+                    return isTop && has2ml && !cartItemNames.includes(c[1]);
+                });
+
+                if (candidates.length > 0) {
+                    const candidate = candidates[cart.length % candidates.length]; 
+                    const [brand, name, price, minVol, desc, img] = candidate;
+                    const price2mlText = calculatePrice(price, '2 мл');
+                    const priceNum = parseInt(price2mlText.replace(/\D/g, ''));
+
+                    document.getElementById('upsellImg').src = img.replace(/'/g, "%27");
+                    document.getElementById('upsellBrand').innerText = brand;
+                    document.getElementById('upsellName').innerText = name;
+                    document.getElementById('upsellPrice').innerText = price2mlText;
+                    
+                    document.getElementById('upsellAddBtn').onclick = function() {
+                        cart.push({ brand: brand, name: name, volume: '2 мл', price: priceNum, priceText: price2mlText });
+                        saveCart(); 
+                    };
+                    upsellBlock.style.display = 'block';
+                } else {
+                    upsellBlock.style.display = 'none';
+                }
             }
         }
         

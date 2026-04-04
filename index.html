@@ -398,9 +398,9 @@ body.dark-theme .tg-chat-bubble .bubble-text { color: #ccc; }
 body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
    /* КНОПКА ПОВЕРНЕННЯ ВГОРУ */
 #scrollTopBtn { 
-    display: none; /* Спочатку вона схована */
+    display: none; 
     position: fixed; 
-    bottom: 160px; /* Вище, ніж кошик і телеграм, щоб не перекривати */
+    bottom: 160px; 
     right: 25px; 
     background: rgba(26, 26, 26, 0.8); 
     backdrop-filter: blur(5px); 
@@ -414,10 +414,26 @@ body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
     cursor: pointer; 
     z-index: 1400; 
     box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
-    transition: all 0.3s ease; 
-    font-weight: bold;
+    
+    /* Твоя оптимізація */
+    transition: opacity 0.3s ease, transform 0.3s ease, display 0.3s allow-discrete;
+    opacity: 0;
+    transform: scale(0.5);
 }
-#scrollTopBtn:active { transform: scale(0.9); }
+
+/* Стан, коли кнопка видима (додається через JS або умови) */
+#scrollTopBtn[style*="display: block"] {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Для підтримки плавної появи в сучасних браузерах */
+@starting-style {
+    #scrollTopBtn[style*="display: block"] {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+}
 
     </style>
 </head>

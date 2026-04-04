@@ -591,37 +591,39 @@
         document.getElementById('reviewHiddenParts').style.display = 'block';
     }
 
-    function submitReview(b, n) {
+    async function submitReview(b, n) {
         const text = document.getElementById('reviewText').value.trim();
         const rating = document.querySelector('input[name="rating"]:checked');
-        
+
         if (!rating) { alert('Будь ласка, оберіть оцінку зірочками!'); return; }
         if (!text) { alert('Будь ласка, напишіть кілька слів!'); return; }
-        
-        const stars = rating.value;
-        const msg = `📝 НОВИЙ ВІДГУК:\n${b} ${n}\nОцінка: ${stars}⭐\nТекст: ${text}`;
-        
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(msg).catch(err => console.log('Clipboard error', err));
-        }
-        
-        const encodedMsg = encodeURIComponent(msg);
-        const tgAppUrl = `tg://resolve?domain=${TG_NICK}&text=${encodedMsg}`;
-        
-        const link = document.createElement('a');
-        link.href = tgAppUrl;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
 
-        setTimeout(() => {
-            window.location.href = `https://t.me/${TG_NICK}?text=${encodedMsg}`;
-        }, 500);
-        
-        setTimeout(() => {
-            document.getElementById('reviewText').value = '';
-            document.querySelector('.review-form-container').innerHTML = '<div style="text-align:center; padding: 20px 0; color: var(--gold); font-weight: 600; font-size: 13px;">Дякуємо! Ваш відгук відправлено на модерацію ✨<br><span style="font-size:10px; color:#999;">(Текст збережено в буфер обміну)</span></div>';
-        }, 1500);
+        const author = prompt("Як вас підписати у відгуку?", "Клієнт") || "Клієнт";
+        const stars = rating.value;
+        const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxwI4YS1nrjizwkUJ4-Eay9iFcFIQB8pW8ehgJNaiVRZiItsMcjfzD4t4MmqfO6AQ42Ag/exec';
+
+        const payload = {
+            type: "product_review",
+            brand: b,
+            name: n,
+            stars: stars,
+            text: text,
+            author: author
+        };
+
+        try {
+            await fetch(WEBAPP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            document.querySelector('.review-form-container').innerHTML = '<div style="text-align:center; padding: 20px 0; color: var(--gold); font-weight: 600; font-size: 13px;">Дякуємо! Ваш відгук відправлено на модерацію ✨</div>';
+        } catch (e) {
+            console.error('Помилка:', e);
+            alert('Сталася помилка. Спробуйте ще раз.');
+        }
     }
 
     function safeParseCSV(str) {

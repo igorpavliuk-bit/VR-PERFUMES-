@@ -1364,43 +1364,10 @@ body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
 
     function navigateToPerfume(n) { document.getElementById('searchInput').value = n; handleSearchInput(); document.getElementById('newsModalWindow').style.display='none'; scrollToFirstCards(); }
     
-    ьь  function setCategory(c, b) {
-    // 1. Встановлюємо нову категорію
-    currentCategory = c;
+    function setCategory(c, b) { currentCategory = c; document.getElementById('searchInput').value = ''; triggerCatalogAnimation(); document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); scrollToFirstCards(); }
     
-    // 2. Скидаємо всі інші фільтри
-    currentBrand = ''; // Скидаємо бренд
-    document.getElementById('searchInput').value = ''; // Очищуємо поле пошуку
-    document.getElementById('clearSearchBtn').style.display = 'none'; // Ховаємо хрестик пошуку
-    document.getElementById('searchResults').style.display = 'none'; // Закриваємо випадаючий список
+    function setBrand(b, btn) { currentBrand = b; document.getElementById('searchInput').value = ''; triggerCatalogAnimation(); document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); scrollToFirstCards(); }
     
-    // 3. Скидаємо візуальний вигляд "чіпсів" з нотами
-    document.querySelectorAll('.note-chip').forEach(chip => chip.classList.remove('active-note'));
-    
-    // 4. Скидаємо візуальний вигляд кнопок брендів (ставимо фокус на "Усі бренди")
-    document.querySelectorAll('.brand-btn').forEach(btn => btn.classList.remove('active'));
-    const allBrandsBtn = document.querySelector('.brand-btn'); // Зазвичай перша кнопка - це "Усі"
-    if (allBrandsBtn) allBrandsBtn.classList.add('active');
-
-    // 5. Запускаємо анімацію та фільтрацію
-    triggerCatalogAnimation();
-    
-    // 6. Оновлюємо активну вкладку
-    document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    
-    // 7. Скролимо до початку товарів
-    scrollToFirstCards();
-}
-function setBrand(b, btn) {
-    currentBrand = b;
-    document.getElementById('searchInput').value = ''; // Скидаємо текст пошуку при виборі бренду
-    triggerCatalogAnimation();
-    document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active'));
-    btn.classList.add('active');
-    scrollToFirstCards();
-}
-
     function filterCatalog() {
         const q = document.getElementById('searchInput').value.toLowerCase();
         document.querySelectorAll('.card').forEach(c => {

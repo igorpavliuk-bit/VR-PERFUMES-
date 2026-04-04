@@ -9,7 +9,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18051738791"></script>
     <script>
@@ -26,17 +26,47 @@
             --text-dark: #1a1a1a;
             --text-gray: #757575; 
             --gray-light: #fbfbfb;
-            --serif: "Playfair Display", serif; 
-            --cinzel: "Cinzel", serif;
-            --sans: -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+            --cinzel: 'Montserrat', sans-serif;
+            --serif: 'Inter', sans-serif;
+            --sans: 'Inter', sans-serif;
             --badge-new-bg: #333333; 
         }
 
+        /* LUXURY NOIR THEME (ДЕНЬ/НІЧ) */
+        body.dark-theme {
+            --bg: #121212;
+            --text-dark: #f5f5f5;
+            --gray-light: #1a1a1a;
+            --badge-new-bg: #333;
+        }
+        body.dark-theme .glass-panel { background: rgba(18, 18, 18, 0.85); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        body.dark-theme .card, body.dark-theme .modal-content, body.dark-theme .cart-drawer, body.dark-theme .about-section, body.dark-theme .reviews-section, body.dark-theme .other-projects { background: var(--bg); border-color: rgba(255,255,255,0.05); }
+        body.dark-theme .search-dropdown, body.dark-theme .tg-chat-bubble, body.dark-theme .leave-review-box, body.dark-theme .cart-footer, body.dark-theme .review-form-container { background: #1a1a1a; border-color: rgba(255,255,255,0.05); color: #fff; }
+        body.dark-theme .search-item-name, body.dark-theme .name, body.dark-theme .faq-question, body.dark-theme .cart-item-name, body.dark-theme .project-name { color: #f5f5f5; }
+        body.dark-theme .card img, body.dark-theme .rec-item img { background: #1a1a1a; border-color: #333; }
+        body.dark-theme #searchInput, body.dark-theme .cart-comment-input, body.dark-theme .review-textarea { background: rgba(255,255,255,0.05); color: #fff; border-color: rgba(255,255,255,0.1); }
+        body.dark-theme .vol-chip, body.dark-theme .modal-note-tag, body.dark-theme .review-box { background: #1a1a1a; border-color: #333; color: #ddd; }
+        body.dark-theme .vol-chip.active { background: rgba(197, 160, 89, 0.1); color: var(--gold); border-color: var(--gold); }
+        body.dark-theme .tt-hint { background: #1a1a1a; color: #ccc; border-color: #333; }
+        body.dark-theme .week-spotlight { background: #1a1a1a; border-color: #333; }
+        body.dark-theme .action-buttons { background: var(--bg); }
+        body.dark-theme .viber-link, body.dark-theme .news-btn, body.dark-theme .contact-btn { border-color: #333; color: #fff; }
+        body.dark-theme .project-circle { background: #1a1a1a; border-color: #333; }
+        body.dark-theme .cart-title, body.dark-theme .cart-total-row, body.dark-theme .leave-review-title, body.dark-theme .price-display { color: #fff; }
+        body.dark-theme .gift-wrap-container { background: #1a1a1a; border-color: #333; }
+        body.dark-theme .gift-wrap-text { color: #ccc; }
+        body.dark-theme .order-btn { border-color: #f5f5f5; color: #f5f5f5; }
+        body.dark-theme .order-btn:hover { background: #f5f5f5; color: #000; }
+        body.dark-theme .close-btn { background: #222; color: #aaa; border: 1px solid #333; }
+        body.dark-theme .cart-item { border-bottom-color: rgba(255,255,255,0.05); }
+        
+        .theme-switch { position: absolute; right: 20px; top: 20px; font-size: 20px; cursor: pointer; z-index: 1010; color: #1a1a1a; transition: 0.3s; background: none; border: none; padding: 0; outline: none; }
+        body.dark-theme .theme-switch { color: var(--gold); }
+
         /* PREMIUM CUSTOM SCROLLBAR */
         ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-track { background: #f9f9f9; }
+        ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 5px; }
-        ::-webkit-scrollbar-thumb:hover { background: #b39151; }
         
         body { 
             font-family: var(--sans); 
@@ -46,14 +76,15 @@
             padding-bottom: 90px; 
             -webkit-tap-highlight-color: transparent; 
             line-height: 1.5; 
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        /* ЕФЕКТ МАТОВОГО СКЛА (GLASSMORPHISM) */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.75);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: background-color 0.3s;
         }
 
         .tt-hint { background: #fff; color: #444; padding: 12px 15px; text-align: center; font-size: 11px; border-bottom: 1px solid #f2f2f2; letter-spacing: 0.3px; position: relative; z-index: 1001; }
@@ -67,48 +98,45 @@
         .slide.active { opacity: 1; z-index: 2; pointer-events: auto; }
 
         .bg-video, .banner-bg-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; background-size: cover; background-position: center; z-index: 0; }
-        .video-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 1; }
+        .video-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.35); z-index: 1; }
 
         .logo { width: 120px; position: relative; z-index: 2; margin-bottom: 15px; mix-blend-mode: screen; }
-        .hero-carousel h1 { font-family: var(--cinzel); font-size: 26px; font-weight: 700; letter-spacing: 12px; color: var(--gold); text-transform: uppercase; z-index: 2; margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .hero-carousel h1 { font-family: var(--cinzel); font-size: 22px; font-weight: 800; letter-spacing: 8px; color: var(--gold); text-transform: uppercase; z-index: 2; margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
         
         .banner-content { text-align: center; padding: 20px; color: #fff; position: relative; z-index: 2; width: 100%; box-sizing: border-box; margin-top: -15px; }
-        .banner-brand { font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: var(--gold); display: block; margin-bottom: 5px; font-weight: 700; }
-        .banner-title { font-size: 42px; font-family: var(--cinzel); font-weight: 900; display: block; margin-bottom: 12px; letter-spacing: -1.5px; text-transform: uppercase; line-height: 0.95; }
-        .banner-catchy { display: block; font-family: var(--serif); font-size: 16px; font-style: italic; margin-bottom: 25px; line-height: 1.4; color: #f5f5f5; max-width: 300px; margin-left: auto; margin-right: auto; }
-        .banner-btn { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; padding: 14px 35px; border: 1px solid rgba(255,255,255,0.5); border-radius: 4px; color: #fff; text-decoration: none; cursor: pointer; background: rgba(0,0,0,0.1); backdrop-filter: blur(4px); }
+        .banner-brand { font-size: 10px; text-transform: uppercase; letter-spacing: 3px; color: var(--gold); display: block; margin-bottom: 5px; font-weight: 700; }
+        .banner-title { font-size: 32px; font-family: var(--cinzel); font-weight: 900; display: block; margin-bottom: 12px; letter-spacing: -0.5px; text-transform: uppercase; line-height: 1.1; }
+        .banner-catchy { display: block; font-family: var(--serif); font-size: 14px; font-style: italic; margin-bottom: 25px; line-height: 1.4; color: #f5f5f5; max-width: 300px; margin-left: auto; margin-right: auto; }
+        .banner-btn { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; padding: 14px 35px; border: 1px solid rgba(255,255,255,0.5); border-radius: 4px; color: #fff; text-decoration: none; cursor: pointer; background: rgba(0,0,0,0.1); backdrop-filter: blur(4px); }
         .banner-price-sub { display: block; font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 12px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; }        
         
-        video.banner-bg-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
-
         .carousel-dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 10; }
         .dot { width: 6px; height: 6px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.5); cursor: pointer; }
         .dot.active { background: #fff; transform: scale(1.2); }
 
         .news-ticker { background: var(--gray-light); padding: 10px 0; border-bottom: 1px solid #eee; overflow: hidden; white-space: nowrap; }
-        .news-ticker-content { display: inline-block; padding-left: 100%; animation: ticker 25s linear infinite; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+        .news-ticker-content { display: inline-block; padding-left: 100%; animation: ticker 25s linear infinite; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
         @keyframes ticker { 0% { transform: translate(0,0); } 100% { transform: translate(-100%,0); } }
 
-        .action-buttons { display: flex; gap: 10px; padding: 20px 15px; background: #fff; }
-        .viber-link, .news-btn { flex: 1; border: 1px solid #eee; padding: 14px; text-align: center; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; color: #000; cursor: pointer; }
+        .action-buttons { display: flex; gap: 10px; padding: 20px 15px; background: var(--bg); }
+        .viber-link, .news-btn { flex: 1; border: 1px solid #eee; padding: 14px; text-align: center; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; text-decoration: none; color: var(--text-dark); cursor: pointer; font-weight: 600; }
         
         /* SEARCH & STICKY NAV */
-        .sticky-active { position: sticky; top: 0; z-index: 1000; padding-top: 10px; border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
-        .search-wrapper { position: relative; margin: 0 20px; }
-        #searchInput { width: 100%; padding: 12px 35px 12px 15px; border: 1px solid rgba(0,0,0,0.08); border-radius: 20px; font-size: 13px; outline: none; letter-spacing: 1px; box-sizing: border-box; background: rgba(255, 255, 255, 0.6); box-shadow: inset 0 2px 5px rgba(0,0,0,0.02); transition: all 0.3s ease; }
-        #searchInput:focus { background: rgba(255, 255, 255, 0.95); box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-color: rgba(197, 160, 89, 0.5); }
+        .sticky-active { position: sticky; top: 0; z-index: 1000; padding-top: 12px; }
+        .search-wrapper { position: relative; margin-left: 20px; margin-right: 50px; }
+        #searchInput { width: 100%; padding: 12px 35px 12px 15px; border: 1px solid rgba(0,0,0,0.08); border-radius: 20px; font-size: 13px; outline: none; letter-spacing: 0.5px; box-sizing: border-box; background: rgba(255, 255, 255, 0.6); box-shadow: inset 0 2px 5px rgba(0,0,0,0.02); transition: all 0.3s ease; }
+        #searchInput:focus { border-color: var(--gold); }
         #clearSearchBtn { position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: 16px; color: #999; cursor: pointer; display: none; z-index: 10; padding: 5px; margin-right: 10px; }
         
         /* NOTE SUGGESTIONS CHIPS */
-        .note-suggestions { padding: 5px 20px 10px; overflow-x: auto; white-space: nowrap; display: flex; gap: 8px; scrollbar-width: none; border-bottom: 1px solid rgba(0,0,0,0.03); }
+        .note-suggestions { padding: 8px 20px 10px; overflow-x: auto; white-space: nowrap; display: flex; gap: 8px; scrollbar-width: none; border-bottom: 1px solid rgba(0,0,0,0.03); }
         .note-suggestions::-webkit-scrollbar { display: none; }
         .note-label { font-size: 9px; color: #999; text-transform: uppercase; letter-spacing: 1px; align-self: center; font-weight: 700; }
-        .note-chip { display: inline-block; padding: 4px 12px; background: rgba(255,255,255,0.7); border: 1px solid rgba(0,0,0,0.1); border-radius: 20px; font-size: 10px; color: #555; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px; }
+        .note-chip { display: inline-block; padding: 5px 14px; background: rgba(255,255,255,0.7); border: 1px solid rgba(0,0,0,0.1); border-radius: 20px; font-size: 10px; color: #555; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;}
         .note-chip:active { transform: scale(0.95); }
         .note-chip.active-note { border-color: var(--gold); color: var(--gold); background: #fdfbf7; font-weight: 700; box-shadow: 0 2px 8px rgba(197,160,89,0.2); }
         
-        /* УЩІЛЬНЕНІ НОТИ В МОДАЛЦІ */
-        .modal-note-tag { display: inline-block; background: #fff; border: 1px solid #eaeaea; padding: 3px 8px; border-radius: 4px; font-size: 11px; margin: 0 4px 4px 0; cursor: pointer; color: #444; transition: all 0.2s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+        .modal-note-tag { display: inline-block; background: #fff; border: 1px solid #eaeaea; padding: 4px 10px; border-radius: 4px; font-size: 11px; margin: 0 4px 4px 0; cursor: pointer; color: #444; transition: all 0.2s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.02); font-weight: 500;}
         .modal-note-tag:hover, .modal-note-tag:active { border-color: var(--gold); color: #fff; background: var(--gold); box-shadow: 0 3px 8px rgba(197,160,89,0.3); transform: translateY(-1px); }
         
         .recommendations-block { margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px; }
@@ -122,25 +150,22 @@
         .search-dropdown { display: none; position: absolute; top: 100%; left: 0; right: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 0 0 8px 8px; max-height: 320px; overflow-y: auto; z-index: 2000; border: 1px solid rgba(0,0,0,0.05); border-top: none; }
         .search-item { display: flex; align-items: center; padding: 10px 15px; border-bottom: 1px solid #f9f9f9; cursor: pointer; transition: 0.2s; }
         .search-item:last-child { border-bottom: none; }
-        .search-item:active { background: #fdfdfd; }
         .search-item img { width: 35px; height: 35px; object-fit: contain; margin-right: 12px; border-radius: 4px; }
         .search-item-info { flex: 1; overflow: hidden; }
         .search-item-brand { font-size: 8px; color: var(--gold); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 2px; }
-        .search-item-name { font-size: 13px; font-family: var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #1a1a1a; font-weight: 600;}
+        .search-item-name { font-size: 13px; font-family: var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-dark); font-weight: 600;}
         .search-item-price { font-size: 10px; color: #999; white-space: nowrap; margin-left: 10px; font-weight: 600; }
         .search-empty { padding: 25px 15px; text-align: center; font-size: 13px; color: #666; font-family: var(--serif); }
 
         .brand-slider { display: flex; gap: 30px; overflow-x: auto; padding: 15px 20px; scrollbar-width: none; align-items: center; }
-        .brand-btn { background: none; border: none; opacity: 0.4; font-size: 11px; text-transform: uppercase; white-space: nowrap; letter-spacing: 1px; cursor: pointer; transition: 0.3s;}
+        .brand-btn { background: none; border: none; opacity: 0.4; font-size: 11px; text-transform: uppercase; white-space: nowrap; letter-spacing: 1px; cursor: pointer; font-weight: 600; transition: 0.3s;}
         .brand-btn:hover { opacity: 1; color: var(--gold); }
-        .brand-btn.active { opacity: 1; color: var(--gold); font-weight: 700; }
+        .brand-btn.active { opacity: 1; color: var(--gold); font-weight: 800; }
 
         .tabs-container { display: flex; gap: 25px; overflow-x: auto; padding: 0 20px 15px 20px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .tabs-container::-webkit-scrollbar { display: none; }
         @media (min-width: 768px) { .tabs-container { justify-content: center; } }
         .tab-btn { background: none; border: none; font-size: 11px; font-weight: 600; color: #a0a0a0; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; padding: 5px 0; transition: 0.3s; white-space: nowrap; flex-shrink: 0; }
-        
-        .tab-btn:hover { color: var(--gold); }
         .tab-btn.active { color: var(--gold); font-weight: 800; border-bottom: 2px solid var(--gold); }
 
         /* ОПТИМІЗОВАНИЙ КАТАЛОГ ДЛЯ ПК ТА МОБІЛОК */
@@ -149,30 +174,30 @@
         @media (min-width: 992px) { #catalog { grid-template-columns: repeat(4, 1fr); gap: 40px 25px; padding: 30px 40px; } }
         @media (min-width: 1200px) { #catalog { grid-template-columns: repeat(5, 1fr); gap: 40px 30px; } }
 
-        .card { position: relative; display: flex; flex-direction: column; background: #fff; transition: box-shadow 0.3s ease; }
-        .card img { width: 100%; aspect-ratio: 1; object-fit: cover; background: #f9f9f9; cursor: pointer; position: relative; z-index: 5; }
-        .card-price-label { font-size: 12px; color: var(--gold); font-weight: 700; margin: 10px 0 2px; text-align: center; }
-        .brand { font-family: var(--cinzel); font-size: 10px; color: var(--text-gray); text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; text-align: center; font-weight: 600;}
-        .name { font-family: var(--serif); font-size: 15px; font-weight: 600; margin: 2px 0 10px; min-height: 35px; text-align: center; line-height: 1.2; }
+        .card { position: relative; display: flex; flex-direction: column; background: var(--bg); transition: box-shadow 0.3s ease; }
+        .card img { width: 100%; aspect-ratio: 1; object-fit: cover; background: #f9f9f9; border-radius: 4px; cursor: pointer; position: relative; z-index: 5; }
+        .card-price-label { font-size: 13px; font-family: var(--serif); color: var(--gold); font-weight: 700; margin: 10px 0 2px; text-align: center; }
+        .brand { font-family: var(--cinzel); font-size: 10px; color: #999; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; text-align: center; font-weight: 700;}
+        .name { font-family: var(--serif); font-size: 14px; font-weight: 600; margin: 4px 0 10px; min-height: 35px; text-align: center; line-height: 1.2; color: var(--text-dark); }
         .card-stars { color: var(--gold); font-size: 10px; text-align: center; letter-spacing: 1px; margin-top: -5px; margin-bottom: 10px; }
-        .order-btn { border: 1px solid #000; background: transparent; padding: 12px; font-size: 9px; text-transform: uppercase; font-weight: 700; letter-spacing: 2px; cursor: pointer; position: relative; z-index: 10; transition: 0.3s; }
-        .order-btn:hover { background: #000; color: #fff; }
+        .order-btn { border: 1px solid var(--text-dark); background: transparent; color: var(--text-dark); padding: 12px; font-size: 9px; text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px; cursor: pointer; position: relative; z-index: 10; transition: 0.3s; border-radius: 4px; }
+        .order-btn:hover { background: var(--text-dark); color: var(--bg); }
         
         .badges-wrapper { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 6px; z-index: 10; align-items: flex-start; pointer-events: none; }
-        .badge { padding: 3px 9px; font-size: 8px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; border-radius: 2px; }
+        .badge { padding: 4px 10px; font-size: 8px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; border-radius: 4px; }
         .badge-new { background: var(--badge-new-bg); color: #fff; }
-        .badge-top { color: var(--gold); border: 1px solid var(--gold); background: #fff; }
+        .badge-top { color: var(--gold); border: 1px solid var(--gold); background: var(--bg); }
         .badge-bottle { background: #000; color: var(--gold); border: 1px solid var(--gold); }
         .badge-set { background: #1a1a1a; color: #fff; border: 1px solid #1a1a1a; }
         
-        .badge-last { background: #fff; color: #a94442; border: 1px solid #a94442; animation: badgePulse 2s infinite ease-in-out; }
+        .badge-last { background: var(--bg); color: #a94442; border: 1px solid #a94442; animation: badgePulse 2s infinite ease-in-out; }
         @keyframes badgePulse {
             0% { box-shadow: 0 0 0 0 rgba(169, 68, 66, 0.4); }
             70% { box-shadow: 0 0 0 8px rgba(169, 68, 66, 0); }
             100% { box-shadow: 0 0 0 0 rgba(169, 68, 66, 0); }
         }
 
-        .wishlist-btn { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.95); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; z-index: 15; font-size: 16px; color: #ccc; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.08); backdrop-filter: blur(4px);}
+        .wishlist-btn { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.95); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; z-index: 15; font-size: 18px; color: #ccc; cursor: pointer; border: 1px solid rgba(0,0,0,0.05); transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.08); backdrop-filter: blur(4px);}
         .wishlist-btn:hover { color: var(--gold); }
         .wishlist-btn:active { transform: scale(0.8); }
         .wishlist-btn.active { color: var(--gold); border-color: rgba(197,160,89,0.3); }
@@ -183,167 +208,169 @@
         .skeleton-text { height: 12px; margin-bottom: 8px; width: 80%; margin-left: auto; margin-right: auto; }
         .skeleton-text.short { width: 50%; }
 
-        .week-spotlight { padding: 25px 15px; background: #fafafa; margin: 15px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; text-align: center; }
-        .week-label { font-size: 9px; text-transform: uppercase; letter-spacing: 4px; color: var(--gold); margin-bottom: 15px; display: block; font-weight: 600; }
-        .week-img { max-height: 180px; width: auto; max-width: 90%; object-fit: contain; margin-bottom: 15px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.06)); cursor: pointer; }
-        .week-card-btn { width: 220px; height: 40px; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; background: #1a1a1a; color: #fff; border: none; cursor: pointer; }
+        .week-spotlight { padding: 30px 20px; background: var(--gray-light); margin: 15px 0; text-align: center; }
+        .week-label { font-size: 10px; text-transform: uppercase; letter-spacing: 4px; color: var(--gold); margin-bottom: 15px; display: block; font-weight: 700; }
+        .week-img { max-height: 200px; width: auto; max-width: 90%; object-fit: contain; margin-bottom: 15px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.1)); cursor: pointer; }
+        .week-card-btn { width: 220px; height: 44px; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; background: #1a1a1a; color: #fff; border: none; cursor: pointer; border-radius: 4px; }
 
-        /* УЩІЛЬНЕНА МОДАЛКА ЗІ СКЛОМ */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .modal-content { background: rgba(255, 255, 255, 0.95); padding: 25px 20px; max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.2); position: relative; border-radius: 12px; border: 1px solid rgba(255,255,255,0.5); }
-        .modal-close-x { position: absolute; top: 15px; left: 15px; font-size: 20px; color: #999; background: none; border: none; cursor: pointer; padding: 5px; z-index: 20; transition: 0.3s; }
-        .modal-close-x:hover { color: #000; }
+        /* УЩІЛЬНЕНА МОДАЛКА ЗІ СКЛОМ (TOM FORD STYLE) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-content { background: var(--bg); width: 100%; max-width: 420px; border-radius: 12px; position: relative; max-height: 90vh; overflow-y: auto; padding: 0; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        .modal-close-x { position: absolute; top: 15px; right: 15px; font-size: 20px; color: #fff; background: rgba(0,0,0,0.4); border: none; cursor: pointer; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; z-index: 20; transition: 0.3s; }
+        .modal-close-x:hover { background: rgba(0,0,0,0.8); }
+
+        .modal-header-media { position: relative; height: 260px; background: #000; overflow: hidden; display: flex; justify-content: center; align-items: center; border-radius: 12px 12px 0 0; }
+        .modal-video-bg { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.5; }
+        .bottle-glow-container { position: relative; z-index: 10; display: flex; justify-content: center; align-items: center; width: 100%; }
+        .bottle-glow-container::after { content: ''; position: absolute; width: 240px; height: 240px; background: radial-gradient(circle, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0) 70%); z-index: -1; }
+        .modal-main-img { max-height: 260px; max-width: 90%; object-fit: contain; mix-blend-mode: multiply; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.4)); }
+
+        .modal-body { padding: 25px 20px; }
 
         .reviews-scroll-container { max-height: 160px; overflow-y: auto; margin: 10px 0 15px; padding-right: 5px; border-bottom: 1px solid #f2f2f2; }
-        .review-box { border-left: 3px solid #eee; background: rgba(252,252,252,0.8); padding: 8px 12px; margin: 6px 0; font-family: var(--serif); font-style: italic; font-size: 13px; color: #555; line-height: 1.4; border-radius: 0 4px 4px 0;}
-        .review-pos { border-left-color: var(--gold); background: rgba(253,253,253,0.9); }
-        .review-neg { border-left-color: #333; background: rgba(249,249,249,0.9); }
+        .review-box { border-left: 3px solid #eee; background: rgba(128,128,128,0.05); padding: 10px 14px; margin: 8px 0; font-family: var(--serif); font-style: italic; font-size: 13px; color: var(--text-dark); line-height: 1.5; border-radius: 0 4px 4px 0;}
+        .review-pos { border-left-color: var(--gold); }
+        .review-neg { border-left-color: #333; }
         
-        .review-form-container { margin-top: 15px; margin-bottom: 10px; padding: 15px; background: rgba(250,250,250,0.8); border-radius: 6px; border: 1px solid rgba(0,0,0,0.05); }
+        .review-form-container { margin-top: 15px; margin-bottom: 10px; padding: 15px; background: rgba(128,128,128,0.05); border-radius: 6px; border: 1px solid rgba(128,128,128,0.1); }
         .review-form-title { font-size: 10px; text-transform: uppercase; font-weight: 700; color: var(--gold); letter-spacing: 1px; margin-bottom: 10px; display: block; text-align: center; }
         .star-rating { display: flex; flex-direction: row-reverse; justify-content: center; gap: 5px; margin-bottom: 5px; }
         .star-rating input { display: none; }
         .star-rating label { font-size: 26px; color: #ddd; cursor: pointer; transition: 0.2s; }
         .star-rating input:checked ~ label, .star-rating label:hover, .star-rating label:hover ~ label { color: var(--gold); }
-        .review-textarea { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: var(--sans); font-size: 13px; resize: none; margin-bottom: 10px; outline: none; background: #fff; margin-top: 10px;}
+        .review-textarea { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid rgba(128,128,128,0.2); border-radius: 4px; font-family: var(--sans); font-size: 13px; resize: none; margin-bottom: 10px; outline: none; background: transparent; margin-top: 10px; color: var(--text-dark);}
         .review-textarea:focus { border-color: var(--gold); }
-        .review-submit-btn { background: #fff; color: #000; border: 1px solid #000; padding: 10px 15px; font-size: 9px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; cursor: pointer; border-radius: 4px; width: 100%; transition: 0.2s; }
-        .review-submit-btn:hover { background: #000; color: #fff; }
+        .review-submit-btn { background: var(--bg); color: var(--text-dark); border: 1px solid var(--text-dark); padding: 12px 15px; font-size: 9px; text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px; cursor: pointer; border-radius: 4px; width: 100%; transition: 0.2s; }
+        .review-submit-btn:hover { background: var(--text-dark); color: var(--bg); }
 
-        .vol-container { margin: 15px 0 15px; border-top: 1px solid #f0f0f0; padding-top: 12px; }
-        .vol-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #aaa; display: block; margin-bottom: 8px; }
-        .vol-grid { display: flex; gap: 6px; flex-wrap: wrap; }
-        .vol-chip { padding: 8px 12px; border: 1px solid #eee; font-size: 11px; cursor: pointer; transition: 0.3s; background: #fff; border-radius: 4px;}
-        .vol-chip.active { border-color: var(--gold); color: var(--gold); font-weight: 700; background: #fefaf4; }
-        .vol-chip.disabled { opacity: 0.3; pointer-events: none; background: #fafafa; color: #ccc; border-color: #eee; text-decoration: line-through; }
+        .vol-container { margin: 20px 0; border-top: 1px solid rgba(128,128,128,0.1); padding-top: 15px; }
+        .vol-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #aaa; display: block; margin-bottom: 10px; font-weight: 600;}
+        .vol-grid { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;}
+        .vol-chip { padding: 10px 16px; border: 1px solid rgba(128,128,128,0.2); font-size: 12px; cursor: pointer; transition: 0.3s; background: transparent; border-radius: 6px; font-weight: 600;}
+        .vol-chip.active { border-color: var(--gold); color: var(--gold); background: rgba(197, 160, 89, 0.05); }
+        .vol-chip.disabled { opacity: 0.3; pointer-events: none; text-decoration: line-through; }
         
-        .vol-chip.bottle-special { background: #000; color: var(--gold); border: 1px solid #000; font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 1px;}
-        .vol-chip.bottle-special.active { background: #fff; color: #000; border-color: #000; }
+        .vol-chip.bottle-special { background: #000; color: var(--gold); border: 1px solid #000; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 1px;}
+        .vol-chip.bottle-special.active { background: var(--bg); color: var(--text-dark); border-color: var(--text-dark); }
         
-        .price-display { font-size: 22px; font-family: var(--serif); font-weight: 600; color: var(--gold); margin: 10px 0 2px 0; }
-        .price-sub { font-size: 11px; color: #bbb; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .price-display { font-size: 24px; font-family: var(--serif); font-weight: 700; color: var(--gold); margin: 10px 0 2px 0; text-align: center; }
+        .price-sub { font-size: 11px; color: #bbb; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; text-align: center; }
 
-        .about-section { background: #fafafa; padding: 60px 20px; text-align: center; border-top: 1px solid #eee; }
-        .about-photo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 4px solid #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .about-content { max-width: 500px; margin: 0 auto; text-align: left; font-size: 14px; line-height: 1.8; color: #333; }
+        .about-section { background: var(--gray-light); padding: 60px 20px; text-align: center; }
+        .about-photo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 4px solid var(--bg); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .about-content { max-width: 500px; margin: 0 auto; text-align: left; font-size: 14px; line-height: 1.8; }
         
-        .faq-container { margin-top: 25px; text-align: left; border-top: 1px solid #e5e5e5; }
-        .faq-item { border-bottom: 1px solid #e5e5e5; }
+        .faq-container { margin-top: 25px; text-align: left; border-top: 1px solid rgba(128,128,128,0.1); }
+        .faq-item { border-bottom: 1px solid rgba(128,128,128,0.1); }
         .faq-question { padding: 15px 0; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: var(--text-dark); transition: color 0.3s; }
         .faq-question::after { content: '+'; font-size: 16px; color: var(--gold); }
-        .faq-answer { display: none; padding-bottom: 15px; font-size: 13px; color: #555; font-family: var(--serif); }
+        .faq-answer { display: none; padding-bottom: 15px; font-size: 13px; color: #666; line-height: 1.6; }
         .faq-item.active .faq-answer { display: block; }
         .faq-item.active .faq-question { color: var(--gold); }
         .faq-item.active .faq-question::after { content: '−'; }
 
         .about-contacts { display: flex; gap: 10px; justify-content: center; margin-top: 25px; }
-        .contact-btn { flex: 1; display: flex; align-items: center; justify-content: center; padding: 12px; border: 1px solid #ddd; text-decoration: none; color: #1a1a1a; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .contact-btn { flex: 1; display: flex; align-items: center; justify-content: center; padding: 14px; border: 1px solid rgba(128,128,128,0.2); text-decoration: none; color: var(--text-dark); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; border-radius: 6px; }
         
-        .floating-tg { position: fixed; bottom: 25px; right: 25px; width: 50px; height: 50px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(197,160,89,0.4); z-index: 1500; text-decoration: none; }
-        .floating-tg svg { width: 22px; height: 22px; fill: white; }
+        .floating-tg { position: fixed; bottom: 25px; right: 25px; width: 55px; height: 55px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(197,160,89,0.4); z-index: 1500; text-decoration: none; }
+        .floating-tg svg { width: 24px; height: 24px; fill: white; }
         
-        #scrollTopBtn { display: none; position: fixed; bottom: 150px; right: 25px; background: rgba(26, 26, 26, 0.8); backdrop-filter: blur(5px); color: #fff; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 1400; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: 0.3s; }
+        #scrollTopBtn { display: none; position: fixed; bottom: 150px; right: 25px; background: rgba(26, 26, 26, 0.8); backdrop-filter: blur(5px); color: #fff; border: none; width: 44px; height: 44px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 1400; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: 0.3s; }
         #scrollTopBtn:active { transform: scale(0.9); }
 
-        .modal-btn-full { display: flex; width: 100%; height: 50px; align-items: center; justify-content: center; font-size: 11px; text-transform: uppercase; font-weight: 900; letter-spacing: 1.5px; text-decoration: none; border: none; cursor: pointer; transition: 0.3s; border-radius: 6px;}
-        .modal-order-btn { position: sticky; bottom: -20px; left: 0; width: calc(100% + 40px); margin-left: -20px; margin-top: 15px; margin-bottom: -25px; padding: 20px 0; background: var(--gold); color: #fff; box-shadow: 0 -10px 20px rgba(0,0,0,0.1); z-index: 100; transition: background 0.3s ease, color 0.3s ease; border-radius: 0 0 12px 12px;}
-        .modal-order-btn:active { background: #000; }
-        .close-btn { background: #f5f5f5; color: #999; margin-top: 10px; }
+        .modal-btn-full { display: flex; width: 100%; height: 54px; align-items: center; justify-content: center; font-size: 12px; text-transform: uppercase; font-weight: 800; letter-spacing: 1.5px; text-decoration: none; border: none; cursor: pointer; transition: 0.3s; border-radius: 8px;}
+        .modal-order-btn { margin-top: 15px; background: var(--gold); color: #fff; box-shadow: 0 10px 20px rgba(197,160,89,0.3); z-index: 100; transition: background 0.3s ease, color 0.3s ease; }
+        .modal-order-btn:active { transform: scale(0.98); }
         
-        .other-projects { padding: 40px 20px; text-align: center; background: #fff; border-top: 1px solid #f2f2f2; }
-        .projects-title { font-size: 9px; text-transform: uppercase; letter-spacing: 3px; color: #bbb; margin-bottom: 30px; display: block; font-weight: 600; }
+        .other-projects { padding: 50px 20px; text-align: center; background: var(--bg); border-top: 1px solid rgba(128,128,128,0.1); }
+        .projects-title { font-size: 10px; text-transform: uppercase; letter-spacing: 4px; color: #999; margin-bottom: 40px; display: block; font-weight: 700; }
         .projects-flex { display: flex; gap: 45px; justify-content: center; }
-        .project-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #1a1a1a; transition: 0.3s; width: 80px; }
-        .project-circle { width: 65px; height: 65px; border-radius: 50%; border: 1px solid var(--gold); margin-bottom: 12px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .project-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-dark); transition: 0.3s; width: 80px; }
+        .project-circle { width: 75px; height: 75px; border-radius: 50%; border: 2px solid var(--gold); margin-bottom: 15px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .project-circle img { width: 100%; height: 100%; object-fit: cover; }
-        .project-name { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #444; text-align: center; line-height: 1.2; }
-        .project-item:active .project-circle { transform: scale(0.9); border-color: #000; }
+        .project-name { font-family: var(--cinzel); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; text-align: center; line-height: 1.3; }
+        .project-item:active .project-circle { transform: scale(0.9); border-color: var(--text-dark); }
 
-        .tg-chat-bubble { position: fixed; bottom: 85px; right: 25px; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.15); padding: 12px 15px 12px 12px; display: flex; align-items: center; gap: 12px; z-index: 1499; opacity: 0; transform: translateY(20px) scale(0.9); pointer-events: none; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 1px solid rgba(0,0,0,0.05); width: 240px; box-sizing: border-box; }
+        .tg-chat-bubble { position: fixed; bottom: 95px; right: 25px; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); padding: 14px; display: flex; align-items: center; gap: 12px; z-index: 1499; opacity: 0; transform: translateY(20px) scale(0.9); pointer-events: none; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 1px solid rgba(0,0,0,0.05); width: 250px; box-sizing: border-box; }
         .tg-chat-bubble.show { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
-        .tg-chat-bubble::after { content: ''; position: absolute; bottom: -6px; right: 15px; width: 12px; height: 12px; background: #fff; transform: rotate(45deg); border-right: 1px solid rgba(0,0,0,0.05); border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .tg-chat-bubble img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
-        .bubble-text { font-size: 11px; line-height: 1.4; color: #555; }
-        .bubble-text b { color: var(--text-dark); font-size: 12px; display: inline-block; margin-bottom: 2px; }
-        .bubble-close { position: absolute; top: 6px; right: 10px; font-size: 12px; color: #ccc; cursor: pointer; transition: 0.2s; padding: 2px; }
+        .tg-chat-bubble::after { content: ''; position: absolute; bottom: -6px; right: 20px; width: 12px; height: 12px; background: inherit; transform: rotate(45deg); border-right: 1px solid rgba(0,0,0,0.05); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .tg-chat-bubble img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
+        .bubble-text { font-size: 12px; line-height: 1.4; color: #555; }
+        .bubble-text b { color: var(--text-dark); font-size: 13px; display: inline-block; margin-bottom: 2px; }
+        .bubble-close { position: absolute; top: 6px; right: 10px; font-size: 14px; color: #ccc; cursor: pointer; transition: 0.2s; padding: 2px; }
         .bubble-close:hover { color: #000; }
 
         @keyframes cartPulse { 0% {transform: scale(1);} 50% {transform: scale(1.15); box-shadow: 0 0 20px rgba(197,160,89,0.8);} 100% {transform: scale(1);} }
         .cart-pulse-anim { animation: cartPulse 0.4s ease-in-out; }
         
-        .cart-floating-btn { position: fixed; bottom: 25px; left: 25px; width: 50px; height: 50px; background: #1a1a1a; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 20px rgba(0,0,0,0.3); z-index: 1500; cursor: pointer; transition: transform 0.3s; border: 1px solid var(--gold); }
+        .cart-floating-btn { position: fixed; bottom: 25px; left: 25px; width: 55px; height: 55px; background: #1a1a1a; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 1500; cursor: pointer; transition: transform 0.3s; border: 1px solid var(--gold); }
         .cart-floating-btn:active { transform: scale(0.9); }
-        .cart-floating-btn svg { width: 22px; height: 22px; fill: var(--gold); }
-        .cart-badge { position: absolute; top: -5px; right: -5px; background: var(--gold); color: #fff; font-size: 10px; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; }
+        .cart-floating-btn svg { width: 24px; height: 24px; fill: var(--gold); }
+        .cart-badge { position: absolute; top: -5px; right: -5px; background: var(--gold); color: #fff; font-size: 11px; font-weight: 800; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; }
         
-        /* FLYING ICON ANIMATION */
         .flying-icon { position: fixed; z-index: 10000; width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); box-shadow: 0 10px 25px rgba(0,0,0,0.2); transition: all 1s cubic-bezier(0.19, 1, 0.22, 1); pointer-events: none; opacity: 1;}
 
-        .cart-drawer { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background: rgba(255,255,255,0.92); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 3500; transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.1); border-left: 1px solid rgba(255,255,255,0.5); }
+        .cart-drawer { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 3500; transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.1); border-left: 1px solid rgba(128,128,128,0.2); }
         .cart-drawer.open { right: 0; }
-        .cart-drawer-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3499; display: none; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+        .cart-drawer-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3499; display: none; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
         .cart-drawer-backdrop.show { display: block; }
         
-        .cart-header { padding: 20px 20px 15px; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
-        .cart-title { font-family: var(--cinzel); font-size: 18px; font-weight: 700; color: #000; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
-        .cart-close { background: none; border: none; font-size: 24px; color: #999; cursor: pointer; padding: 0 10px; }
+        .cart-header { padding: 25px 20px 20px; border-bottom: 1px solid rgba(128,128,128,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .cart-title { font-family: var(--cinzel); font-size: 18px; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
+        .cart-close { background: none; border: none; font-size: 28px; color: #999; cursor: pointer; padding: 0 10px; }
         
-        /* SHIPPING PROGRESS BAR */
-        .shipping-progress-container { margin: 15px 20px 5px; background: rgba(250,250,250,0.7); border-radius: 6px; border: 1px solid rgba(0,0,0,0.05); padding: 12px; text-align: center; display: none; }
-        .shipping-progress-text { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #555; margin-bottom: 8px; font-weight: 600; }
+        .shipping-progress-container { margin: 15px 20px 5px; background: rgba(128,128,128,0.05); border-radius: 8px; border: 1px solid rgba(128,128,128,0.1); padding: 14px; text-align: center; display: none; }
+        .shipping-progress-text { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #777; margin-bottom: 10px; font-weight: 700; }
         .shipping-progress-bar { width: 100%; height: 4px; background: #e0e0e0; border-radius: 2px; overflow: hidden; }
         .shipping-progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.5s ease; }
 
         .cart-items { flex: 1; overflow-y: auto; padding: 15px 20px; }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px solid rgba(0,0,0,0.03); }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px solid rgba(128,128,128,0.1); }
         .cart-item-info { flex: 1; padding-right: 15px; }
-        .cart-item-brand { font-family: var(--cinzel); font-size: 9px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
-        .cart-item-name { font-size: 14px; font-family: var(--serif); font-weight: 600; color: #1a1a1a; line-height: 1.2; margin: 3px 0; }
+        .cart-item-brand { font-family: var(--cinzel); font-size: 9px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; font-weight: 800; }
+        .cart-item-name { font-size: 14px; font-family: var(--serif); font-weight: 700; line-height: 1.2; margin: 4px 0; }
         .cart-item-vol { font-size: 11px; color: #777; }
-        .cart-item-price { font-size: 13px; font-weight: 700; color: #000; }
-        .cart-item-remove { background: none; border: none; color: #ff4d4d; font-size: 22px; cursor: pointer; padding: 5px; opacity: 0.6; }
-        .cart-item-remove:active { opacity: 1; }
+        .cart-item-price { font-size: 14px; font-weight: 700; }
+        .cart-item-remove { background: none; border: none; color: #ff4d4d; font-size: 24px; cursor: pointer; padding: 5px; opacity: 0.6; }
+        .cart-item-remove:hover { opacity: 1; }
         
-        .cart-empty-msg { text-align: center; color: #999; font-size: 13px; margin-top: 40px; font-family: var(--serif); font-style: italic;}
+        .cart-empty-msg { text-align: center; color: #999; font-size: 14px; margin-top: 50px; font-family: var(--serif); font-style: italic;}
         
-        .cart-footer { padding: 20px; border-top: 1px solid rgba(0,0,0,0.05); background: rgba(250,250,250,0.5); }
+        .cart-footer { padding: 25px 20px; border-top: 1px solid rgba(128,128,128,0.1); }
         
-        /* GIFT WRAP CHECKBOX */
-        .gift-wrap-container { display: flex; align-items: center; margin-bottom: 15px; cursor: pointer; padding: 12px; border: 1px dashed #ddd; border-radius: 6px; transition: 0.3s; background: rgba(255,255,255,0.8); }
+        .gift-wrap-container { display: flex; align-items: center; margin-bottom: 20px; cursor: pointer; padding: 14px; border: 1px dashed rgba(128,128,128,0.3); border-radius: 8px; transition: 0.3s; }
         .gift-wrap-container:hover { border-color: var(--gold); }
         .gift-wrap-container input { display: none; }
-        .gift-wrap-box { width: 16px; height: 16px; border: 1px solid #ccc; border-radius: 3px; margin-right: 12px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .gift-wrap-box { width: 18px; height: 18px; border: 1px solid #ccc; border-radius: 4px; margin-right: 12px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .gift-wrap-container input:checked + .gift-wrap-box { background: var(--gold); border-color: var(--gold); }
-        .gift-wrap-container input:checked + .gift-wrap-box::after { content: '✓'; color: #fff; font-size: 11px; font-weight: bold; }
-        .gift-wrap-text { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #1a1a1a; font-weight: 700; }
+        .gift-wrap-container input:checked + .gift-wrap-box::after { content: '✓'; color: #fff; font-size: 12px; font-weight: bold; }
+        .gift-wrap-text { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
 
-        .cart-total-row { display: flex; justify-content: space-between; font-size: 18px; font-family: var(--serif); font-weight: 600; color: #000; margin-bottom: 15px; }
+        .cart-total-row { display: flex; justify-content: space-between; font-size: 20px; font-family: var(--serif); font-weight: 800; margin-bottom: 20px; }
         
-        .cart-comment-input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; font-family: var(--sans); font-size: 13px; resize: none; margin-bottom: 15px; outline: none; background: rgba(255,255,255,0.9); }
+        .cart-comment-input { width: 100%; box-sizing: border-box; padding: 14px; border: 1px solid rgba(128,128,128,0.2); border-radius: 8px; font-family: var(--sans); font-size: 14px; resize: none; margin-bottom: 15px; outline: none; background: transparent;}
         .cart-comment-input:focus { border-color: var(--gold); }
 
-        .cart-checkout-btn { display: flex; width: 100%; padding: 18px 0; align-items: center; justify-content: center; font-size: 11px; text-transform: uppercase; font-weight: 900; letter-spacing: 1.5px; background: #000; color: #fff; border: none; cursor: pointer; border-radius: 8px; transition: 0.3s; }
-        .cart-checkout-btn:active { background: var(--gold); }
+        .cart-checkout-btn { display: flex; width: 100%; padding: 20px 0; align-items: center; justify-content: center; font-size: 12px; text-transform: uppercase; font-weight: 900; letter-spacing: 2px; background: var(--gold); color: #fff; border: none; cursor: pointer; border-radius: 8px; transition: 0.3s; }
+        .cart-checkout-btn:active { transform: scale(0.98); }
         
-        .cart-return-btn { display: flex; width: 100%; padding: 14px 0; align-items: center; justify-content: center; font-size: 9px; text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px; background: transparent; color: #777; border: 1px solid #ddd; cursor: pointer; border-radius: 8px; transition: 0.3s; margin-top: 10px; }
-        .cart-return-btn:active { background: #f5f5f5; color: #000; }
+        .cart-return-btn { display: flex; width: 100%; padding: 16px 0; align-items: center; justify-content: center; font-size: 10px; text-transform: uppercase; font-weight: 700; letter-spacing: 1.5px; background: transparent; color: #777; border: 1px solid rgba(128,128,128,0.2); cursor: pointer; border-radius: 8px; transition: 0.3s; margin-top: 10px; }
 
-        /* SECTION REVIEWS - PREMIUM MINIMALISM */
-        .reviews-section { padding: 50px 20px; background: #fff; border-top: 1px solid #f2f2f2; text-align: center; }
-        .reviews-header { font-size: 10px; text-transform: uppercase; letter-spacing: 4px; color: var(--gold); font-weight: 700; margin-bottom: 30px; display: block; }
+        .reviews-section { padding: 60px 20px; background: var(--bg); border-top: 1px solid rgba(128,128,128,0.1); text-align: center; }
+        .reviews-header { font-size: 11px; text-transform: uppercase; letter-spacing: 4px; color: var(--gold); font-weight: 800; margin-bottom: 40px; display: block; }
         
         .reviews-container { max-width: 600px; margin: 0 auto; text-align: left; }
-        .review-card { border-bottom: 1px solid #f9f9f9; padding: 25px 0; transition: 0.3s; }
+        .review-card { border-bottom: 1px solid rgba(128,128,128,0.1); padding: 30px 0; transition: 0.3s; }
         .review-card:last-child { border-bottom: none; }
-        .review-author { font-family: var(--cinzel); font-size: 14px; font-weight: 700; color: #1a1a1a; display: block; margin-bottom: 4px; letter-spacing: 1px;}
-        .review-stars { color: var(--gold); font-size: 9px; letter-spacing: 2px; margin-bottom: 10px; display: block; }
-        .review-text { font-family: var(--serif); font-size: 14px; color: #444; line-height: 1.7; font-style: italic; font-weight: 400; }
+        .review-author { font-family: var(--cinzel); font-size: 14px; font-weight: 800; display: block; margin-bottom: 6px; letter-spacing: 1px;}
+        .review-stars { color: var(--gold); font-size: 11px; letter-spacing: 2px; margin-bottom: 12px; display: block; }
+        .review-text { font-family: var(--serif); font-size: 15px; color: #555; line-height: 1.7; font-style: italic; font-weight: 400; }
         
         #reviewsHistory { display: none; }
-        .toggle-reviews-btn { color: var(--gold); cursor: pointer; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; font-weight: 700; margin-top: 30px; display: inline-block; border-bottom: 1px solid var(--gold); padding-bottom: 4px; }
+        .toggle-reviews-btn { color: var(--gold); cursor: pointer; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; font-weight: 800; margin-top: 40px; display: inline-block; border-bottom: 2px solid var(--gold); padding-bottom: 4px; }
 
-        .leave-review-box { margin-top: 50px; padding: 30px 20px; background: #fbfbfb; border-radius: 4px; border: 1px solid #eee; }
-        .leave-review-title { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 20px; display: block; color: #1a1a1a; }       
+        .leave-review-box { margin-top: 60px; padding: 40px 20px; background: rgba(128,128,128,0.05); border-radius: 8px; border: 1px solid rgba(128,128,128,0.1); }
+        .leave-review-title { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; margin-bottom: 25px; display: block; text-align: center;}       
     </style>
 </head>
 <body>
@@ -367,6 +394,7 @@
 </div>
 
 <div id="stickyControls" class="sticky-active glass-panel">
+    <button class="theme-switch" onclick="toggleTheme()" id="themeBtn">☾</button>
     <div class="search-wrapper">
         <input type="text" id="searchInput" placeholder="ПОШУК АРОМАТУ АБО БРЕНДУ..." oninput="handleSearchInput()">
         <span id="clearSearchBtn" onclick="clearSearch()">✕</span>
@@ -458,13 +486,14 @@
                 <input type="radio" id="gstar1" name="grating" value="1" onchange="showGeneralReviewFields()"><label for="gstar1">★</label>
             </div>
             <div id="generalReviewFields" style="display:none; margin-top:20px;">
-                <input type="text" id="revName" class="cart-comment-input" placeholder="Ваше ім'я" style="margin-bottom:15px; border-radius: 4px;">
-                <textarea id="revText" class="review-textarea" rows="3" placeholder="Ваші враження від замовлення та роботи..." style="border-radius: 4px;"></textarea>
-                <button class="review-submit-btn" onclick="submitGeneralReview()" style="border-radius: 4px; padding: 15px;">ВІДПРАВИТИ ВІДГУК</button>
+                <input type="text" id="revName" class="cart-comment-input" placeholder="Ваше ім'я" style="margin-bottom:15px;">
+                <textarea id="revText" class="review-textarea" rows="3" placeholder="Ваші враження від замовлення та роботи..."></textarea>
+                <button class="review-submit-btn" onclick="submitGeneralReview()">ВІДПРАВИТИ ВІДГУК</button>
             </div>
         </div>
     </div>
 </div>    
+
 <div class="other-projects">
     <span class="projects-title">Наші Проєкти</span>
     <div class="projects-flex">
@@ -508,16 +537,16 @@
     
     <div class="cart-items" id="cartItemsList"></div>
 
-    <div id="cartUpsellBlock" style="display: none; margin: 0 20px 15px; padding: 12px; border: 1px dashed var(--gold); border-radius: 6px; background: rgba(253,251,247,0.8);">
-        <div style="font-size: 9px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-weight: 700; letter-spacing: 1px; text-align: center;">Додати на пробу? ✨</div>
+    <div id="cartUpsellBlock" style="display: none; margin: 0 20px 15px; padding: 14px; border: 1px dashed var(--gold); border-radius: 8px; background: rgba(197, 160, 89, 0.05);">
+        <div style="font-size: 10px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; font-weight: 800; letter-spacing: 1px; text-align: center;">Додати на пробу? ✨</div>
         <div style="display: flex; align-items: center; gap: 12px;">
-            <img id="upsellImg" src="" style="width: 45px; height: 45px; object-fit: cover; border-radius: 4px; border: 1px solid #eee;">
+            <img id="upsellImg" src="" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid rgba(128,128,128,0.2);">
             <div style="flex: 1; overflow: hidden;">
-                <div id="upsellBrand" style="font-family: var(--cinzel); font-size: 9px; color: #999; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600;"></div>
-                <div id="upsellName" style="font-size: 13px; font-family: var(--serif); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 2px 0;"></div>
-                <div id="upsellPrice" style="font-size: 11px; color: #000; font-weight: 700;"></div>
+                <div id="upsellBrand" style="font-family: var(--cinzel); font-size: 9px; color: #999; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 800;"></div>
+                <div id="upsellName" style="font-size: 14px; font-family: var(--serif); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 3px 0;"></div>
+                <div id="upsellPrice" style="font-size: 13px; font-weight: 700;"></div>
             </div>
-            <button id="upsellAddBtn" style="background: #1a1a1a; color: #fff; border: none; padding: 8px 12px; font-size: 9px; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-weight: 700; transition: 0.2s;">+ 2 мл</button>
+            <button id="upsellAddBtn" style="background: var(--text-dark); color: var(--bg); border: none; padding: 10px 15px; font-size: 10px; border-radius: 6px; cursor: pointer; text-transform: uppercase; font-weight: 800; transition: 0.2s;">+ 2 мл</button>
         </div>
     </div>
     <div class="cart-footer">
@@ -531,7 +560,7 @@
             <span>Всього:</span>
             <strong id="cartTotalSum">0 грн</strong>
         </div>
-        <input type="text" id="cartContact" class="cart-comment-input" placeholder="Ваш Telegram нік або номер телефону *" style="margin-bottom: 10px; border-color: #1a1a1a;" required>
+        <input type="text" id="cartContact" class="cart-comment-input" placeholder="Ваш Telegram нік або номер телефону *" required>
         <textarea id="cartComment" class="cart-comment-input" rows="2" placeholder="Місто, відділення НП, самовивіз або ваш коментар..."></textarea>
         
         <button class="cart-checkout-btn" id="checkoutBtn" onclick="checkoutCart()">Відправити замовлення</button>
@@ -539,15 +568,35 @@
     </div>
 </div>
 
-<div id="tgChatBubble" class="tg-chat-bubble">
-    <span class="bubble-close" onclick="document.getElementById('tgChatBubble').classList.remove('show')">✕</span>
-    <img src="Screenshot_20260328-171201.png" alt="Вікторія" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
-    <div class="bubble-text">
-        <b>Потрібна консультація?</b><br>Я на зв'язку в Telegram ✨
+<div id="infoModal" class="modal" onclick="this.style.display='none'">
+    <div class="modal-content glass-panel" onclick="event.stopPropagation()" style="padding:0; overflow:hidden;">
+        <button class="modal-close-x" onclick="document.getElementById('infoModal').style.display='none'">✕</button>
+        
+        <div class="modal-header-media">
+            <video class="modal-video-bg" autoplay muted loop playsinline><source src="intro.mp4" type="video/mp4"></video>
+            <div class="bottle-glow-container">
+                <img id="mImg" class="modal-main-img" src="">
+            </div>
+        </div>
+
+        <div class="modal-body">
+            <h3 id="mB" style="text-align:center;font-family:var(--cinzel);margin:0 0 5px 0;letter-spacing:2px;font-size:11px;color:var(--gold);text-transform:uppercase;font-weight:800;"></h3>
+            <p id="mN" style="text-align:center;font-family:var(--cinzel);font-size:22px;color:var(--text-dark);font-weight:900;margin-top:0;margin-bottom:20px;"></p>
+            <div id="mD" style="font-size:14px; color:var(--text-dark);"></div>
+            <button id="modalOrderBtn" class="modal-btn-full modal-order-btn">ДОДАТИ В КОШИК</button>
+            <div id="reviewFormContainerHTML"></div>
+        </div>
     </div>
 </div>
 
-<button id="scrollTopBtn" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
+<div id="newsModalWindow" class="modal" onclick="this.style.display='none'">
+    <div class="modal-content glass-panel" onclick="event.stopPropagation()" style="padding: 30px;">
+        <h3 style="font-family:var(--cinzel);text-align:center;text-transform:uppercase;letter-spacing:2px;font-weight:900;">Новини та акції</h3>
+        <hr style="border:0;height:1px;background:rgba(128,128,128,0.2);margin:25px 0;">
+        <div id="newsModalContent"></div>
+        <button class="modal-btn-full" style="background:var(--bg); color:var(--text-dark); border:1px solid rgba(128,128,128,0.3); margin-top: 25px;" onclick="document.getElementById('newsModalWindow').style.display='none'">Закрити</button>
+    </div>
+</div>
 
 <script>
     const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
@@ -585,9 +634,7 @@
         b.innerText = isVis ? "Наша історія ↓" : "Згорнути ↑";
     }
 
-    function toggleFaq(el) {
-        el.parentElement.classList.toggle('active');
-    }
+    function toggleFaq(el) { el.parentElement.classList.toggle('active'); }
 
     function sharePerfume() {
         const brand = document.getElementById('mB').innerText;
@@ -598,14 +645,10 @@
                 text: `Подивись на цей аромат: ${brand} ${name} ✨`,
                 url: window.location.href
             }).catch(err => console.log('Share error:', err));
-        } else {
-            alert("Ваш браузер не підтримує швидке поширення.");
-        }
+        } else { alert("Ваш браузер не підтримує швидке поширення."); }
     }
 
-    function showReviewFields() {
-        document.getElementById('reviewHiddenParts').style.display = 'block';
-    }
+    function showReviewFields() { document.getElementById('reviewHiddenParts').style.display = 'block'; }
 
     async function submitReview(b, n) {
         const text = document.getElementById('reviewText').value.trim();
@@ -618,28 +661,12 @@
         const stars = rating.value;
         const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxwI4YS1nrjizwkUJ4-Eay9iFcFIQB8pW8ehgJNaiVRZiItsMcjfzD4t4MmqfO6AQ42Ag/exec';
 
-        const payload = {
-            type: "product_review",
-            brand: b,
-            name: n,
-            stars: stars,
-            text: text,
-            author: author
-        };
+        const payload = { type: "product_review", brand: b, name: n, stars: stars, text: text, author: author };
 
         try {
-            await fetch(WEBAPP_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            document.querySelector('.review-form-container').innerHTML = '<div style="text-align:center; padding: 20px 0; color: var(--gold); font-weight: 600; font-size: 13px;">Дякуємо! Ваш відгук відправлено на модерацію ✨</div>';
-        } catch (e) {
-            console.error('Помилка:', e);
-            alert('Сталася помилка. Спробуйте ще раз.');
-        }
+            await fetch(WEBAPP_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+            document.querySelector('.review-form-container').innerHTML = '<div style="text-align:center; padding: 20px 0; color: var(--gold); font-weight: 800; font-size: 13px;">Дякуємо! Ваш відгук відправлено ✨</div>';
+        } catch (e) { alert('Сталася помилка. Спробуйте ще раз.'); }
     }
 
     function safeParseCSV(str) {
@@ -674,29 +701,19 @@
         const id = b + ' ' + n;
         const idx = wishlist.indexOf(id);
         
-        if(idx > -1) {
-            wishlist.splice(idx, 1);
-            btn.classList.remove('active');
-            btn.innerText = '♡';
-        } else {
-            wishlist.push(id);
-            btn.classList.add('active');
-            btn.innerText = '♥';
-        }
+        if(idx > -1) { wishlist.splice(idx, 1); btn.classList.remove('active'); btn.innerText = '♡'; } 
+        else { wishlist.push(id); btn.classList.add('active'); btn.innerText = '♥'; }
+        
         localStorage.setItem('vr_wishlist', JSON.stringify(wishlist));
         if (currentCategory === 'wishlist') triggerCatalogAnimation(); 
     }
 
     async function load() {
         try {
-            const fetches = [
-                fetch(SHEET_CSV + '&v=' + Date.now()),
-                fetch(REVIEWS_CSV + '&v=' + Date.now())
-            ];
+            const fetches = [fetch(SHEET_CSV + '&v=' + Date.now()), fetch(REVIEWS_CSV + '&v=' + Date.now())];
             if (PROMO_CSV !== '') fetches.push(fetch(PROMO_CSV + '&v=' + Date.now()));
 
             const responses = await Promise.all(fetches);
-            
             const dataProd = await responses[0].text();
             const rows = safeParseCSV(dataProd);
             
@@ -727,9 +744,11 @@
 
             catalogData.sort((a, b) => new Date(b[6]) - new Date(a[6]));
             catalogData.forEach(c => {
-                const [brand, name, price, minVol, desc, img, dateStr, top, weekText] = c;
-                // Індекс 11 - флакон мл, 12 - ціна флакону
-                const bottleMl = c[11]; 
+                const [brand, name, price, minVol, desc, img, dateStr, top, weekText, , , bottleMl, bottlePrice, , stockCol] = c;
+                
+                // ВАЖЛИВО: Оцінка залишків з колонки O (індекс 14)
+                const stock = parseFloat(stockCol);
+                const isOutOfStock = !isNaN(stock) && stock <= 0;
                 
                 const pDate = new Date(dateStr), isNew = (new Date() - pDate) / (1000*60*60*24) <= 10;
                 const isTop = top && (top.toLowerCase().includes('топ') || top.toLowerCase().includes('хіт'));
@@ -738,10 +757,7 @@
                 const isBottle = bottleMl && parseInt(bottleMl) > 0;
                 const isLastDrops = top && top.toLowerCase().includes('останн');
 
-                const isSet = (brand && brand.toLowerCase().includes('set')) || 
-                              (brand && brand.toLowerCase().includes('сет')) || 
-                              (name && name.toLowerCase().includes('сет')) || 
-                              (top && top.toLowerCase().includes('сет'));
+                const isSet = (brand && brand.toLowerCase().includes('set')) || (brand && brand.toLowerCase().includes('сет')) || (name && name.toLowerCase().includes('сет')) || (top && top.toLowerCase().includes('сет'));
                 
                 const startsFrom5 = minVol && String(minVol).includes('5');
                 const minPriceLabel = calculatePrice(price, startsFrom5 ? '5 мл' : '2 мл');
@@ -752,7 +768,6 @@
                 const isWished = wishlist.includes(cardId);
                 const safeDesc = desc ? desc.replace(/<[^>]*>?/gm, ' ').replace(/"/g, '&quot;') : '';
 
-                // ОБРАХУНОК ЗІРОК
                 let rawDesc = desc || '';
                 let posCount = (rawDesc.match(/\[\+\]/g) || []).length;
                 let neuCount = (rawDesc.match(/\[=\]/g) || []).length;
@@ -777,15 +792,10 @@
                         let sentences = cleanDesc.split(/[.!?<]/);
                         for (let s of sentences) {
                             let candidate = s.trim();
-                            if (candidate.length > 15 && /[а-яіїєґa-z]{4,}/i.test(candidate)) {
-                                catchyHeading = candidate.length > 60 ? candidate.substring(0, 60).trim() + '...' : candidate;
-                                break;
-                            }
+                            if (candidate.length > 15 && /[а-яіїєґa-z]{4,}/i.test(candidate)) { catchyHeading = candidate.length > 60 ? candidate.substring(0, 60).trim() + '...' : candidate; break; }
                         }
                         if (!catchyHeading) catchyHeading = "Розкішний аромат для вашого образу";
-                    } else if (isWeek) {
-                        catchyHeading = "Ексклюзивна пропозиція цього тижня";
-                    }
+                    } else if (isWeek) { catchyHeading = "Ексклюзивна пропозиція цього тижня"; }
                     const slide = document.createElement('div');
                     slide.className = 'slide';
                     slide.innerHTML = `<div class="banner-bg-img" style="background-image:url('${safeImg}')"></div><div class="video-overlay"></div><div class="banner-content"><span class="banner-brand">${isWeek ? 'WEEKLY PICK' : brand}</span><span class="banner-title">${name}</span><span class="banner-catchy">${catchyHeading}</span><span class="banner-btn">СПРОБУВАТИ АРОМАТ</span><span class="banner-price-sub">${price} грн / 1 мл</span></div>`;
@@ -808,7 +818,6 @@
                 div.setAttribute('data-brand', brand); 
                 div.setAttribute('data-id', cardId); 
                 div.setAttribute('data-desc', safeDesc); 
-                
                 div.setAttribute('data-category', (isNew ? 'new ' : '') + (isTop ? 'top ' : '') + (isBottle ? 'bottle ' : '') + (isSet ? 'set ' : '') + (top ? top.toLowerCase() : ''));
                 
                 div.innerHTML = `
@@ -821,29 +830,25 @@
                     </div>
                     <div class="wishlist-btn ${isWished ? 'active' : ''}" onclick="toggleWishlist(event, '${brand.replace(/'/g, "\\'")}', '${name.replace(/'/g, "\\'")}', this)">${isWished ? '♥' : '♡'}</div>
                     <img loading="lazy" src="${safeImg}">
-                    <div class="card-price-label">${displayPriceStr}</div>
+                    <div class="card-price-label">${isOutOfStock ? 'Тимчасово відсутній' : displayPriceStr}</div>
                     <div class="brand">${brand}</div>
                     <div class="name" ${cardStarsHTML ? 'style="margin-bottom:5px;"' : ''}>${name}</div>
                     ${cardStarsHTML}
-                    <button class="order-btn">Детальніше</button>
+                    <button class="order-btn" ${isOutOfStock ? 'style="background:rgba(128,128,128,0.1); color:#999; border-color:transparent; pointer-events:none;"' : ''}>
+                        ${isOutOfStock ? 'НЕМАЄ В НАЯВНОСТІ' : 'Детальніше'}
+                    </button>
                 `;
                 
                 div.querySelector('img').onclick = () => showModal(c);
-                div.querySelector('.order-btn').onclick = () => showModal(c);
+                if(!isOutOfStock) div.querySelector('.order-btn').onclick = () => showModal(c);
                 container.appendChild(div);
             });
-
-            const dots = document.createElement('div');
-            dots.className = 'carousel-dots';
-            dots.id = 'carouselDots';
-            carousel.appendChild(dots);
 
             renderBrandSlider(catalogData); 
             initCarousel(); 
             initSwipe(); 
             init3DEffect();
             formatNews(rows[0][10]);
-            
             renderGeneralReviews(reviewsData.slice(1));
             if (promoDataRow) renderPremiumPromo(promoDataRow);
             
@@ -852,12 +857,17 @@
     }
 
     function showModal(pArr, isWeekly = false) {
-        const [brand, name, price, minVol, desc, img, , top, weekText] = pArr;
-        const bottleMl = pArr[11]; 
-        const bottlePrice = pArr[12]; 
+        const [brand, name, price, minVol, desc, img, , top, weekText, , , bottleMl, bottlePrice, , stockCol] = pArr;
+        
+        const stock = parseFloat(stockCol);
+        const isOutOfStock = !isNaN(stock) && stock <= 0;
         
         currentBasePrice = price; currentFixedPrice = 0; selectedVol = "5 мл"; currentModalImg = img;
-        document.getElementById('mB').innerText = brand; document.getElementById('mN').innerText = name;
+        const safeImg = img.replace(/'/g, "%27");
+        
+        document.getElementById('mB').innerText = brand; 
+        document.getElementById('mN').innerText = name;
+        document.getElementById('mImg').src = safeImg; // Tom Ford style big image update
         
         let rawText = (isWeekly && weekText) ? weekText : desc;
         let f = rawText;
@@ -872,7 +882,7 @@
             let totalScore = (posCount * 5) + (neuCount * 3) + (negCount * 1);
             let avgStars = Math.round(totalScore / totalRev);
             let starsStr = '★'.repeat(avgStars) + '☆'.repeat(5 - avgStars);
-            aggregatedStarsHTML = `<div style="text-align:center; color:var(--gold); font-size:16px; letter-spacing:2px; margin-top:-10px; margin-bottom:15px;" title="Оцінка на основі ${totalRev} відгуків">${starsStr} <span style="font-size:11px; color:#999; letter-spacing:0; vertical-align:middle; font-weight:normal;">(${totalRev})</span></div>`;
+            aggregatedStarsHTML = `<div style="text-align:center; color:var(--gold); font-size:18px; letter-spacing:3px; margin-top:-10px; margin-bottom:20px;" title="Оцінка на основі ${totalRev} відгуків">${starsStr} <span style="font-size:12px; color:#999; letter-spacing:0; vertical-align:middle; font-weight:600;">(${totalRev})</span></div>`;
         }
 
         let reviewsHTML = '';
@@ -882,11 +892,8 @@
             if(revStart !== -1) {
                 let revText = f.substring(revStart);
                 f = f.substring(0, revStart);
-                reviewsHTML += '<div style="margin-top:15px;"><span style="font-family: var(--cinzel); font-weight:700; text-transform:uppercase; font-size:10px; letter-spacing:1px; color:#999;">💬 Відгуки:</span><div class="reviews-scroll-container">';
-                reviewsHTML += revText
-                    .replace(/\[\+\](.*?)(?=<br>|\[\+\]|\[-\]|\[=\]|$)/g, '<div class="review-box review-pos">$1</div>')
-                    .replace(/\[-\](.*?)(?=<br>|\[\+\]|\[-\]|\[=\]|$)/g, '<div class="review-box review-neg">$1</div>')
-                    .replace(/\[=\](.*?)(?=<br>|\[\+\]|\[-\]|\[=\]|$)/g, '<div class="review-box">$1</div>');
+                reviewsHTML += '<div style="margin-top:20px;"><span style="font-family: var(--cinzel); font-weight:800; text-transform:uppercase; font-size:10px; letter-spacing:2px; color:var(--gold);">💬 Відгуки:</span><div class="reviews-scroll-container">';
+                reviewsHTML += revText.replace(/\[\+\](.*?)(?=<br>|\[\+\]|\[-\]|\[=\]|$)/g, '<div class="review-box review-pos">$1</div>').replace(/\[-\](.*?)(?=<br>|\[\+\]|\[-\]|\[=\]|$)/g, '<div class="review-box review-neg">$1</div>').replace(/\[=\](.*?)(?=<br>|\[\+\]|\[-\]|\[=\]|$)/g, '<div class="review-box">$1</div>');
                 reviewsHTML += '</div></div>';
             }
         }
@@ -894,53 +901,40 @@
         const hasTags = /(Стиль:|Напрямок:|Піраміда|Основні характеристики:|Верхні ноти:)/i.test(f);
 
         if (!hasTags && f.trim().length > 0) {
-            f = '<div style="font-size:13.5px; line-height:1.5;">' + f + '</div>';
+            f = '<div style="font-size:14px; line-height:1.6;">' + f + '</div>';
         } else if (f.trim().length > 0) {
-            let intro = "";
-            let details = f;
+            let intro = "", details = f;
             let splitMatch = f.match(/(Стиль:|Напрямок:|Опис:|Піраміда|Основні характеристики:|Верхні ноти:)/i);
+            if (splitMatch && splitMatch.index > 0) { intro = f.substring(0, splitMatch.index); details = f.substring(splitMatch.index); }
 
-            if (splitMatch && splitMatch.index > 0) {
-                intro = f.substring(0, splitMatch.index);
-                details = f.substring(splitMatch.index);
-            }
-
-            if (intro.trim()) {
-                intro = '<p style="font-size:13.5px; margin-bottom:10px; line-height:1.5;">' + intro.replace(/(<br\s*\/?>\s*)+/g, '<br><br>').trim() + '</p>';
-            }
+            if (intro.trim()) { intro = '<p style="font-size:14px; margin-bottom:15px; line-height:1.6;">' + intro.replace(/(<br\s*\/?>\s*)+/g, '<br><br>').trim() + '</p>'; }
 
             if (details.trim()) {
-                details = '<div style="background-color:rgba(249,249,249,0.7); padding:12px; border-radius:5px; font-size:13.5px; line-height:1.4;">' + details;
-
-                details = details.replace(/(Піраміда аромату:|Піраміда композиції:|Основні характеристики:|Стійкість та шлейф:)\s*(?:<br\s*\/?>)?/gi, '<p style="font-family:var(--cinzel); color:#b39151; text-transform:uppercase; font-size:11px; font-weight:bold; margin-top:15px; margin-bottom:5px; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:3px;">$1</p>');
-                details = details.replace(/(Стиль:|Напрямок:)/gi, '<p style="font-family:var(--cinzel); color:#b39151; text-transform:uppercase; font-size:11px; font-weight:bold; margin-top:8px; margin-bottom:4px;">$1</p>');
+                details = '<div style="background-color:rgba(128,128,128,0.05); padding:15px; border-radius:8px; font-size:13.5px; line-height:1.5; text-align:left;">' + details;
+                details = details.replace(/(Піраміда аромату:|Піраміда композиції:|Основні характеристики:|Стійкість та шлейф:)\s*(?:<br\s*\/?>)?/gi, '<p style="font-family:var(--cinzel); color:var(--gold); text-transform:uppercase; font-size:11px; font-weight:800; margin-top:15px; margin-bottom:5px; border-bottom:1px solid rgba(128,128,128,0.1); padding-bottom:4px;">$1</p>');
+                details = details.replace(/(Стиль:|Напрямок:)/gi, '<p style="font-family:var(--cinzel); color:var(--gold); text-transform:uppercase; font-size:11px; font-weight:800; margin-top:10px; margin-bottom:4px;">$1</p>');
                 
                 details = details.replace(/(Верхні ноти:|Ноти серця:|Серце:|Середні ноти:|Базові ноти:|Ноти бази:|Акорди:)\s*(.*?)(?=<br|<p|$)/gi, function(match, title, notesText) {
                     let clickableNotes = notesText.split(/[,;]/).map(n => {
                         let cleanNote = n.replace(/[.,;]+$/, '').trim(); 
-                        if(cleanNote.length > 2) {
-                            return `<span class="modal-note-tag" onclick="searchByNote('${cleanNote}')">${cleanNote}</span>`;
-                        }
+                        if(cleanNote.length > 2) return `<span class="modal-note-tag" onclick="searchByNote('${cleanNote}')">${cleanNote}</span>`;
                         return cleanNote;
                     }).join(' ');
-                    return `<p style="font-family:var(--cinzel); color:#b39151; text-transform:uppercase; font-size:9px; font-weight:bold; margin-top:8px; margin-bottom:4px;">${title}</p><div style="margin-bottom:2px;">${clickableNotes}</div>`;
+                    return `<p style="font-family:var(--cinzel); color:var(--gold); text-transform:uppercase; font-size:10px; font-weight:800; margin-top:10px; margin-bottom:6px;">${title}</p><div style="margin-bottom:4px;">${clickableNotes}</div>`;
                 });
 
-                details = details.replace(/(Група ароматів:|Група:|Стать:|Країна бренду:|Країна:)/gi, '<span style="display:inline-block; margin-top:4px;"><b>$1</b></span>');
+                details = details.replace(/(Група ароматів:|Група:|Стать:|Країна бренду:|Країна:)/gi, '<span style="display:inline-block; margin-top:6px;"><b>$1</b></span>');
 
                 details = details.replace(/(Стійкість:|Шлейф:)\s*(?:<br\s*\/?>)?\s*(\d)[^\wА-Яа-яієґїA-Za-z]*([А-Яа-яієґїA-Za-z\s,]+)/gi, function(m, p1, p2, p3) {
-                    let num = parseInt(p2);
-                    if(isNaN(num)) num = 0;
-                    if(num>5) num=5;
+                    let num = parseInt(p2); if(isNaN(num)) num = 0; if(num>5) num=5;
                     let bars = '';
                     for(let i=0; i<5; i++) {
-                        if(i<num) bars += '<span style="display:inline-block; width:30px; height:8px; background-color:#b39151; border-radius:3px; margin-right:4px;">&nbsp;</span>';
-                        else bars += '<span style="display:inline-block; width:30px; height:8px; background-color:#e0e0e0; border-radius:3px; margin-right:4px;">&nbsp;</span>';
+                        if(i<num) bars += '<span style="display:inline-block; width:30px; height:6px; background-color:var(--gold); border-radius:3px; margin-right:4px;">&nbsp;</span>';
+                        else bars += '<span style="display:inline-block; width:30px; height:6px; background-color:rgba(128,128,128,0.2); border-radius:3px; margin-right:4px;">&nbsp;</span>';
                     }
                     let textDesc = p3.replace(/<br\s*\/?>/gi, '').trim();
-                    return `<div style="margin-top:10px; margin-bottom:0;"><p style="font-family:var(--cinzel); margin:0 0 3px 0; font-size:12px;"><b>${p1}</b></p><div style="display:block; font-size:0; line-height:0;">${bars}</div><p style="margin:2px 0 0 0; font-size:11px; color:gray;">${textDesc}</p></div>`;
+                    return `<div style="margin-top:12px; margin-bottom:0;"><p style="font-family:var(--cinzel); margin:0 0 4px 0; font-size:12px; font-weight:800;">${p1}</p><div style="display:block; font-size:0; line-height:0;">${bars}</div><p style="margin:4px 0 0 0; font-size:12px; color:#888; font-style:italic;">${textDesc}</p></div>`;
                 });
-
                 details += '</div>';
             }
             f = intro + details;
@@ -951,34 +945,21 @@
         if(sameBrand.length > 0) {
             recsHTML += '<div class="recommendations-block"><span class="rec-title">Також від ' + brand + ':</span><div class="rec-scroll">';
             sameBrand.forEach(c => {
-                let safeImg = c[5].replace(/'/g, "%27");
+                let sImg = c[5].replace(/'/g, "%27");
                 let cStr = JSON.stringify(c).replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-                recsHTML += `<div class="rec-item" onclick='showModal(${cStr})'><img src="${safeImg}"><span>${c[1]}</span></div>`;
+                recsHTML += `<div class="rec-item" onclick='showModal(${cStr})'><img src="${sImg}"><span>${c[1]}</span></div>`;
             });
             recsHTML += '</div></div>';
         }
 
         f = aggregatedStarsHTML + f + recsHTML + reviewsHTML;
 
-        const shareBtnHTML = `
-            <div style="text-align: right; margin-top: 15px; margin-bottom: 5px;">
-                <button onclick="sharePerfume()" style="background:none; border:none; cursor:pointer; color:var(--gold); display:inline-flex; align-items:center; font-size:10px; text-transform:uppercase; letter-spacing:1px; font-weight:700; padding: 0;">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="margin-right:5px;">
-                        <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92zM18 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM6 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 7.02c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
-                    </svg>
-                    Поділитися
-                </button>
-            </div>
-        `;
+        const shareBtnHTML = `<div style="text-align: right; margin-top: 15px; margin-bottom: 5px;"><button onclick="sharePerfume()" style="background:none; border:none; cursor:pointer; color:var(--gold); display:inline-flex; align-items:center; font-size:11px; text-transform:uppercase; letter-spacing:1.5px; font-weight:800; padding: 0;"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="margin-right:6px;"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92zM18 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM6 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 7.02c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg>Поділитися</button></div>`;
 
         const disable2ml = minVol && String(minVol).includes('5');
         const isBottleAvailable = bottleMl && parseInt(bottleMl) > 0;
         const isLastDrops = top && top.toLowerCase().includes('останн');
-        
-       const isSetType = (minVol && String(minVol).toLowerCase().includes('тільки')) || 
-                  brand.toLowerCase().includes('set') || 
-                  brand.toLowerCase().includes('сет') || 
-                  name.toLowerCase().includes('сет');
+        const isSetType = (minVol && String(minVol).toLowerCase().includes('тільки')) || brand.toLowerCase().includes('set') || brand.toLowerCase().includes('сет') || name.toLowerCase().includes('сет');
 
         let volButtons = '';
         if (isSetType) {
@@ -995,19 +976,15 @@
                 ${isBottleAvailable ? `<div class="vol-chip bottle-special" onclick="selectVol(this, 'Рідний флакон (${bottleMl} мл)', ${bottlePrice})">Залишок у рідному флаконі (${bottleMl} мл)</div>` : ''}
             `;
         }
+        
         const volHTML = `
             <div class="vol-container"><span class="vol-label">Оберіть об'єм:</span>
-                <div class="vol-grid">
-                    ${volButtons}
-                </div>
-                ${isLastDrops ? `<div style="text-align:center; color: #a94442; font-size: 10px; text-transform: uppercase; margin-top: 12px; font-weight: 700; border: 1px dashed #a94442; padding: 6px; border-radius: 4px; animation: badgePulse 2s infinite ease-in-out;">⚡ Увага: аромат закінчується, останні мілілітри</div>` : ''}
+                <div class="vol-grid">${volButtons}</div>
+                ${isLastDrops ? `<div style="text-align:center; color:#a94442; font-size:10px; text-transform:uppercase; margin-top:15px; font-weight:800; border:1px dashed #a94442; padding:8px; border-radius:6px; animation:badgePulse 2s infinite ease-in-out;">⚡ Увага: аромат закінчується, останні мілілітри</div>` : ''}
             </div>
             <div class="price-display" id="modalPrice">Ціна: ${isSetType ? calculatePrice(price, '2 мл') : calculatePrice(price, '5 мл')}</div>
             ${isSetType ? '' : `<div class="price-sub">Базова ціна: ${price} грн / 1 мл</div>`}`;
             
-        const safeReviewBrand = brand.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-        const safeReviewName = name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-
         const reviewFormHTML = `
             <div class="review-form-container" id="reviewFormBlock">
                 <span class="review-form-title">Оцінити аромат</span>
@@ -1020,7 +997,7 @@
                 </div>
                 <div id="reviewHiddenParts" style="display:none;">
                     <textarea id="reviewText" class="review-textarea" rows="3" placeholder="Поділіться своїми враженнями..."></textarea>
-                    <button class="review-submit-btn" onclick="submitReview('${safeReviewBrand}', '${safeReviewName}')">Відправити відгук</button>
+                    <button class="review-submit-btn" onclick="submitReview('${brand.replace(/'/g, "\\'").replace(/"/g, '&quot;')}', '${name.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">Відправити відгук</button>
                 </div>
             </div>
         `;
@@ -1028,7 +1005,22 @@
         document.getElementById('mD').innerHTML = f + shareBtnHTML + volHTML;
         document.getElementById('reviewFormContainerHTML').innerHTML = reviewFormHTML;
         
-        document.getElementById('modalOrderBtn').onclick = () => order(brand, name);
+        const orderBtn = document.getElementById('modalOrderBtn');
+        if (isOutOfStock) {
+            orderBtn.innerText = 'НЕМАЄ В НАЯВНОСТІ';
+            orderBtn.style.background = 'rgba(128,128,128,0.2)';
+            orderBtn.style.color = '#888';
+            orderBtn.style.boxShadow = 'none';
+            orderBtn.style.pointerEvents = 'none';
+        } else {
+            orderBtn.innerText = 'ДОДАТИ В КОШИК';
+            orderBtn.style.background = 'var(--gold)';
+            orderBtn.style.color = '#fff';
+            orderBtn.style.boxShadow = '0 10px 20px rgba(197,160,89,0.3)';
+            orderBtn.style.pointerEvents = 'auto';
+            orderBtn.onclick = () => order(brand, name);
+        }
+
         document.getElementById('infoModal').style.display = 'flex';
     }
 
@@ -1038,25 +1030,15 @@
         document.querySelectorAll('.vol-chip').forEach(c => c.classList.remove('active'));
         el.classList.add('active'); 
         
-        if (vol === "Набір") {
-            currentFixedPrice = 0;
-            document.getElementById('modalPrice').innerText = "Ціна: " + calculatePrice(currentBasePrice, "2 мл");
-        } else if (fixedP > 0) {
-            currentFixedPrice = fixedP;
-            document.getElementById('modalPrice').innerText = "Ціна: " + fixedP + " грн";
-        } else {
-            currentFixedPrice = 0;
-            document.getElementById('modalPrice').innerText = "Ціна: " + calculatePrice(currentBasePrice, vol);
-        }
+        if (vol === "Набір") { currentFixedPrice = 0; document.getElementById('modalPrice').innerText = "Ціна: " + calculatePrice(currentBasePrice, "2 мл"); } 
+        else if (fixedP > 0) { currentFixedPrice = fixedP; document.getElementById('modalPrice').innerText = "Ціна: " + fixedP + " грн"; } 
+        else { currentFixedPrice = 0; document.getElementById('modalPrice').innerText = "Ціна: " + calculatePrice(currentBasePrice, vol); }
     }
     
     function triggerCatalogAnimation() {
         const cat = document.getElementById('catalog');
         cat.style.opacity = '0';
-        setTimeout(() => {
-            filterCatalog();
-            cat.style.opacity = '1';
-        }, 300);
+        setTimeout(() => { filterCatalog(); cat.style.opacity = '1'; }, 300);
     }
 
     function animateFlyToCart() {
@@ -1093,14 +1075,13 @@
         
         cart.push({ brand: b, name: n, volume: selectedVol, price: priceNum, priceText: pText.replace('Ціна: ', '') });
         saveCart();
-        
         animateFlyToCart();
         
         const btn = document.getElementById('modalOrderBtn');
         const originalText = btn.innerText;
-        btn.innerText = '✓ ДОДАНО В КОШИК';
-        btn.style.background = '#1a1a1a';
-        btn.style.color = 'var(--gold)'; 
+        btn.innerText = '✓ ДОДАНО';
+        btn.style.background = 'var(--text-dark)';
+        btn.style.color = 'var(--bg)'; 
         btn.style.pointerEvents = 'none';
         
         setTimeout(() => {
@@ -1113,20 +1094,14 @@
         }, 1100);
     }
 
-    function saveCart() {
-        localStorage.setItem('vr_cart', JSON.stringify(cart));
-        updateCartUI();
-    }
+    function saveCart() { localStorage.setItem('vr_cart', JSON.stringify(cart)); updateCartUI(); }
 
     function toggleCart() {
         document.getElementById('cartDrawer').classList.toggle('open');
         document.getElementById('cartBackdrop').classList.toggle('show');
     }
 
-    function removeFromCart(index) {
-        cart.splice(index, 1);
-        saveCart();
-    }
+    function removeFromCart(index) { cart.splice(index, 1); saveCart(); }
 
     function updateCartUI() {
         document.getElementById('cartBadge').innerText = cart.length;
@@ -1141,7 +1116,7 @@
         let total = 0;
         
         if (cart.length === 0) {
-            list.innerHTML = '<div class="cart-empty-msg">Ваш кошик порожній ✨<br><span style="font-size:10px; display:block; margin-top:10px; cursor:pointer; color:var(--gold);" onclick="toggleCart()">Повернутися до каталогу</span></div>';
+            list.innerHTML = '<div class="cart-empty-msg">Ваш кошик порожній ✨<br><span style="font-size:12px; display:block; margin-top:15px; cursor:pointer; color:var(--gold); font-weight:700; text-transform:uppercase; letter-spacing:1px;" onclick="toggleCart()">Повернутися до каталогу</span></div>';
             shippingContainer.style.display = 'none';
             giftBox.checked = false;
             if(upsellBlock) upsellBlock.style.display = 'none'; 
@@ -1171,11 +1146,9 @@
             if(total >= 1500) {
                 shippingText.innerHTML = 'Безкоштовна доставка активована! ✨';
                 shippingText.style.color = 'var(--gold)';
-                shippingText.style.fontWeight = '700';
             } else {
                 shippingText.innerHTML = `Додайте ще на <b>${1500 - total} грн</b> для безкоштовної доставки`;
-                shippingText.style.color = '#555';
-                shippingText.style.fontWeight = '600';
+                shippingText.style.color = 'inherit';
             }
 
             if(upsellBlock) {
@@ -1202,16 +1175,12 @@
                         saveCart(); 
                     };
                     upsellBlock.style.display = 'block';
-                } else {
-                    upsellBlock.style.display = 'none';
-                }
+                } else { upsellBlock.style.display = 'none'; }
             }
         }
         
         let finalTotal = total;
-        if(cart.length > 0 && giftBox.checked) {
-            finalTotal += 100;
-        }
+        if(cart.length > 0 && giftBox.checked) { finalTotal += 100; }
         
         document.getElementById('cartTotalSum').innerText = finalTotal > 0 ? finalTotal + ' грн' : '0 грн';
     }
@@ -1220,15 +1189,9 @@
         if (cart.length === 0) return;
         
         const contact = document.getElementById('cartContact').value.trim();
-        if (!contact) {
-            alert('Будь ласка, вкажіть ваш Telegram нік або номер телефону для зв\'язку!');
-            return;
-        }
+        if (!contact) { alert('Будь ласка, вкажіть ваш Telegram нік або номер телефону для зв\'язку!'); return; }
         
-       gtag('event', 'conversion', {
-           'send_to': 'AW-18051738791/Uk6SCIjhgZQcEKfZ3p9D',
-           'transaction_id': '' 
-       });
+       gtag('event', 'conversion', { 'send_to': 'AW-18051738791/Uk6SCIjhgZQcEKfZ3p9D', 'transaction_id': '' });
         
         const btn = document.getElementById('checkoutBtn');
         const originalText = btn.innerText;
@@ -1239,43 +1202,27 @@
         let orderDetails = cart.map((item, i) => `${i+1}. ${item.brand} - ${item.name}\n   Об'єм: ${item.volume} (${item.priceText})`).join('\n');
         
         const giftBox = document.getElementById('giftWrapCheckbox');
-        if (giftBox && giftBox.checked) {
-            orderDetails += '\n\n🎁 + Подарункове пакування (100 грн)';
-        }
+        if (giftBox && giftBox.checked) { orderDetails += '\n\n🎁 + Подарункове пакування (100 грн)'; }
 
         const comment = document.getElementById('cartComment').value.trim();
         const totalText = document.getElementById('cartTotalSum').innerText;
 
-        const payload = {
-            contact: contact,
-            order: orderDetails,
-            total: totalText,
-            comment: comment
-        };
+        const payload = { contact: contact, order: orderDetails, total: totalText, comment: comment };
 
         try {
             const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxwI4YS1nrjizwkUJ4-Eay9iFcFIQB8pW8ehgJNaiVRZiItsMcjfzD4t4MmqfO6AQ42Ag/exec';
-            
-            await fetch(WEBAPP_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload)
-            });
+            await fetch(WEBAPP_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
 
             btn.innerText = '✓ ЗАМОВЛЕННЯ ПРИЙНЯТО';
-            btn.style.background = '#1a1a1a';
-            btn.style.color = 'var(--gold)';
+            btn.style.background = 'var(--text-dark)';
+            btn.style.color = 'var(--bg)';
 
             setTimeout(() => {
-                cart = [];
-                saveCart();
+                cart = []; saveCart();
                 document.getElementById('cartContact').value = '';
                 document.getElementById('cartComment').value = '';
                 btn.innerText = originalText;
-                btn.style.background = '#000';
+                btn.style.background = 'var(--gold)';
                 btn.style.color = '#fff';
                 btn.style.opacity = '1';
                 btn.style.pointerEvents = 'auto';
@@ -1284,7 +1231,6 @@
             }, 2000);
 
         } catch (error) {
-            console.error('Помилка відправки:', error);
             alert('Сталася помилка при відправці. Перевірте з\'єднання з інтернетом.');
             btn.innerText = originalText;
             btn.style.opacity = '1';
@@ -1312,7 +1258,7 @@
         resContainer.innerHTML = '';
         
         if (matches.length === 0) {
-            resContainer.innerHTML = '<div class="search-empty">Аромат не знайдено 😔<br><span style="font-size:10px; margin-top:5px; display:block;">Спробуйте змінити запит</span></div>';
+            resContainer.innerHTML = '<div class="search-empty">Аромат не знайдено 😔<br><span style="font-size:10px; margin-top:8px; display:block; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--gold);">Спробуйте змінити запит</span></div>';
         } else {
             matches.forEach(c => {
                 const [brand, name, price, minVol, desc, img] = c;
@@ -1330,24 +1276,16 @@
         resContainer.style.display = 'block';
     }
 
-    function clearSearch() { 
-        document.getElementById('searchInput').value = ''; 
-        handleSearchInput(); 
-        document.getElementById('searchResults').style.display = 'none'; 
-        document.querySelectorAll('.note-chip').forEach(c => c.classList.remove('active-note')); 
-    }
+    function clearSearch() { document.getElementById('searchInput').value = ''; handleSearchInput(); document.getElementById('searchResults').style.display = 'none'; document.querySelectorAll('.note-chip').forEach(c => c.classList.remove('active-note')); }
 
     function searchByNote(note, btnElement) {
         document.querySelectorAll('.note-chip').forEach(c => c.classList.remove('active-note'));
         const inputField = document.getElementById('searchInput');
         
-        if (inputField.value.toLowerCase() === note.toLowerCase()) {
-            clearSearch(); return;
-        }
+        if (inputField.value.toLowerCase() === note.toLowerCase()) { clearSearch(); return; }
         
         if(btnElement) {
             btnElement.classList.add('active-note');
-            // Міні-анімація натискання
             btnElement.style.transform = 'scale(0.9)';
             setTimeout(() => { btnElement.style.transform = 'scale(1)'; }, 150);
         }
@@ -1373,10 +1311,8 @@
             const searchData = (c.innerText + " " + (c.getAttribute('data-desc') || "")).toLowerCase();
             const mS = searchData.includes(q);
             const mB = currentBrand === '' || c.getAttribute('data-brand') === currentBrand;
-            
             const isWished = wishlist.includes(c.getAttribute('data-id'));
             const mC = currentCategory === 'all' || (currentCategory === 'wishlist' ? isWished : c.getAttribute('data-category').includes(currentCategory));
-            
             c.style.display = (mS && mB && mC) ? 'flex' : 'none';
         });
     }
@@ -1384,84 +1320,49 @@
     function init3DEffect() {
         const cards = document.querySelectorAll('.card');
         cards.forEach(card => {
-            
             function handleMove(clientX, clientY) {
                 const rect = card.getBoundingClientRect();
-                const x = clientX - rect.left; 
-                const y = clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = ((y - centerY) / centerY) * -8; 
-                const rotateY = ((x - centerX) / centerX) * 8;
-                
+                const x = clientX - rect.left, y = clientY - rect.top;
+                const centerX = rect.width / 2, centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -8, rotateY = ((x - centerX) / centerX) * 8;
                 card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
                 card.style.transition = 'none';
                 card.style.zIndex = '10';
-                card.style.boxShadow = '0 15px 30px rgba(0,0,0,0.1)';
+                card.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
             }
-
             function resetEffect() {
                 card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
                 card.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease';
                 card.style.zIndex = '1';
                 card.style.boxShadow = 'none';
             }
-
             card.addEventListener('mousemove', e => handleMove(e.clientX, e.clientY));
             card.addEventListener('mouseleave', resetEffect);
-
-            card.addEventListener('touchmove', e => {
-                const touch = e.touches[0];
-                handleMove(touch.clientX, touch.clientY);
-            }, { passive: true });
-            
+            card.addEventListener('touchmove', e => { handleMove(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
             card.addEventListener('touchend', resetEffect);
         });
     }
 
     function initCarousel() {
-        const promos = globalCatalogData.filter(c => c[7] && (
-            c[7].toLowerCase().includes('промо') || 
-            c[7].toLowerCase().includes('тиждень') || 
-            c[7].toLowerCase().includes('скоро')
-        ));
-        
+        const promos = globalCatalogData.filter(c => c[7] && (c[7].toLowerCase().includes('промо') || c[7].toLowerCase().includes('тиждень') || c[7].toLowerCase().includes('скоро')));
         const carousel = document.getElementById('heroCarousel');
         const logoSlide = carousel.querySelector('.logo-slide').cloneNode(true);
         
-        carousel.innerHTML = ''; 
-        carousel.appendChild(logoSlide);
+        carousel.innerHTML = ''; carousel.appendChild(logoSlide);
 
         promos.forEach(p => {
             const isComingSoon = p[7].toLowerCase().includes('скоро');
             const mediaUrl = p[5];
-            let mediaHtml = mediaUrl.toLowerCase().includes('.mp4') 
-                ? `<video class="banner-bg-img" autoplay muted loop playsinline><source src="${mediaUrl}" type="video/mp4"></video>`
-                : `<div class="banner-bg-img" style="background-image:url('${mediaUrl}')"></div>`;
+            let mediaHtml = mediaUrl.toLowerCase().includes('.mp4') ? `<video class="banner-bg-img" autoplay muted loop playsinline><source src="${mediaUrl}" type="video/mp4"></video>` : `<div class="banner-bg-img" style="background-image:url('${mediaUrl}')"></div>`;
 
             const slide = document.createElement('div');
             slide.className = 'slide';
-            slide.innerHTML = `
-                ${mediaHtml}
-                <div class="video-overlay"></div>
-                <div class="banner-content">
-                    <span class="banner-brand">${isComingSoon ? 'COMING SOON' : p[0]}</span>
-                    <span class="banner-title">${p[1]}</span>
-                    <button class="banner-btn" onclick='showModal(${JSON.stringify(p).replace(/'/g, "&apos;")})'>
-                        ${isComingSoon ? 'ДЕТАЛЬНІШЕ' : 'СПРОБУВАТИ АРОМАТ'}
-                    </button>
-                    <span class="banner-price-sub">${isComingSoon ? 'Незабаром у наявності' : p[2] + ' грн / 1 мл'}</span>
-                </div>
-            `;
+            slide.innerHTML = `${mediaHtml}<div class="video-overlay"></div><div class="banner-content"><span class="banner-brand">${isComingSoon ? 'COMING SOON' : p[0]}</span><span class="banner-title">${p[1]}</span><button class="banner-btn" onclick='showModal(${JSON.stringify(p).replace(/'/g, "&apos;")})'>${isComingSoon ? 'ДЕТАЛЬНІШЕ' : 'СПРОБУВАТИ АРОМАТ'}</button><span class="banner-price-sub">${isComingSoon ? 'Незабаром у наявності' : p[2] + ' грн / 1 мл'}</span></div>`;
             carousel.appendChild(slide);
         });
 
         let dotsContainer = document.querySelector('.carousel-dots');
-        if (!dotsContainer) {
-            dotsContainer = document.createElement('div');
-            dotsContainer.className = 'carousel-dots';
-            carousel.appendChild(dotsContainer);
-        }
+        if (!dotsContainer) { dotsContainer = document.createElement('div'); dotsContainer.className = 'carousel-dots'; carousel.appendChild(dotsContainer); }
 
         const slides = document.querySelectorAll('.slide');
         dotsContainer.innerHTML = '';
@@ -1492,57 +1393,33 @@
         const brs = [...new Set(cat.map(c => c[0]))].sort(), s = document.getElementById('brandSlider');
         s.innerHTML = '';
         const btnAll = document.createElement('button');
-        btnAll.className = 'brand-btn active';
-        btnAll.innerText = 'Усі бренди';
-        btnAll.onclick = function() { setBrand('', this); };
+        btnAll.className = 'brand-btn active'; btnAll.innerText = 'Усі бренди'; btnAll.onclick = function() { setBrand('', this); };
         s.appendChild(btnAll);
         brs.forEach(b => { const btn = document.createElement('button'); btn.className = 'brand-btn'; btn.innerText = b; btn.onclick = function() { setBrand(b, this); }; s.appendChild(btn); });
     }
     
     function formatNews(newsText) {
         if(!newsText) return;
-        let formatted = newsText.replace(/\n/g, '<br>');
-        formatted = formatted.replace(/\*(.*?)\*/g, '<b>$1</b>');
-        document.getElementById('newsModalContent').innerHTML = '<div style="font-size:13px; line-height:1.6; color:#444;">' + formatted + '</div>';
+        let formatted = newsText.replace(/\n/g, '<br>').replace(/\*(.*?)\*/g, '<b>$1</b>');
+        document.getElementById('newsModalContent').innerHTML = '<div style="font-size:14px; line-height:1.7; color:var(--text-dark);">' + formatted + '</div>';
     }
 
     function renderGeneralReviews(data) {
-        const mainList = document.getElementById('reviewsListContainer');
-        const historyList = document.getElementById('reviewsHistory');
-        const toggleBtn = document.getElementById('toggleReviewsBtn');
+        const mainList = document.getElementById('reviewsListContainer'), historyList = document.getElementById('reviewsHistory'), toggleBtn = document.getElementById('toggleReviewsBtn');
         if (!mainList) return;
 
-        const sortedData = data
-            .filter(r => r[0] && r[2]) 
-            .sort((a, b) => {
-                const dateA = new Date(a[3]); 
-                const dateB = new Date(b[3]);
-                return dateB - dateA; 
-            });
+        const sortedData = data.filter(r => r[0] && r[2]).sort((a, b) => new Date(b[3]) - new Date(a[3]));
 
-        mainList.innerHTML = ''; 
-        historyList.innerHTML = '';
+        mainList.innerHTML = ''; historyList.innerHTML = '';
 
         sortedData.forEach((rev, index) => {
             const [name, stars, text] = rev;
             const starHtml = '★'.repeat(parseInt(stars) || 5);
-            const html = `
-                <div class="review-card">
-                    <span class="review-author">${name}</span>
-                    <span class="review-stars">${starHtml}</span>
-                    <p class="review-text">«${text}»</p>
-                </div>`;
-
-            if (index < 3) {
-                mainList.innerHTML += html;
-            } else {
-                historyList.innerHTML += html;
-            }
+            const html = `<div class="review-card"><span class="review-author">${name}</span><span class="review-stars">${starHtml}</span><p class="review-text">«${text}»</p></div>`;
+            if (index < 3) mainList.innerHTML += html; else historyList.innerHTML += html;
         });
 
-        if (sortedData.length <= 3 && toggleBtn) {
-            toggleBtn.style.display = 'none';
-        }
+        if (sortedData.length <= 3 && toggleBtn) toggleBtn.style.display = 'none';
     }
 
     function toggleReviews() {
@@ -1552,9 +1429,7 @@
         b.innerText = isVis ? "Згорнути ↑" : "Показати більше ↓";
     }
 
-    function showGeneralReviewFields() {
-        document.getElementById('generalReviewFields').style.display = 'block';
-    }
+    function showGeneralReviewFields() { document.getElementById('generalReviewFields').style.display = 'block'; }
 
     function submitGeneralReview() {
         const name = document.getElementById('revName').value.trim() || "Клієнт";
@@ -1564,27 +1439,18 @@
         if (!rating) { alert('Будь ласка, оберіть оцінку зірочками!'); return; }
         if (!text) { alert('Будь ласка, напишіть пару слів про ваш досвід!'); return; }
         
-        const stars = rating.value;
-        const msg = `✨ НОВИЙ ВІДГУК ПРО СЕРВІС VR:\nВід: ${name}\nОцінка: ${stars}⭐\nТекст: ${text}`;
+        const msg = `✨ НОВИЙ ВІДГУК ПРО СЕРВІС VR:\nВід: ${name}\nОцінка: ${rating.value}⭐\nТекст: ${text}`;
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(msg).catch(err => console.log('Clipboard error', err));
+        window.location.href = `https://t.me/${TG_NICK}?text=${encodeURIComponent(msg)}`;
         
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(msg).catch(err => console.log('Clipboard error', err));
-        }
-        
-        const encodedMsg = encodeURIComponent(msg);
-        window.location.href = `https://t.me/${TG_NICK}?text=${encodedMsg}`;
-        
-        setTimeout(() => {
-            document.querySelector('.leave-review-box').innerHTML = '<div style="color:var(--gold); font-weight:700; padding:20px; font-size:13px; letter-spacing:1px; text-transform:uppercase; text-align:center;">Дякуємо! Ваш відгук відправлено Вікторії ✨</div>';
-        }, 1500);
+        setTimeout(() => { document.querySelector('.leave-review-box').innerHTML = '<div style="color:var(--gold); font-weight:800; padding:30px; font-size:13px; letter-spacing:1px; text-transform:uppercase; text-align:center;">Дякуємо! Ваш відгук відправлено Вікторії ✨</div>'; }, 1500);
     }
 
     function renderPremiumPromo(promoData) {
         if (!promoData || promoData.length === 0 || !promoData[0]) return;
         const status = String(promoData[0]).trim().toUpperCase();
-        if (status !== 'ON') return;
-
-        if (document.getElementById('promoCard') || sessionStorage.getItem('promoCardShown')) return;
+        if (status !== 'ON' || document.getElementById('promoCard') || sessionStorage.getItem('promoCardShown')) return;
+        
         sessionStorage.setItem('promoCardShown', 'true');
 
         const brand = promoData[1] ? String(promoData[1]).trim() : '';
@@ -1592,96 +1458,79 @@
         let videoUrl = promoData[3] ? String(promoData[3]).trim() : '';
         const imgUrl = promoData[4] ? String(promoData[4]).trim() : '';
         const linkOrName = promoData[5] ? String(promoData[5]).trim() : '';
-        const customText = promoData[6] ? String(promoData[6]).trim() : '';
+        const customText = promoData[6] ? String(promoData[6]).trim() : 'НОВИНКА'; 
 
-        const badgeText = customText !== '' ? customText : 'НОВИНКА'; 
+        if (videoUrl.includes('dropbox.com')) videoUrl = videoUrl.replace('www.dropbox.com', 'dl.dropboxusercontent.com').replace(/&dl=[01]/g, '').replace(/\?dl=[01]/g, '');
 
-        if (videoUrl.includes('dropbox.com')) {
-            videoUrl = videoUrl.replace('www.dropbox.com', 'dl.dropboxusercontent.com');
-            videoUrl = videoUrl.replace(/&dl=[01]/g, '').replace(/\?dl=[01]/g, '');
-        }
-
-        const hasVideo = videoUrl !== '';
-        const mediaHtml = hasVideo 
+        const mediaHtml = videoUrl !== '' 
             ? `<video autoplay muted loop playsinline webkit-playsinline preload="auto" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; opacity:0.6; z-index:1; background-color:#1a1a1a;"><source src="${videoUrl}" type="video/mp4"></video>`
             : `<div style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; opacity:0.3; z-index:1; background-image:url('${imgUrl}'); background-size:cover; background-position:center; filter:blur(3px);"></div>`;
 
         setTimeout(() => {
             const promo = document.createElement('div');
             promo.id = 'promoCard';
-            
             Object.assign(promo.style, {
-                position: 'fixed',
-                bottom: '20px',
-                right: '20px',
-                width: '300px',
-                height: '450px',
-                backgroundColor: '#1a1a1a', 
-                zIndex: '3000',
-                borderRadius: '20px',
-                overflow: 'hidden',
-                boxShadow: '0 20px 40px rgba(0,0,0,0.6)',
-                border: '1px solid rgba(197, 160, 89, 0.3)', 
-                display: 'flex',
-                flexDirection: 'column',
-                transition: 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                transform: 'translateY(100px) scale(0.8)',
-                opacity: '0'
+                position: 'fixed', bottom: '20px', right: '20px', width: '320px', height: '480px', backgroundColor: '#1a1a1a', 
+                zIndex: '3000', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
+                border: '1px solid rgba(197, 160, 89, 0.3)', display: 'flex', flexDirection: 'column',
+                transition: 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)', transform: 'translateY(100px) scale(0.8)', opacity: '0'
             });
 
             window.handlePromoAction = function() {
-                if (linkOrName.startsWith('http') || linkOrName.includes('www.')) {
-                    window.open(linkOrName, '_blank');
-                    document.getElementById('promoCard').remove();
-                } else if (linkOrName !== '') {
-                    const item = globalCatalogData.find(p => 
-                        (String(p[0]) + ' ' + String(p[1])).toLowerCase().includes(linkOrName.toLowerCase())
-                    );
-                    
-                    if (item) {
-                        showModal(item); 
-                        document.getElementById('promoCard').remove();
-                    } else {
+                if (linkOrName.startsWith('http') || linkOrName.includes('www.')) { window.open(linkOrName, '_blank'); document.getElementById('promoCard').remove(); } 
+                else if (linkOrName !== '') {
+                    const item = globalCatalogData.find(p => (String(p[0]) + ' ' + String(p[1])).toLowerCase().includes(linkOrName.toLowerCase()));
+                    if (item) { showModal(item); document.getElementById('promoCard').remove(); } 
+                    else {
                         const searchInput = document.getElementById('searchInput');
-                        if (searchInput) {
-                            searchInput.value = linkOrName;
-                            handleSearchInput();
-                            scrollToFirstCards();
-                        }
+                        if (searchInput) { searchInput.value = linkOrName; handleSearchInput(); scrollToFirstCards(); }
                         document.getElementById('promoCard').remove();
                     }
-                } else {
-                    document.getElementById('promoCard').remove();
-                }
+                } else { document.getElementById('promoCard').remove(); }
             };
 
-            // ОСЬ МАГІЯ: Невидимий градієнт під картинкою, щоб JPG "вирізався" навіть на темному фоні відео
-            const safeImgHtml = imgUrl !== '' ? `<div style="position:relative; z-index:5; width:100%; display:flex; justify-content:center; align-items:center;"><div style="position:absolute; width: 220px; height: 220px; background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 70%); z-index:-1;"></div><img src="${imgUrl}" style="max-height: 250px; max-width: 95%; object-fit: contain; mix-blend-mode: multiply; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.5));"></div>` : '';
+            const safeImgHtml = imgUrl !== '' ? `<div style="position:relative; z-index:5; width:100%; display:flex; justify-content:center; align-items:center;"><div style="position:absolute; width: 240px; height: 240px; background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 70%); z-index:-1;"></div><img src="${imgUrl}" style="max-height: 260px; max-width: 90%; object-fit: contain; mix-blend-mode: multiply; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.5));"></div>` : '';
 
             promo.innerHTML = `
-                <button onclick="document.getElementById('promoCard').remove()" style="position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.2); border:none; color:white; border-radius:50%; width:30px; height:30px; cursor:pointer; z-index:10; font-size:18px; display:flex; justify-content:center; align-items:center;">×</button>
+                <button onclick="document.getElementById('promoCard').remove()" style="position:absolute; top:15px; right:15px; background:rgba(255,255,255,0.2); border:none; color:white; border-radius:50%; width:32px; height:32px; cursor:pointer; z-index:10; font-size:20px; display:flex; justify-content:center; align-items:center;">✕</button>
                 ${mediaHtml}
-                <div style="position:relative; z-index:2; height:100%; display:flex; flex-direction:column; justify-content:space-between; align-items:center; padding:30px 15px; text-align:center; pointer-events:none;">
+                <div style="position:relative; z-index:2; height:100%; display:flex; flex-direction:column; justify-content:space-between; align-items:center; padding:30px 20px; text-align:center; pointer-events:none;">
                     <div>
-                        <h3 style="margin:0; font-family:var(--cinzel); font-size:12px; color:var(--gold); letter-spacing:3px;">${brand}</h3>
-                        <h2 style="margin:5px 0; font-family:var(--serif); font-size:24px; color:#fff; font-weight:900; line-height:1.0;">${name}</h2>
-                        <div style="background:var(--gold); color:#fff; display:inline-block; padding:5px 10px; transform:rotate(-3deg); font-weight:700; font-size:11px; margin-top:10px; text-transform:uppercase;">${badgeText}</div>
+                        <h3 style="margin:0; font-family:var(--cinzel); font-size:11px; color:var(--gold); letter-spacing:3px; font-weight:800;">${brand}</h3>
+                        <h2 style="margin:5px 0; font-family:var(--cinzel); font-size:26px; color:#fff; font-weight:900; line-height:1.0;">${name}</h2>
+                        <div style="background:var(--gold); color:#fff; display:inline-block; padding:6px 12px; transform:rotate(-2deg); font-weight:800; font-size:10px; margin-top:10px; text-transform:uppercase; letter-spacing:1px;">${customText}</div>
                     </div>
                     ${safeImgHtml}
                     <div style="pointer-events:auto; width:100%;">
-                        <button onclick="handlePromoAction()" style="background:#fff; color:#000; border:none; padding:12px 0; width:100%; font-family:var(--cinzel); font-weight:900; text-transform:uppercase; letter-spacing:1px; border-radius:10px; cursor:pointer; font-size:11px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); transition: 0.3s;">
+                        <button onclick="handlePromoAction()" style="background:#fff; color:#000; border:none; padding:16px 0; width:100%; font-family:var(--sans); font-weight:900; text-transform:uppercase; letter-spacing:1.5px; border-radius:8px; cursor:pointer; font-size:11px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); transition: 0.3s;">
                             Дізнатися більше
                         </button>
                     </div>
                 </div>
             `;
-
             document.body.appendChild(promo);
             setTimeout(() => { promo.style.opacity = '1'; promo.style.transform = 'translateY(0) scale(1)'; }, 100);
         }, 2500); 
     }
 
+    // ЛОГІКА ТЕМНОЇ ТЕМИ
+    function initTheme() {
+        const savedTheme = localStorage.getItem('vr_theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            document.getElementById('themeBtn').innerText = '☀';
+        }
+    }
+    
+    function toggleTheme() {
+        document.body.classList.toggle('dark-theme');
+        const isDark = document.body.classList.contains('dark-theme');
+        localStorage.setItem('vr_theme', isDark ? 'dark' : 'light');
+        document.getElementById('themeBtn').innerText = isDark ? '☀' : '☾';
+    }
+
     load();
+    initTheme(); // Перевіряємо тему при старті
 
     setTimeout(() => {
         if (!sessionStorage.getItem('chatBubbleShown')) {
@@ -1696,25 +1545,5 @@
 
 </script>
 
-<div id="infoModal" class="modal" onclick="this.style.display='none'">
-    <div class="modal-content glass-panel" onclick="event.stopPropagation()">
-        <button class="modal-close-x" onclick="document.getElementById('infoModal').style.display='none'">✕</button>
-        <h3 id="mB" style="text-align:center;font-family:var(--cinzel);margin-bottom:5px;letter-spacing:1px;"></h3>
-        <p id="mN" style="text-align:center;font-family:var(--serif);font-size:14px;color:#444;font-weight:600;margin-bottom:20px;"></p>
-        <div id="mD" style="font-size:13.5px;"></div>
-        <button id="modalOrderBtn" class="modal-btn-full modal-order-btn">ДОДАТИ В КОШИК</button>
-        <div id="reviewFormContainerHTML"></div>
-        <button class="modal-btn-full close-btn" onclick="document.getElementById('infoModal').style.display='none'">Закрити</button>
-    </div>
-</div>
-
-<div id="newsModalWindow" class="modal" onclick="this.style.display='none'">
-    <div class="modal-content glass-panel" onclick="event.stopPropagation()">
-        <h3 style="font-family:var(--cinzel);text-align:center;text-transform:uppercase;letter-spacing:1px;">Новини та акції</h3>
-        <hr style="border:0;height:1px;background:rgba(0,0,0,0.1);margin:20px 0;">
-        <div id="newsModalContent"></div>
-        <button class="modal-btn-full close-btn" onclick="document.getElementById('newsModalWindow').style.display='none'">Закрити</button>
-    </div>
-</div>
 </body>
 </html>

@@ -918,6 +918,64 @@
                     wDiv.className = 'week-spotlight';
                     wDiv.innerHTML = `<span class="week-label">Ексклюзив тижня</span><img src="${safeImg}" class="week-img"><div class="brand">${brand}</div><div class="name">${name}</div><button class="week-card-btn primary">ОПИС</button>`;
                     wDiv.querySelector('.week-img').onclick = () => showModal(c, true);
+            catalogData.forEach(c => {
+                const [brand, name, price, minVol, desc, img, dateStr, top, weekText, , , bottleMl, bottlePrice, , stockCol] = c;
+                
+                // ПЕРЕТВОРЮЄМО НА ЧИСЛА (Щоб математика працювала точно)
+                const currentPricePerMl = parseFloat(price) || 0;
+                const oldPricePerMl = parseFloat(c[15]) || 0; 
+                
+                const stock = parseFloat(stockCol);
+                const isOutOfStock = !isNaN(stock) && stock <= 0;
+                
+                const pDate = new Date(dateStr), isNew = (new Date() - pDate) / (1000*60*60*24) <= 10;
+                const isTop = top && (top.toLowerCase().includes('топ') || top.toLowerCase().includes('хіт'));
+                const isSale = top && top.toLowerCase().includes('sale'); 
+                const isPromo = top && top.toLowerCase().includes('промо');
+                const isWeek = top && top.toLowerCase().includes('тиждень');
+                const isBottle = bottleMl && parseInt(bottleMl) > 0;
+                const isSet = (brand && brand.toLowerCase().includes('set')) || (brand && brand.toLowerCase().includes('сет')) || (name && name.toLowerCase().includes('сет')) || (top && top.toLowerCase().includes('сет'));
+                
+                const startsFrom5 = minVol && String(minVol).includes('5');
+                const minVolLabel = startsFrom5 ? '5 мл' : '2 мл';
+                
+                // Рахуємо фінальні ціни для відображення
+                const minPriceLabel = calculatePrice(currentPricePerMl, minVolLabel);
+                const oldPriceLabel = calculatePrice(oldPricePerMl, minVolLabel);
+                const displayPriceStr = isSet ? minPriceLabel : `від ${minPriceLabel}`; 
+                
+                const safeImg = img.replace(/'/g, "%27");
+                const cardId = brand + ' ' + name;
+                const isWished = wishlist.includes(cardId);
+
+                // ЛОГІКА ЗІРОЧОК
+                let rawDesc = desc || '';
+                let posCount = (rawDesc.match(/\[\+\]/g) || []).length;
+                let neuCount = (rawDesc.match(/\[=\]/g) || []).length;
+                let negCount = (rawDesc.match(/\[-\]/g) || []).length;
+                let totalRev = posCount + neuCount + negCount;
+                let cardStarsHTML = '';
+                if (totalRev > 0) {
+                    let totalScore = (posCount * 5) + (neuCount * 3) + (negCount * 1);
+                    let avgStars = Math.round(totalScore / totalRev);
+                    cardStarsHTML = `<div class="card-stars">${'★'.repeat(avgStars)}${'☆'.repeat(5 - avgStars)} <span style="font-size:10px; color:#999;">(${totalRev})</span></div>`;
+                }
+
+                // Банери та карусель
+                if ((isPromo || isWeek) && !isOutOfStock) {
+                    const slide = document.createElement('div');
+                    slide.className = 'slide';
+                    slide.innerHTML = `<div class="banner-bg-img" style="background-image:url('${safeImg}')"></div><div class="video-overlay"></div><div class="banner-content"><span class="banner-brand">${isWeek ? 'WEEKLY PICK' : brand}</span><span class="banner-title">${name}</span><span class="banner-btn">СПРОБУВАТИ АРОМАТ</span><span class="banner-price-sub">${currentPricePerMl} грн / 1 мл</span></div>`;
+                    slide.querySelector('.banner-bg-img').onclick = () => showModal(c, isWeek);
+                    slide.querySelector('.banner-btn').onclick = () => showModal(c, isWeek);
+                    carousel.appendChild(slide);
+                }
+                
+                if (isWeek) {
+                    const wDiv = document.createElement('div');
+                    wDiv.className = 'week-spotlight';
+                    wDiv.innerHTML = `<span class="week-label">Ексклюзив тижня</span><img src="${safeImg}" class="week-img"><div class="brand">${brand}</div><div class="name">${name}</div><button class="week-card-btn primary">ОПИС</button>`;
+                    wDiv.querySelector('.week-img').onclick = () => showModal(c, true);
                     wDiv.querySelector('.week-card-btn').onclick = () => showModal(c, true);
                     wContainer.appendChild(wDiv);
                 }
@@ -929,11 +987,13 @@
                 div.setAttribute('data-id', cardId); 
                 div.setAttribute('data-category', (isNew ? 'new ' : '') + (isTop ? 'top ' : '') + (isBottle ? 'bottle ' : '') + (isSet ? 'set ' : '') + (top ? top.toLowerCase() : ''));
                 
-                // Бейдж відсотка знижки
+                // ПЕРЕВІРКА ЗНИЖКИ (тепер порівнюємо ціну за 1 мл)
                 let saleBadgeHTML = '';
-                if (isSale && oldPrice > price) {
-                    const discount = Math.round((1 - price / oldPrice) * 100);
+                let oldPriceHTML = '';
+                if (isSale && oldPricePerMl > currentPricePerMl) {
+                    const discount = Math.round((1 - currentPricePerMl / oldPricePerMl) * 100);
                     saleBadgeHTML = `<div class="badge badge-sale">-${discount}%</div>`;
+                    oldPriceHTML = `<span class="old-price">${oldPriceLabel}</span>`; // Показуємо стару ціну за 2/5 мл
                 }
 
                 div.innerHTML = `
@@ -946,12 +1006,10 @@
                     </div>
                     <div class="wishlist-btn ${isWished ? 'active' : ''}" onclick="toggleWishlist(event, '${brand.replace(/'/g, "\\'")}', '${name.replace(/'/g, "\\'")}', this)">${isWished ? '♥' : '♡'}</div>
                     <img loading="lazy" src="${safeImg}" onclick="showModal(globalCatalogData.find(x => x[0] === '${brand.replace(/'/g, "\\'")}' && x[1] === '${name.replace(/'/g, "\\'")}'))">
-                    
                     <div class="price-display-wrapper">
-                        ${(isSale && oldPrice > price) ? `<span class="old-price">${oldPrice} грн</span>` : ''}
+                        ${oldPriceHTML}
                         <div class="card-price-label">${isOutOfStock ? 'Тимчасово відсутній' : displayPriceStr}</div>
                     </div>
-
                     <div class="brand">${brand}</div>
                     <div class="name">${name}</div>
                     ${cardStarsHTML}
@@ -961,6 +1019,7 @@
                 `;
                 container.appendChild(div);
             });
+
 
 
             renderBrandSlider(catalogData); 

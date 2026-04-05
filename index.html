@@ -415,19 +415,16 @@ body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
     z-index: 1400; 
     box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
     
-    /* Твоя оптимізація */
     transition: opacity 0.3s ease, transform 0.3s ease, display 0.3s allow-discrete;
     opacity: 0;
     transform: scale(0.5);
 }
 
-/* Стан, коли кнопка видима (додається через JS або умови) */
 #scrollTopBtn[style*="display: block"] {
     opacity: 1;
     transform: scale(1);
 }
 
-/* Для підтримки плавної появи в сучасних браузерах */
 @starting-style {
     #scrollTopBtn[style*="display: block"] {
         opacity: 0;
@@ -691,15 +688,6 @@ body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
     let cart = JSON.parse(localStorage.getItem('vr_cart')) || [];
     let wishlist = JSON.parse(localStorage.getItem('vr_wishlist')) || [];
 
-    window.onscroll = function() {
-        const btn = document.getElementById("scrollTopBtn");
-        if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 600) {
-            btn.style.display = "block";
-        } else {
-            btn.style.display = "none";
-        }
-    };
-
     function initSwipe() {
         const s = document.getElementById('heroCarousel');
         s.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, {passive:true});
@@ -825,7 +813,6 @@ body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
             catalogData.forEach(c => {
                 const [brand, name, price, minVol, desc, img, dateStr, top, weekText, , , bottleMl, bottlePrice, , stockCol] = c;
                 
-                // ВАЖЛИВО: Оцінка залишків з колонки O (індекс 14)
                 const stock = parseFloat(stockCol);
                 const isOutOfStock = !isNaN(stock) && stock <= 0;
                 
@@ -950,6 +937,19 @@ body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
         
         let rawText = (isWeekly && weekText) ? weekText : desc;
         let f = rawText;
+
+        // ВІЗУАЛІЗАЦІЯ СЕТІВ: Заміна {Назва} на міні-картинки
+        f = f.replace(/\{(.*?)\}/g, function(match, perfName) {
+            let found = globalCatalogData.find(p => (p[0] + ' ' + p[1]).toLowerCase().includes(perfName.toLowerCase().trim()));
+            if (found) {
+                let imgSrc = found[5].replace(/'/g, "%27");
+                return `<div style="display:flex; align-items:center; gap:12px; margin: 8px 0; padding: 6px 12px; background: rgba(128,128,128,0.05); border-radius: 8px; border: 1px dashed rgba(197,160,89,0.4);">
+                            <img src="${imgSrc}" style="width: 35px; height: 35px; object-fit: contain; border-radius: 4px; background: transparent;">
+                            <span style="font-family: var(--serif); font-size: 13px; font-weight: 700; color: var(--text-dark);">${found[0]} ${found[1]}</span>
+                        </div>`;
+            }
+            return `<b style="color: var(--gold);">${perfName}</b>`;
+        });
         
         let posCount = (f.match(/\[\+\]/g) || []).length;
         let neuCount = (f.match(/\[=\]/g) || []).length;
@@ -1317,40 +1317,74 @@ body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
         }
     }
 
-    function handleSearchInput() {
-        const inputField = document.getElementById('searchInput');
-        const clearBtn = document.getElementById('clearSearchBtn');
-        const q = inputField.value.toLowerCase().trim();
-        const resContainer = document.getElementById('searchResults');
-        
-        if (q.length > 0) { clearBtn.style.display = 'block'; } else { clearBtn.style.display = 'none'; }
-        
-        triggerCatalogAnimation();
-        
-        if (!q) { resContainer.style.display = 'none'; return; }
+    function fixKeyboardLayout(text) {
+        const layoutMap = {'й':'q','ц':'w','у':'e','к':'r','е':'t','н':'y','г':'u','ш':'i','щ':'o','з':'p','х':'[','ї':']','ф':'a','і':'s','в':'d','а':'f','п':'g','р':'h','о':'j','л':'k','д':'l','ж':';','є':'\'','я':'z','ч':'x','с':'c','м':'v','и':'b','т':'n','ь':'m','б':',','ю':'.','q':'й','w':'ц','e':'у','r':'к','t':'е','y':'н','u':'г','i':'ш','o':'щ','p':'з','[':'х',']':'ї','a':'ф','s':'і','d':'в','f':'а','g':'п','h':'р','j':'о','k':'л','l':'д',';':'ж','\'':'є','z':'я','x':'ч','c':'с','v':'м','b':'и','n':'т','m':'ь',',':'б','.':'ю'};
+        return text.split('').map(c => layoutMap[c.toLowerCase()] || c).join('');
+    }
 
-        const matches = globalCatalogData.filter(c => {
-            const searchStr = (c[0] + " " + c[1] + " " + (c[4] || "")).toLowerCase();
-            return searchStr.includes(q);
+    function applySynonyms(text) {
+        let t = text.toLowerCase();
+        const syns = { "бакара": "baccarat", "баккара": "baccarat", "куркджан": "kurkdjian", "куркджян": "kurkdjian", "зарка": "zarkoperfume", "кіліан": "kilian", "килиан": "kilian", "атар": "attar", "аттар": "attar", "шанель": "chanel", "діор": "dior", "диор": "dior", "том форд": "tom ford", "блек афгано": "black afgano" };
+        for (let key in syns) { if (t.includes(key)) t = t.replace(key, syns[key]); }
+        return t;
+    }
+
+    function handleSearchInput() {
+        const inputVal = document.getElementById('searchInput').value;
+        const resContainer = document.getElementById('searchResults');
+        const clearBtn = document.getElementById('clearSearchBtn');
+
+        if (clearBtn) clearBtn.style.display = inputVal ? 'block' : 'none';
+
+        triggerCatalogAnimation();
+
+        if (!inputVal.trim()) {
+            resContainer.style.display = 'none';
+            return;
+        }
+
+        let qOriginal = inputVal.toLowerCase().trim();
+        let qFixedLayout = fixKeyboardLayout(qOriginal);
+
+        let q1 = applySynonyms(qOriginal);
+        let q2 = applySynonyms(qFixedLayout);
+
+        let results = globalCatalogData.filter(p => {
+            let searchableText = (p[0] + " " + p[1] + " " + (p[4] || "")).toLowerCase();
+            return searchableText.includes(q1) || searchableText.includes(q2);
+        });
+
+        results.sort((a, b) => {
+            let titleA = (a[0] + " " + a[1]).toLowerCase();
+            let titleB = (b[0] + " " + b[1]).toLowerCase();
+            let aIsTitleMatch = titleA.includes(q1) || titleA.includes(q2);
+            let bIsTitleMatch = titleB.includes(q1) || titleB.includes(q2);
+            if (aIsTitleMatch && !bIsTitleMatch) return -1;
+            if (!aIsTitleMatch && bIsTitleMatch) return 1;
+            return 0;
         });
 
         resContainer.innerHTML = '';
-        
-        if (matches.length === 0) {
-            resContainer.innerHTML = '<div class="search-empty">Аромат не знайдено 😔<br><span style="font-size:10px; margin-top:8px; display:block; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--gold);">Спробуйте змінити запит</span></div>';
-        } else {
-            matches.forEach(c => {
+        if (results.length > 0) {
+            results.forEach(c => {
                 const [brand, name, price, minVol, desc, img] = c;
                 const startsFrom5 = minVol && String(minVol).includes('5');
                 const minPriceLabel = calculatePrice(price, startsFrom5 ? '5 мл' : '2 мл');
-                
+
                 const item = document.createElement('div');
                 item.className = 'search-item';
                 item.innerHTML = `<img src="${img.replace(/'/g, "%27")}" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'"><div class="search-item-info"><div class="search-item-brand">${brand}</div><div class="search-item-name">${name}</div></div><div class="search-item-price">від ${minPriceLabel}</div>`;
-                
+
                 item.onclick = () => { showModal(c); resContainer.style.display = 'none'; document.getElementById('searchInput').value = ''; document.getElementById('clearSearchBtn').style.display = 'none'; triggerCatalogAnimation(); };
                 resContainer.appendChild(item);
             });
+        } else {
+            resContainer.innerHTML = `<div class="search-empty">
+                На жаль, аромат <b>"${inputVal}"</b> не знайдено 😔<br>
+                <div style="margin-top: 8px; font-size:10px; color:var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
+                    Спробуйте пошукати по бренду або перегляньте наші "Сети"!
+                </div>
+            </div>`;
         }
         resContainer.style.display = 'block';
     }
@@ -1379,32 +1413,54 @@ body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
     document.addEventListener('click', function(e) { const controls = document.getElementById('stickyControls'); if (controls && !controls.contains(e.target)) { const res = document.getElementById('searchResults'); if (res) res.style.display = 'none'; } });
 
     function navigateToPerfume(n) {
-    // 1. Закриваємо вікно новин
-    document.getElementById('newsModalWindow').style.display = 'none';
-
-    // 2. Шукаємо товар у нашому масиві даних за назвою або брендом
-    const item = globalCatalogData.find(p => 
-        (p[0] + " " + p[1]).toLowerCase().includes(n.toLowerCase())
-    );
-
-    if (item) {
-        // Якщо знайшли — одразу показуємо модалку цього парфуму
-        showModal(item);
-    } else {
-        // Якщо точного збігу немає — вбиваємо назву в пошук і скролимо до результатів
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.value = n;
-            handleSearchInput();
-            scrollToFirstCards();
+        document.getElementById('newsModalWindow').style.display = 'none';
+        const item = globalCatalogData.find(p => (p[0] + " " + p[1]).toLowerCase().includes(n.toLowerCase()));
+        if (item) {
+            showModal(item);
+        } else {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.value = n;
+                handleSearchInput();
+                scrollToFirstCards();
+            }
         }
     }
-}
 
+    function setCategory(c, b) {
+        currentCategory = c;
+        currentBrand = '';
+        document.querySelectorAll('.brand-btn').forEach(btn => btn.classList.remove('active'));
+        const allBrandsBtn = document.querySelector('.brand-btn');
+        if (allBrandsBtn) allBrandsBtn.classList.add('active');
+        
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) searchInput.value = '';
+        const clearBtn = document.getElementById('clearSearchBtn');
+        if (clearBtn) clearBtn.style.display = 'none';
+        const searchResults = document.getElementById('searchResults');
+        if (searchResults) searchResults.style.display = 'none';
+
+        document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        triggerCatalogAnimation();
+        scrollToFirstCards();
+    }
     
-    function setCategory(c, b) { currentCategory = c; document.getElementById('searchInput').value = ''; triggerCatalogAnimation(); document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); scrollToFirstCards(); }
-    
-    function setBrand(b, btn) { currentBrand = b; document.getElementById('searchInput').value = ''; triggerCatalogAnimation(); document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active')); btn.classList.add('active'); scrollToFirstCards(); }
+    function setBrand(b, btn) {
+        currentBrand = b;
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) searchInput.value = '';
+        const clearBtn = document.getElementById('clearSearchBtn');
+        if (clearBtn) clearBtn.style.display = 'none';
+        const resContainer = document.getElementById('searchResults');
+        if (resContainer) resContainer.style.display = 'none';
+
+        triggerCatalogAnimation();
+        document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        scrollToFirstCards();
+    }
     
     function filterCatalog() {
         const q = document.getElementById('searchInput').value.toLowerCase();
@@ -1500,15 +1556,14 @@ body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
     }
     
      function formatNews(newsText) {
-    if(!newsText) return;
-    let formatted = newsText
-        .replace(/\n/g, '<br>') // Переноси рядків
-        .replace(/\*(.*?)\*/g, '<b>$1</b>') // Жирний текст через *зірочки*
-        // Робимо назви у {фігурних дужках} клікабельними:
-        .replace(/\{(.*?)\}/g, '<span style="color:var(--gold); font-weight:bold; cursor:pointer; text-decoration:underline;" onclick="navigateToPerfume(\'$1\')">$1</span>');
+        if(!newsText) return;
+        let formatted = newsText
+            .replace(/\n/g, '<br>')
+            .replace(/\*(.*?)\*/g, '<b>$1</b>')
+            .replace(/\{(.*?)\}/g, '<span style="color:var(--gold); font-weight:bold; cursor:pointer; text-decoration:underline;" onclick="navigateToPerfume(\'$1\')">$1</span>');
 
-    document.getElementById('newsModalContent').innerHTML = '<div style="font-size:14px; line-height:1.7; color:var(--text-dark);">' + formatted + '</div>';
-}
+        document.getElementById('newsModalContent').innerHTML = '<div style="font-size:14px; line-height:1.7; color:var(--text-dark);">' + formatted + '</div>';
+    }
 
 
     function renderGeneralReviews(data) {
@@ -1637,7 +1692,7 @@ body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
     }
 
     load();
-    initTheme(); // Перевіряємо тему при старті
+    initTheme();
 
     setTimeout(() => {
         if (!sessionStorage.getItem('chatBubbleShown')) {
@@ -1645,43 +1700,29 @@ body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
             if (bubble) {
                 bubble.classList.add('show');
                 sessionStorage.setItem('chatBubbleShown', 'true');
-                setTimeout(() => { bubble.classList.remove('show'); }, 15000);
+                
+                setTimeout(() => {
+                    bubble.classList.remove('show');
+                }, 15000);
             }
         }
     }, 15000); 
-// ЛОГІКА ПОЯВИ ПРИВІТАННЯ ВІКТОРІЇ
-setTimeout(() => {
-    // Перевіряємо, чи вже показували повідомлення за цей сеанс (щоб не набридати)
-    if (!sessionStorage.getItem('chatBubbleShown')) {
-        const bubble = document.getElementById('tgChatBubble');
-        if (bubble) {
-            bubble.classList.add('show');
-            // Запам'ятовуємо, що показали
-            sessionStorage.setItem('chatBubbleShown', 'true');
-            
-            // Автоматично ховаємо через 15 секунд, якщо клієнт не закрив сам
-            setTimeout(() => {
-                bubble.classList.remove('show');
-            }, 15000);
-        }
-    }
-}, 15000); // 15000 мс = 15 секунд очікування
+    
     // ЛОГІКА ПОЯВИ КНОПКИ "ВГОРУ"
-window.addEventListener('scroll', function() {
-    const scrollBtn = document.getElementById("scrollTopBtn");
-    if (scrollBtn) {
-        // Якщо прокрутили більше 600px — показуємо, інакше — ховаємо
-        if (window.pageYOffset > 600) {
-            scrollBtn.style.display = "block";
-        } else {
-            scrollBtn.style.display = "none";
+    window.addEventListener('scroll', function() {
+        const scrollBtn = document.getElementById("scrollTopBtn");
+        if (scrollBtn) {
+            if (window.pageYOffset > 600) {
+                scrollBtn.style.display = "block";
+            } else {
+                scrollBtn.style.display = "none";
+            }
         }
-    }
-});
+    });
 
 </script>
 
-    <div class="tg-chat-bubble" id="tgChatBubble">
+<div class="tg-chat-bubble" id="tgChatBubble">
     <span class="bubble-close" onclick="document.getElementById('tgChatBubble').classList.remove('show')">×</span>
     <img src="Screenshot_20260328-171201.png" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
     <div class="bubble-text">

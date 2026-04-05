@@ -327,7 +327,7 @@
         
         .cart-empty-msg { text-align: center; color: #999; font-size: 14px; margin-top: 50px; font-family: var(--serif); font-style: italic;}
         
-        .cart-footer { padding: 25px 20px; border-top: 1px solid rgba(128,128,128,0.1); }
+        .cart-footer { padding: 25px 20px; border-top: 1px solid rgba(128,128,128,0.1); background: var(--bg); }
         
         .gift-wrap-container { display: flex; align-items: center; margin-bottom: 20px; cursor: pointer; padding: 14px; border: 1px dashed rgba(128,128,128,0.3); border-radius: 8px; transition: 0.3s; }
         .gift-wrap-container:hover { border-color: var(--gold); }
@@ -363,74 +363,74 @@
         .leave-review-box { margin-top: 60px; padding: 40px 20px; background: rgba(128,128,128,0.05); border-radius: 8px; border: 1px solid rgba(128,128,128,0.1); }
         .leave-review-title { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; margin-bottom: 25px; display: block; text-align: center;} 
         /* СТИЛЬ ПРИВІТАННЯ ВІКТОРІЇ */
-.tg-chat-bubble { 
-    position: fixed; 
-    bottom: 95px; 
-    right: 25px; 
-    background: rgba(255,255,255,0.95); 
-    backdrop-filter: blur(10px); 
-    border-radius: 12px; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
-    padding: 14px; 
-    display: flex; 
-    align-items: center; 
-    gap: 12px; 
-    z-index: 1499; 
-    opacity: 0; 
-    transform: translateY(20px) scale(0.9); 
-    pointer-events: none; 
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-    border: 1px solid rgba(0,0,0,0.05); 
-    width: 250px; 
-    box-sizing: border-box; 
-}
-.tg-chat-bubble.show { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
-.tg-chat-bubble::after { content: ''; position: absolute; bottom: -6px; right: 20px; width: 12px; height: 12px; background: inherit; transform: rotate(45deg); border-right: 1px solid rgba(0,0,0,0.05); border-bottom: 1px solid rgba(0,0,0,0.05); }
-.tg-chat-bubble img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
-.bubble-text { font-size: 12px; line-height: 1.4; color: #555; }
-.bubble-text b { color: #1a1a1a; font-size: 13px; display: inline-block; margin-bottom: 2px; }
-.bubble-close { position: absolute; top: 6px; right: 10px; font-size: 14px; color: #ccc; cursor: pointer; transition: 0.2s; padding: 2px; }
-.bubble-close:hover { color: #000; }
+        .tg-chat-bubble { 
+            position: fixed; 
+            bottom: 95px; 
+            right: 25px; 
+            background: rgba(255,255,255,0.95); 
+            backdrop-filter: blur(10px); 
+            border-radius: 12px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
+            padding: 14px; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            z-index: 1499; 
+            opacity: 0; 
+            transform: translateY(20px) scale(0.9); 
+            pointer-events: none; 
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            border: 1px solid rgba(0,0,0,0.05); 
+            width: 250px; 
+            box-sizing: border-box; 
+        }
+        .tg-chat-bubble.show { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+        .tg-chat-bubble::after { content: ''; position: absolute; bottom: -6px; right: 20px; width: 12px; height: 12px; background: inherit; transform: rotate(45deg); border-right: 1px solid rgba(0,0,0,0.05); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .tg-chat-bubble img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); }
+        .bubble-text { font-size: 12px; line-height: 1.4; color: #555; }
+        .bubble-text b { color: #1a1a1a; font-size: 13px; display: inline-block; margin-bottom: 2px; }
+        .bubble-close { position: absolute; top: 6px; right: 10px; font-size: 14px; color: #ccc; cursor: pointer; transition: 0.2s; padding: 2px; }
+        .bubble-close:hover { color: #000; }
 
-/* Темна тема для бабла */
-body.dark-theme .tg-chat-bubble { background: #1a1a1a; border-color: rgba(255,255,255,0.05); color: #fff; }
-body.dark-theme .tg-chat-bubble .bubble-text { color: #ccc; }
-body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
-   /* КНОПКА ПОВЕРНЕННЯ ВГОРУ */
-#scrollTopBtn { 
-    display: none; 
-    position: fixed; 
-    bottom: 160px; 
-    right: 25px; 
-    background: rgba(26, 26, 26, 0.8); 
-    backdrop-filter: blur(5px); 
-    -webkit-backdrop-filter: blur(5px);
-    color: #fff; 
-    border: none; 
-    width: 44px; 
-    height: 44px; 
-    border-radius: 50%; 
-    font-size: 20px; 
-    cursor: pointer; 
-    z-index: 1400; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
-    
-    transition: opacity 0.3s ease, transform 0.3s ease, display 0.3s allow-discrete;
-    opacity: 0;
-    transform: scale(0.5);
-}
+        /* Темна тема для бабла */
+        body.dark-theme .tg-chat-bubble { background: #1a1a1a; border-color: rgba(255,255,255,0.05); color: #fff; }
+        body.dark-theme .tg-chat-bubble .bubble-text { color: #ccc; }
+        body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
+           /* КНОПКА ПОВЕРНЕННЯ ВГОРУ */
+        #scrollTopBtn { 
+            display: none; 
+            position: fixed; 
+            bottom: 160px; 
+            right: 25px; 
+            background: rgba(26, 26, 26, 0.8); 
+            backdrop-filter: blur(5px); 
+            -webkit-backdrop-filter: blur(5px);
+            color: #fff; 
+            border: none; 
+            width: 44px; 
+            height: 44px; 
+            border-radius: 50%; 
+            font-size: 20px; 
+            cursor: pointer; 
+            z-index: 1400; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+            
+            transition: opacity 0.3s ease, transform 0.3s ease, display 0.3s allow-discrete;
+            opacity: 0;
+            transform: scale(0.5);
+        }
 
-#scrollTopBtn[style*="display: block"] {
-    opacity: 1;
-    transform: scale(1);
-}
+        #scrollTopBtn[style*="display: block"] {
+            opacity: 1;
+            transform: scale(1);
+        }
 
-@starting-style {
-    #scrollTopBtn[style*="display: block"] {
-        opacity: 0;
-        transform: scale(0.5);
-    }
-}
+        @starting-style {
+            #scrollTopBtn[style*="display: block"] {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+        }
 
     </style>
 </head>
@@ -938,9 +938,24 @@ body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
         let rawText = (isWeekly && weekText) ? weekText : desc;
         let f = rawText;
 
-        // ВІЗУАЛІЗАЦІЯ СЕТІВ: Заміна {Назва} на міні-картинки
+        // === ВІЗУАЛІЗАЦІЯ ПАРФУМІВ У ТЕКСТІ (РОЗУМНИЙ ПОШУК) ===
         f = f.replace(/\{(.*?)\}/g, function(match, perfName) {
-            let found = globalCatalogData.find(p => (p[0] + ' ' + p[1]).toLowerCase().includes(perfName.toLowerCase().trim()));
+            let searchStr = perfName.toLowerCase().trim();
+            
+            // 1. Спочатку шукаємо точний збіг
+            let found = globalCatalogData.find(p => (p[0] + ' ' + p[1]).toLowerCase().includes(searchStr));
+
+            // 2. Якщо точного збігу немає, вмикаємо "розумний" пошук
+            if (!found) {
+                let words = searchStr.replace(/by |paris |parfums |[^\wа-яіїєґ0-9]/gi, ' ').split(/\s+/).filter(w => w.length > 1);
+                if (words.length > 0) {
+                    found = globalCatalogData.find(p => {
+                        let dbStr = (p[0] + p[1]).toLowerCase(); 
+                        return words.every(w => dbStr.includes(w));
+                    });
+                }
+            }
+
             if (found) {
                 let imgSrc = found[5].replace(/'/g, "%27");
                 return `<div style="display:flex; align-items:center; gap:12px; margin: 8px 0; padding: 6px 12px; background: rgba(128,128,128,0.05); border-radius: 8px; border: 1px dashed rgba(197,160,89,0.4);">
@@ -948,8 +963,10 @@ body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
                             <span style="font-family: var(--serif); font-size: 13px; font-weight: 700; color: var(--text-dark);">${found[0]} ${found[1]}</span>
                         </div>`;
             }
+            
             return `<b style="color: var(--gold);">${perfName}</b>`;
         });
+        // ==========================================================
         
         let posCount = (f.match(/\[\+\]/g) || []).length;
         let neuCount = (f.match(/\[=\]/g) || []).length;
@@ -1230,16 +1247,33 @@ body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
                 shippingText.style.color = 'inherit';
             }
 
+            // === РОЗУМНИЙ АПСЕЛ ===
             if(upsellBlock) {
                 const cartItemNames = cart.map(item => item.name);
-                const candidates = globalCatalogData.filter(c => {
+                
+                // 1. Знаходимо всіх кандидатів (топ/хіт + є об'єм 2 мл + немає вже в кошику)
+                let allCandidates = globalCatalogData.filter(c => {
                     const isTop = c[7] && (c[7].toLowerCase().includes('топ') || c[7].toLowerCase().includes('хіт'));
                     const has2ml = c[3] && !String(c[3]).includes('5');
                     return isTop && has2ml && !cartItemNames.includes(c[1]);
                 });
 
+                // 2. Відбираємо тих, хто вписується в психологічну межу імпульсивної покупки
+                let candidates = allCandidates.filter(c => {
+                    let price2ml = parseFloat(c[2]) * 2; // Вартість 2 мл
+                    // Умова: до 250 грн АБО не більше 30% від загальної суми кошика (якщо чек великий)
+                    return price2ml <= 250 || price2ml <= (total * 0.3);
+                });
+
+                // 3. Запобіжник: якщо всі хіти дуже дорогі, беремо 3 найдешевші з доступних
+                if (candidates.length === 0 && allCandidates.length > 0) {
+                    candidates = allCandidates.sort((a, b) => parseFloat(a[2]) - parseFloat(b[2])).slice(0, 3);
+                }
+
                 if (candidates.length > 0) {
-                    const candidate = candidates[cart.length % candidates.length]; 
+                    // 4. Обираємо абсолютно випадкового кандидата з відібраних
+                    const candidate = candidates[Math.floor(Math.random() * candidates.length)]; 
+                    
                     const [brand, name, price, minVol, desc, img] = candidate;
                     const price2mlText = calculatePrice(price, '2 мл');
                     const priceNum = parseInt(price2mlText.replace(/\D/g, ''));
@@ -1254,7 +1288,9 @@ body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
                         saveCart(); 
                     };
                     upsellBlock.style.display = 'block';
-                } else { upsellBlock.style.display = 'none'; }
+                } else { 
+                    upsellBlock.style.display = 'none'; 
+                }
             }
         }
         
@@ -1379,12 +1415,32 @@ body.dark-theme .tg-chat-bubble .bubble-text b { color: #fff; }
                 resContainer.appendChild(item);
             });
         } else {
-            resContainer.innerHTML = `<div class="search-empty">
-                На жаль, аромат <b>"${inputVal}"</b> не знайдено 😔<br>
-                <div style="margin-top: 8px; font-size:10px; color:var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
-                    Спробуйте пошукати по бренду або перегляньте наші "Сети"!
+            // === РОЗУМНІ РЕКОМЕНДАЦІЇ ЯКЩО НЕМАЄ РЕЗУЛЬТАТІВ ===
+            resContainer.innerHTML = `<div class="search-empty" style="padding-bottom: 12px;">
+                На жаль, за запитом <b>"${inputVal}"</b> нічого не знайдено 😔<br>
+                <div style="margin-top: 12px; font-size:10px; color:var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
+                    Але вам точно сподобаються наші хіти:
                 </div>
             </div>`;
+
+            let suggestions = globalCatalogData.filter(p => p[7] && (p[7].toLowerCase().includes('топ') || p[7].toLowerCase().includes('хіт')));
+            if (suggestions.length < 3) suggestions = globalCatalogData; 
+            
+            let shuffled = suggestions.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+            shuffled.forEach(c => {
+                const [brand, name, price, minVol, desc, img] = c;
+                const startsFrom5 = minVol && String(minVol).includes('5');
+                const minPriceLabel = calculatePrice(price, startsFrom5 ? '5 мл' : '2 мл');
+
+                const item = document.createElement('div');
+                item.className = 'search-item';
+                item.style.backgroundColor = 'rgba(197, 160, 89, 0.05)'; 
+                item.innerHTML = `<img src="${img.replace(/'/g, "%27")}" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'"><div class="search-item-info"><div class="search-item-brand">${brand}</div><div class="search-item-name">${name}</div></div><div class="search-item-price" style="color: var(--gold);">від ${minPriceLabel}</div>`;
+
+                item.onclick = () => { showModal(c); resContainer.style.display = 'none'; document.getElementById('searchInput').value = ''; document.getElementById('clearSearchBtn').style.display = 'none'; triggerCatalogAnimation(); };
+                resContainer.appendChild(item);
+            });
         }
         resContainer.style.display = 'block';
     }

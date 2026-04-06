@@ -1063,14 +1063,28 @@
             if(revStart !== -1) {
                 let revText = f.substring(revStart);
                 f = f.substring(0, revStart);
-                reviewsHTML += '<div style="margin-top:20px;"><span style="font-family: var(--cinzel); font-weight:800; text-transform:uppercase; font-size:11px; letter-spacing:2px; color:var(--gold);">💬 Відгуки:</span><div class="reviews-scroll-container">';
+                
+                reviewsHTML += `
+                <div class="faq-container" style="margin-top:20px; border-top:none;">
+                    <div class="faq-item" style="border-bottom:none;">
+                        <div class="faq-question" onclick="toggleFaq(this)" style="font-family: var(--cinzel); font-size: 11px; color: var(--gold); letter-spacing: 2px;">
+                            💬 Відгуки (${totalRev})
+                        </div>
+                        <div class="faq-answer">
+                            <div class="reviews-scroll-container" style="max-height: 250px; border-bottom: none;">`;
+                
                 reviewsHTML += revText
-                    .replace(/\[\+\+\](.*?)(?=<br>|\[|$)/g, '<div class="review-box review-pos">$1</div>')
-                    .replace(/\[\+\](.*?)(?=<br>|\[|$)/g, '<div class="review-box review-pos">$1</div>')
-                    .replace(/\[=\](.*?)(?=<br>|\[|$)/g, '<div class="review-box">$1</div>')
-                    .replace(/\[-\](.*?)(?=<br>|\[|$)/g, '<div class="review-box review-neg">$1</div>')
-                    .replace(/\[--\](.*?)(?=<br>|\[|$)/g, '<div class="review-box review-neg">$1</div>');
-                reviewsHTML += '</div></div>';
+                    .replace(/\[\+\+\](.*?)(?=<br>|\[|$)/g, '<div class="review-box review-pos"><span style="color:var(--gold); font-size:10px; display:block; letter-spacing:2px; margin-bottom:2px;">★★★★★</span>$1</div>')
+                    .replace(/\[\+\](.*?)(?=<br>|\[|$)/g, '<div class="review-box review-pos"><span style="color:var(--gold); font-size:10px; display:block; letter-spacing:2px; margin-bottom:2px;">★★★★☆</span>$1</div>')
+                    .replace(/\[=\](.*?)(?=<br>|\[|$)/g, '<div class="review-box"><span style="color:var(--gold); font-size:10px; display:block; letter-spacing:2px; margin-bottom:2px;">★★★☆☆</span>$1</div>')
+                    .replace(/\[-\](.*?)(?=<br>|\[|$)/g, '<div class="review-box review-neg"><span style="color:#888; font-size:10px; display:block; letter-spacing:2px; margin-bottom:2px;">★★☆☆☆</span>$1</div>')
+                    .replace(/\[--\](.*?)(?=<br>|\[|$)/g, '<div class="review-box review-neg"><span style="color:#888; font-size:10px; display:block; letter-spacing:2px; margin-bottom:2px;">★☆☆☆☆</span>$1</div>');
+                
+                reviewsHTML += `
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
             }
         }
 

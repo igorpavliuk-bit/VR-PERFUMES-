@@ -175,13 +175,16 @@
         .tab-btn { background: none; border: none; font-size: 11px; font-weight: 600; color: #a0a0a0; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; padding: 5px 0; transition: 0.3s; white-space: nowrap; flex-shrink: 0; }
         .tab-btn.active { color: var(--gold); font-weight: 800; border-bottom: 2px solid var(--gold); }
 
-        /* ОПТИМІЗОВАНИЙ КАТАЛОГ ДЛЯ ПК ТА МОБІЛОК */
+        /* ОПТИМІЗОВАНИЙ КАТАЛОГ ДЛЯ ПК ТА МОБІЛОК + ЕФЕКТ РІДКОГО СКЛА */
         #catalog { display: grid; grid-template-columns: 1fr 1fr; gap: 30px 15px; padding: 20px; transition: opacity 0.4s ease; }
         @media (min-width: 600px) { #catalog { grid-template-columns: repeat(3, 1fr); gap: 30px 20px; } }
         @media (min-width: 992px) { #catalog { grid-template-columns: repeat(4, 1fr); gap: 40px 25px; padding: 30px 40px; } }
         @media (min-width: 1200px) { #catalog { grid-template-columns: repeat(5, 1fr); gap: 40px 30px; } }
 
-        .card { position: relative; display: flex; flex-direction: column; background: var(--bg); transition: box-shadow 0.3s ease; }
+        .card { position: relative; display: flex; flex-direction: column; background: var(--bg); transition: box-shadow 0.3s ease; overflow: hidden; }
+        .card::after { content: ''; position: absolute; top: -50%; left: -150%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1), transparent); transform: rotate(45deg); transition: all 0.6s ease; z-index: 6; pointer-events: none; }
+        .card:hover::after { left: 100%; }
+
         .card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; background: #f9f9f9; border-radius: 4px; cursor: pointer; position: relative; z-index: 5; content-visibility: auto; }
         .card-price-label { font-size: 13px; font-family: var(--serif); color: var(--gold); font-weight: 700; margin: 10px 0 2px; text-align: center; }
         .brand { font-family: var(--cinzel); font-size: 11px; color: #999; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; text-align: center; font-weight: 700;}
@@ -224,11 +227,15 @@
         .week-img { max-height: 200px; width: auto; max-width: 90%; object-fit: contain; margin-bottom: 15px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.1)); cursor: pointer; }
         .week-card-btn { width: 220px; height: 44px; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; background: #1a1a1a; color: #fff; border: none; cursor: pointer; border-radius: 4px; }
 
-        /* ЧИСТА ТА ЧИТАБЕЛЬНА МОДАЛКА */
+        /* ЧИСТА ТА ЧИТАБЕЛЬНА МОДАЛКА + АУРА */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         .modal-content { background: var(--bg); width: 100%; max-width: 420px; border-radius: 12px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
         .modal-close-x { position: absolute; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; font-size: 16px; z-index: 20; transition: 0.3s; }
         
+        /* СТИЛЬ АУРИ */
+        .aura-wrapper { position: relative; display: inline-block; transition: all 0.8s ease; }
+        .aura-bg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120%; height: 120%; filter: blur(40px); opacity: 0.4; border-radius: 50%; z-index: -1; transition: background 0.8s ease; }
+
         .reviews-scroll-container { max-height: 160px; overflow-y: auto; margin: 10px 0 15px; padding-right: 5px; border-bottom: 1px solid #f2f2f2; }
         .review-box { border-left: 3px solid #eee; background: rgba(128,128,128,0.05); padding: 10px 14px; margin: 8px 0; font-family: var(--serif); font-style: italic; font-size: 13px; color: var(--text-dark); line-height: 1.5; border-radius: 0 4px 4px 0;}
         .review-pos { border-left-color: var(--gold); }
@@ -495,12 +502,12 @@
     
     <div class="note-suggestions" id="noteSuggestions">
         <span class="note-label">Ноти:</span>
-        <span class="note-chip" onclick="searchByNote('Ваніль', this)">Ваніль</span>
-        <span class="note-chip" onclick="searchByNote('Вишня', this)">Вишня</span>
-        <span class="note-chip" onclick="searchByNote('Шкіра', this)">Шкіра</span>
-        <span class="note-chip" onclick="searchByNote('Троянда', this)">Троянда</span>
-        <span class="note-chip" onclick="searchByNote('Бергамот', this)">Бергамот</span>
-        <span class="note-chip" onclick="searchByNote('Мускус', this)">Мускус</span>
+        <span class="note-chip" onclick="searchByNote('Ваніль', this)">🍦 Ваніль</span>
+        <span class="note-chip" onclick="searchByNote('Вишня', this)">🍒 Вишня</span>
+        <span class="note-chip" onclick="searchByNote('Шкіра', this)">💼 Шкіра</span>
+        <span class="note-chip" onclick="searchByNote('Троянда', this)">🌹 Троянда</span>
+        <span class="note-chip" onclick="searchByNote('Бергамот', this)">🍋 Бергамот</span>
+        <span class="note-chip" onclick="searchByNote('Мускус', this)">☁️ Мускус</span>
     </div>
     <div class="brand-slider" id="brandSlider"></div>
     <div class="tabs-container">
@@ -515,6 +522,7 @@
     <div class="sort-wrapper">
         <select id="sortSelect" class="sort-select" onchange="sortCatalog()">
             <option value="default">За замовчуванням (Нові)</option>
+            <option value="popularity">За популярністю (Відгуки)</option>
             <option value="price-asc">Ціна: від дешевих</option>
             <option value="price-desc">Ціна: від дорогих</option>
             <option value="name-asc">За алфавітом (А-Я)</option>
@@ -716,7 +724,10 @@
         <div class="modal-scroll-area" style="padding: 20px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; padding-bottom: 80px;">
             
             <div style="text-align: center; margin: 20px 0;">
-                <img id="mImg" src="" style="max-height: 200px; max-width: 100%; object-fit: contain; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.12)); border-radius: 10px;">
+                <div class="aura-wrapper">
+                    <div id="modalAura" class="aura-bg"></div>
+                    <img id="mImg" src="" crossorigin="anonymous" onload="updateAura(this)" style="max-height: 200px; max-width: 100%; object-fit: contain; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.12)); border-radius: 10px; position: relative; z-index: 2;">
+                </div>
             </div>
 
             <div style="text-align: center;">
@@ -763,11 +774,42 @@
     let wishlist = JSON.parse(localStorage.getItem('vr_wishlist')) || [];
     let recentlyViewed = JSON.parse(localStorage.getItem('vr_recent')) || [];
     
-    // Словник Бренд-лору
+    // === НОВЕ: Повний словник Бренд-лору ===
     const brandLoreData = {
-        "Nasomatto": "Бунтарський бренд від Алессандро Гуалтьєрі. Кожен аромат — це провокація, екстракт чистих емоцій та порушення класичних правил парфумерії. Справжнє мистецтво у краплі, що залишає незабутній шлейф.",
-        "V Canto": "Італійська ніша, натхненна «Божественною комедією» Данте та історією замку Градара. Це аромати пристрасті, таємних зіллів та глибоких почуттів, створені Паоло Теренці. Отруйні та прекрасні композиції.",
-        "Maison Francis Kurkdjian": "Творіння одного з найвидатніших парфумерів сучасності Франсіса Куркджяна. Бренд балансує між французькою класикою та інноваційною свободою, створюючи справжній ольфакторний гардероб."
+        "Ella K Parfums": "Подорож крізь аромати від Соні Констант. Кожна композиція — це ольфакторний щоденник мандрівниці, що втілює дух пригод та екзотичну красу далеких країв.",
+        "Zadig & Voltaire": "Французький рок-н-рол у флаконі. Аромати для вільних духом, де бунтарська енергія змішується з паризьким шиком та сучасним мінімалізмом.",
+        "2787": "Парфумерія покоління NEXT із Барселони. Авангардні аромати, що живуть «тут і зараз», поєднуючи традиційну якість та ультрасучасну концепцію.",
+        "Mancera": "Синтез західного модерну та східної розкоші. Аромати бренду славляться феноменальною стійкістю та шлейфом, що заповнює все навколо.",
+        "Les Liquides Imaginaires": "Парфумерний містицизм та філософія. Це не просто запахи, а «священні рідини», що пробуджують уяву, магію та глибокі емоції.",
+        "Zarkoperfume": "Скандинавська молекулярна магія. Аромати, що підлаштовуються під індивідуальну хімію шкіри, створюючи ваш особистий, неповторний підпис.",
+        "Emporio Armani": "Втілення сучасної елегантності та чуттєвості. Класика італійського стилю, що підкреслює впевненість та природний шарм свого власника.",
+        "Montale": "Король уда та гурманіки. П'янкі східні композиції в алюмінієвих флаконах, що стали символом насиченості та стійкості у світі парфумів.",
+        "Attar Collection": "Арабська казка у розкішному вбранні. Аромати, натхненні історією Сходу, що огортають оксамитовим шлейфом прянощів та квітів.",
+        "Nishane": "Перший нішевий бренд із Туреччини, що підкорив світ. Складна, багатогранна парфумерія, де кожна нота розповідає свою особливу історію.",
+        "Byredo": "Естетика шведського мінімалізму. Бен Горхем перетворює спогади та емоції на сучасні шедеври, що стали справжнім культурним феноменом.",
+        "Kajal": "Мистецтво спокуси та витонченості. Близькосхідна парфумерія преміального сегмента, що вражає глибиною складних композицій.",
+        "Memo Paris": "Парфумерна карта світу. Кожен аромат — це подорож у конкретне місце на планеті, передана через рідкісні інгредієнти та яскраві образи.",
+        "Gucci": "Спадщина італійської розкоші. Від класики до авангардних колекцій — це завжди заява про стиль, сміливість та бездоганний смак.",
+        "Billie Eilish": "Ароматична інтерпретація затишку та інтимності. Теплі, гурманські ноти, що обіймають, наче улюблений светр, створюючи атмосферу безпеки.",
+        "Victoria's Secret": "Символ жіночності та кокетства. Грайливі, яскраві аромати, що додають легкості та впевненості у власній привабливості щодня.",
+        "V Canto": "Італійська ніша, натхненна «Божественною комедією» Данте. Аромати пристрасті, таємних зіллів та глибоких почуттів у оксамитових флаконах.",
+        "By Kilian": "Справжня розкіш від спадкоємця коньячної імперії. Глибокі, вечірні та неймовірно спокусливі аромати, створені як витвори мистецтва.",
+        "Giardini Di Toscana": "Душа Тоскани у кожній краплі. Сонячні, гурманські та неймовірно комфортні аромати, що дарують відчуття гармонії з природою.",
+        "Lattafa Perfumes": "Перлина арабської парфумерії. Бренд поєднує доступність та преміальну якість Сходу, створюючи гучні та стійкі парфумерні бестселери.",
+        "Maison Alhambra": "Елегантна інтерпретація світових шедеврів. Висока якість виконання та вірність східним традиціям роблять цей бренд особливим.",
+        "Prada": "Інтелектуальна мода та витончена чистота. Аромати бренду — це еталон стриманої розкоші та вишуканості без зайвих деталей.",
+        "Tom Ford": "Провокація, статус та харизма. Парфумерія Тома Форда — це завжди виклик, гра на межі дозволеного та безумовна сексуальність.",
+        "Hermes": "Французька аристократичність. Легендарні аромати, що втілюють чистоту природних нот та багаторічні традиції найстарішого модного дому.",
+        "Juliette Has A Gun": "Парфумерний маніфест сучасної жінки. Аромати, побудовані на неординарних молекулах для тих, хто не боїться бути іншою.",
+        "Jo Malone": "Мистецтво парфумерного нашарування. Британська елегантність та простота, де кожен аромат можна поєднувати з іншим для створення власного міксу.",
+        "Gritti": "Венеціанська розкіш та історія. Династія Грітті передає через парфуми дух подорожей, морського бризу та італійської пристрасті.",
+        "Chopard": "Ювелірна точність у парфумерії. Етична розкіш та дорогоцінні інгредієнти, що перетворюють кожен флакон на ольфакторний діамант.",
+        "Orlov Paris": "Аромати, названі на честь легендарних діамантів. Висока концентрація розкоші, блиску та витонченості для справжніх поціновувачів.",
+        "Essential Parfums": "Демократична ніша від зірок парфумерії. Фокус на екологічності та геніальності формул, де головне — талант автора, а не реклама.",
+        "Obvious": "Еко-відповідальний мінімалізм. Прозорі, чисті та зрозумілі аромати, створені для тих, хто цінує природність та чесність у парфумерії.",
+        "Trussardi": "Класика італійського стилю з віковою історією. Аромати, що втілюють вишукану шкіру, затишні вулиці Мілана та сімейні традиції.",
+        "Hormone Paris": "Сміливий експеримент на межі науки та почуттів. Аромати, що досліджують тему потягу та впливу запахів на емоції та інстинкти.",
+        "Chloé Atelier des Fleurs": "Вишукана колекція, присвячена магії квітів. Кожен парфум — це моно-букет, що ідеально передає чистоту та крихкість живої рослини."
     };
 
     const originalTitle = document.title;
@@ -779,14 +821,42 @@
         }
     });
 
-    // 1. ФУНКЦІЯ СОРТУВАННЯ
+    // === НОВЕ: Динамічна аура флакона ===
+    function updateAura(imgElement) {
+        try {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 1;
+            canvas.height = 1;
+            // Малюємо 1 піксель для середнього кольору
+            ctx.drawImage(imgElement, 0, 0, 1, 1);
+            const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+            const color = `rgba(${r}, ${g}, ${b}, 0.5)`;
+            
+            const aura = document.getElementById('modalAura');
+            if(aura) aura.style.background = color;
+        } catch (e) {
+            // Fallback якщо зображення з іншого домену блокує CORS
+            const aura = document.getElementById('modalAura');
+            if(aura) aura.style.background = 'rgba(197, 160, 89, 0.3)';
+        }
+    }
+
+    // === ОНОВЛЕНО: Сортування з логікою популярності ===
     function sortCatalog() {
         const val = document.getElementById('sortSelect').value;
         const container = document.getElementById('catalog');
         const cards = Array.from(container.querySelectorAll('.card'));
         
         cards.sort((a, b) => {
-            if (val === 'default') return 0; // Залишає початкове сортування за датою
+            if (val === 'default') return 0; // Початкове за датою
+            
+            // Логіка для популярності (відгуки)
+            if (val === 'popularity') {
+                const revA = parseInt(a.getAttribute('data-reviews-count')) || 0;
+                const revB = parseInt(b.getAttribute('data-reviews-count')) || 0;
+                return revB - revA; // Спочатку ті, у кого більше відгуків
+            }
             
             let priceA = parseFloat(a.querySelector('.card-price-label').innerText.replace(/\D/g, '')) || 0;
             let priceB = parseFloat(b.querySelector('.card-price-label').innerText.replace(/\D/g, '')) || 0;
@@ -802,7 +872,7 @@
         cards.forEach(card => container.appendChild(card));
     }
 
-    // 2. ФУНКЦІЯ ВІДОБРАЖЕННЯ НЕЩОДАВНО ПЕРЕГЛЯНУТИХ
+    // ВІДОБРАЖЕННЯ НЕЩОДАВНО ПЕРЕГЛЯНУТИХ
     function renderRecentlyViewed() {
         const sec = document.getElementById('recentSection');
         const cont = document.getElementById('recentScrollContainer');
@@ -969,7 +1039,6 @@
             catalogData.forEach(c => {
                 const [brand, name, price, minVol, desc, img, dateStr, top, weekText, , , bottleMl, bottlePrice, , stockCol] = c;
                 
-                // БЕЗПЕЧНИЙ ПАРСИНГ ЦІН ДЛЯ ЗНИЖОК
                 const oldPricePerMl = c[15] ? parseFloat(String(c[15]).replace(',', '.')) || 0 : 0;
                 const currentPricePerMl = parseFloat(String(price).replace(',', '.')) || 0;
                 
@@ -998,7 +1067,7 @@
                 const isWished = wishlist.includes(cardId);
                 const safeDesc = desc ? desc.replace(/<[^>]*>?/gm, ' ').replace(/"/g, '&quot;') : '';
 
-                // НОВИЙ ПІДРАХУНОК ЗІРОК (БЕЗПЕЧНИЙ)
+                // ОНОВЛЕНО: Підрахунок зірок та запис в data-атрибут для сортування
                 let rawDesc = desc || '';
                 let count5 = (rawDesc.match(/\[\+\+\]/g) || []).length;
                 let count4 = (rawDesc.replace(/\[\+\+\]/g, '').match(/\[\+\]/g) || []).length;
@@ -1015,7 +1084,6 @@
                     cardStarsHTML = `<div class="card-stars">${starsStr} <span style="font-size:10px; color:#999; letter-spacing:0;">(${totalRev})</span></div>`;
                 }
 
-                // ЛОГІКА ЗНИЖОК (Sale Badge)
                 let saleBadgeHTML = '';
                 let oldPriceHTML = '';
                 if (isSale && oldPricePerMl > currentPricePerMl) {
@@ -1069,6 +1137,7 @@
                 div.setAttribute('data-brand', brand); 
                 div.setAttribute('data-id', cardId); 
                 div.setAttribute('data-desc', safeDesc); 
+                div.setAttribute('data-reviews-count', totalRev || 0); // Додано для сортування
                 div.setAttribute('data-category', (isNew ? 'new ' : '') + (isTop ? 'top ' : '') + (isBottle ? 'bottle ' : '') + (isSet ? 'set ' : '') + (top ? top.toLowerCase() : ''));
                 
                 div.innerHTML = `
@@ -1108,7 +1177,6 @@
             renderGeneralReviews(reviewsData.slice(1));
             if (promoDataRow) renderPremiumPromo(promoDataRow);
             
-            // ЧИТАННЯ ЛІНКІВ SMART SHARE ТА WISHLIST
             setTimeout(() => {
                 const urlParams = new URLSearchParams(window.location.search);
                 const shareP = urlParams.get('p');
@@ -1150,11 +1218,10 @@
     function showModal(pArr, isWeekly = false) {
         const [brand, name, price, minVol, desc, img, , top, weekText, , , bottleMl, bottlePrice, , stockCol] = pArr;
         
-        // Збереження в Нещодавно переглянуті
         const itemId = brand + ' ' + name;
-        recentlyViewed = recentlyViewed.filter(id => id !== itemId); // Видаляємо, якщо вже є
-        recentlyViewed.unshift(itemId); // Додаємо на початок
-        if (recentlyViewed.length > 6) recentlyViewed.pop(); // Лишаємо тільки 6 останніх
+        recentlyViewed = recentlyViewed.filter(id => id !== itemId);
+        recentlyViewed.unshift(itemId);
+        if (recentlyViewed.length > 6) recentlyViewed.pop();
         localStorage.setItem('vr_recent', JSON.stringify(recentlyViewed));
         renderRecentlyViewed();
         
@@ -1170,6 +1237,9 @@
         mImgEl.src = safeImg; 
         mImgEl.onerror = function() { this.src = 'https://i.postimg.cc/CxkmFFJ3/logo.png'; };
         
+        // Виклик аури при відкритті
+        updateAura(mImgEl);
+
         const scarcityDiv = document.getElementById('scarcityMsg');
         if (stock > 0 && stock < 10) {
             scarcityDiv.innerHTML = `<div style="background: rgba(169, 68, 66, 0.05); color: #a94442; padding: 10px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border: 1px dashed #a94442; display: inline-block;">🔥 Залишилось лише ${stock} мл!</div>`;
@@ -1178,7 +1248,6 @@
         let rawText = (isWeekly && weekText) ? weekText : desc;
         let f = rawText;
 
-        // === ВІЗУАЛІЗАЦІЯ ПАРФУМІВ У ТЕКСТІ (РОЗУМНИЙ ПОШУК) ===
         f = f.replace(/\{(.*?)\}/g, function(match, perfName) {
             let searchStr = perfName.toLowerCase().trim();
             let found = globalCatalogData.find(p => (p[0] + ' ' + p[1]).toLowerCase().includes(searchStr));
@@ -1203,7 +1272,6 @@
             return `<b style="color: var(--gold);">${perfName}</b>`;
         });
         
-        // НОВИЙ ПІДРАХУНОК ЗІРОК В МОДАЛЦІ (БЕЗПЕЧНИЙ)
         let c5 = (f.match(/\[\+\+\]/g) || []).length;
         let c4 = (f.replace(/\[\+\+\]/g, '').match(/\[\+\]/g) || []).length;
         let c3 = (f.match(/\[=\]/g) || []).length;
@@ -1512,7 +1580,6 @@
                 shippingText.style.color = 'inherit';
             }
 
-            // === РОЗУМНИЙ АПСЕЛ ===
             if(upsellBlock) {
                 const cartItemNames = cart.map(item => item.name);
                 
@@ -1575,13 +1642,12 @@
             return; 
         }
         
-        // ВАЛІДАЦІЯ ТЕЛЕФОНУ/ТЕЛЕГРАМУ
         if (!/[0-9@]/.test(contact)) {
             alert('Будь ласка, вкажіть коректний номер телефону (має містити цифри) або Telegram нік (починається з @)!');
             return;
         }
         
-                if (typeof gtag === 'function') {
+        if (typeof gtag === 'function') {
             gtag('event', 'conversion', {
                 'send_to': 'AW-18051738791/n67FCM-Pz5ccEKfZ3p9D',
                 'value': totalSumNum,
@@ -1589,7 +1655,6 @@
                 'transaction_id': '' 
             });
         }
-
         
         const btn = document.getElementById('checkoutBtn');
         const originalText = btn.innerText;
@@ -1697,7 +1762,6 @@
                 resContainer.appendChild(item);
             });
         } else {
-            // === РОЗУМНІ РЕКОМЕНДАЦІЇ ЯКЩО НЕМАЄ РЕЗУЛЬТАТІВ ===
             resContainer.innerHTML = `<div class="search-empty" style="padding-bottom: 12px;">
                 На жаль, за запитом <b>"${inputVal}"</b> нічого не знайдено 😔<br>
                 <div style="margin-top: 12px; font-size:11px; color:var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
@@ -1782,7 +1846,6 @@
         document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
         b.classList.add('active');
         
-        // ПОКАЗ КНОПКИ ШЕРИНГУ WISHLIST
         const wBtn = document.getElementById('wishlistShareAction');
         if (wBtn) wBtn.style.display = (c === 'wishlist' && wishlist.length > 0) ? 'block' : 'none';
 
@@ -1803,7 +1866,7 @@
         document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active'));
         if (btn) btn.classList.add('active');
         
-        // НОВЕ: Бренд-лор
+        // Відображення Бренд-лору
         const loreBox = document.getElementById('brandLoreBox');
         if (b && brandLoreData[b]) {
             document.getElementById('brandLoreTitle').innerText = 'Історія ' + b;
@@ -1827,7 +1890,7 @@
             c.style.display = (mS && mB && mC) ? 'flex' : 'none';
         });
         
-        // НОВЕ: Застосовуємо сортування після фільтрації
+        // Застосовуємо сортування одразу після фільтрації
         sortCatalog();
     }
 
@@ -2032,7 +2095,6 @@
         }, 2500); 
     }
 
-    // ЛОГІКА ТЕМНОЇ ТЕМИ
     function initTheme() {
         const savedTheme = localStorage.getItem('vr_theme');
         if (savedTheme === 'dark') {
@@ -2065,7 +2127,6 @@
         }
     }, 15000); 
     
-    // ЛОГІКА ПОЯВИ КНОПКИ "ВГОРУ"
     window.addEventListener('scroll', function() {
         const scrollBtn = document.getElementById("scrollTopBtn");
         if (scrollBtn) {

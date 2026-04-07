@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>VR-PERFUMES | Premium Showcase</title>
     
+    <meta name="description" content="VR-PERFUMES — ваш гід у світі нішевої парфумерії. Оригінальні аромати на розпив від 2 мл, новинки та хіти світових брендів з доставкою по Україні.">
+    <meta name="keywords" content="нішева парфумерія, розпив парфумів, VR PERFUMES, оригінальні парфуми, Вікторія парфуми, парфумерний бар">
+    <meta name="author" content="VR-PERFUMES">
+    
+    <meta property="og:title" content="VR-PERFUMES | Premium Showcase">
+    <meta property="og:description" content="Оригінальна нішева парфумерія на розпив. Знайдіть свій ідеальний аромат.">
+    <meta property="og:image" content="https://i.postimg.cc/CxkmFFJ3/logo.png">
+    <meta property="og:type" content="website">
+
     <link rel="icon" href="https://i.postimg.cc/CxkmFFJ3/logo.png" type="image/png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -176,8 +185,11 @@
         @media (min-width: 992px) { #catalog { grid-template-columns: repeat(4, 1fr); gap: 40px 25px; padding: 30px 40px; } }
         @media (min-width: 1200px) { #catalog { grid-template-columns: repeat(5, 1fr); gap: 40px 30px; } }
 
-        .card { position: relative; display: flex; flex-direction: column; background: var(--bg); transition: box-shadow 0.3s ease; }
-        .card img { width: 100%; aspect-ratio: 1; object-fit: cover; background: #f9f9f9; border-radius: 4px; cursor: pointer; position: relative; z-index: 5; }
+        /* НОВЕ: CLS оптимізація. Фіксований квадрат і content-visibility для рендеру */
+        .card { position: relative; display: flex; flex-direction: column; background: var(--bg); transition: box-shadow 0.3s ease; content-visibility: auto; contain-intrinsic-size: 300px; }
+        .card img, .week-img, .modal-content img { aspect-ratio: 1 / 1; object-fit: cover; background-color: rgba(128,128,128,0.05); }
+        
+        .card img { width: 100%; border-radius: 4px; cursor: pointer; position: relative; z-index: 5; }
         .card-price-label { font-size: 13px; font-family: var(--serif); color: var(--gold); font-weight: 700; margin: 10px 0 2px; text-align: center; }
         .brand { font-family: var(--cinzel); font-size: 11px; color: #999; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; text-align: center; font-weight: 700;}
         .name { font-family: var(--serif); font-size: 14px; font-weight: 600; margin: 4px 0 10px; min-height: 35px; text-align: center; line-height: 1.2; color: var(--text-dark); }
@@ -342,7 +354,7 @@
         
         .cart-empty-msg { text-align: center; color: #999; font-size: 14px; margin-top: 50px; font-family: var(--serif); font-style: italic;}
         
-        .cart-footer { padding: 25px 20px; border-top: 1px solid rgba(128,128,128,0.1); background: var(--bg); }
+        .cart-footer { padding: 25px 20px; border-top: 1px solid rgba(128,128,128,0.1); background: var(--bg); box-shadow: 0 -4px 15px rgba(0,0,0,0.03); }
         
         .gift-wrap-container { display: flex; align-items: center; margin-bottom: 20px; cursor: pointer; padding: 14px; border: 1px dashed rgba(128,128,128,0.3); border-radius: 8px; transition: 0.3s; }
         .gift-wrap-container:hover { border-color: var(--gold); }
@@ -453,7 +465,7 @@
     <div class="slide logo-slide active">
         <video class="bg-video" autoplay muted loop playsinline><source src="intro.mp4" type="video/mp4"></video>
         <div class="video-overlay"></div>
-        <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" class="logo">
+        <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" class="logo" alt="VR PERFUMES Логотип">
         <h1>VR PERFUMES</h1>
     </div>
 </div>
@@ -466,10 +478,10 @@
 </div>
 
 <div id="stickyControls" class="sticky-active glass-panel">
-    <button class="theme-switch" onclick="toggleTheme()" id="themeBtn">☾</button>
+    <button class="theme-switch" onclick="toggleTheme()" id="themeBtn" aria-label="Перемкнути тему">☾</button>
     <div class="search-wrapper">
-        <input type="text" id="searchInput" placeholder="ПОШУК АРОМАТУ АБО БРЕНДУ..." oninput="handleSearchInput()">
-        <span id="clearSearchBtn" onclick="clearSearch()">✕</span>
+        <input type="text" id="searchInput" placeholder="ПОШУК АРОМАТУ АБО БРЕНДУ..." oninput="handleSearchInput()" aria-label="Пошук парфумерії">
+        <span id="clearSearchBtn" onclick="clearSearch()" role="button" aria-label="Очистити пошук">✕</span>
         <div id="searchResults" class="search-dropdown"></div>
     </div>
     
@@ -500,14 +512,20 @@
     <div class="card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
     <div class="card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
     <div class="card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
+    <div class="card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
+    <div class="card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
+    <div class="card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
+    <div class="card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
+    <div class="card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
+    <div class="card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
 </div>
 
 <div class="about-section">
-    <img src="Screenshot_20260328-171201.png" class="about-photo" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
+    <img src="Screenshot_20260328-171201.png" class="about-photo" alt="Вікторія - власниця VR PERFUMES" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
     <div class="about-content">
         <p style="text-align:center;"><strong>Вітаю всіх в нашому парфумерному барі! Мене звати Вікторія.</strong></p>
         
-        <a href="https://www.instagram.com/vrshopping.khm?igsh=d3JybzJ6dW8yZmxh" target="_blank" class="ig-guarantee-block">
+        <a href="https://www.instagram.com/vrshopping.khm?igsh=d3JybzJ6dW8yZmxh" target="_blank" class="ig-guarantee-block" aria-label="Перейти в наш Instagram">
             <div class="ig-guarantee-info">
                 <div class="ig-icon-wrap">
                     <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
@@ -571,8 +589,8 @@
                 <input type="radio" id="gstar1" name="grating" value="1" onchange="showGeneralReviewFields()"><label for="gstar1">★</label>
             </div>
             <div id="generalReviewFields" style="display:none; margin-top:20px;">
-                <input type="text" id="revName" class="cart-comment-input" placeholder="Ваше ім'я" style="margin-bottom:15px;">
-                <textarea id="revText" class="review-textarea" rows="3" placeholder="Ваші враження від замовлення та роботи..."></textarea>
+                <input type="text" id="revName" class="cart-comment-input" placeholder="Ваше ім'я" style="margin-bottom:15px;" aria-label="Ім'я для відгуку">
+                <textarea id="revText" class="review-textarea" rows="3" placeholder="Ваші враження від замовлення та роботи..." aria-label="Текст відгуку"></textarea>
                 <button class="review-submit-btn" onclick="submitGeneralReview()">ВІДПРАВИТИ ВІДГУК</button>
             </div>
         </div>
@@ -582,37 +600,37 @@
 <div class="other-projects">
     <span class="projects-title">Наші Проєкти</span>
     <div class="projects-flex">
-        <a href="https://www.instagram.com/sweet_plan_b/" class="project-item" target="_blank">
+        <a href="https://www.instagram.com/sweet_plan_b/" class="project-item" target="_blank" aria-label="Проєкт Sweet Plan B">
             <div class="project-circle">
-                <img src="Screenshot_20260323-001755.png" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
+                <img src="Screenshot_20260323-001755.png" alt="Sweet Plan B" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
             </div>
             <span class="project-name">Sweet<br>Plan B</span>
         </a>
         
-        <a href="https://t.me/+yPwOWrT6zHo5ZDky" class="project-item" target="_blank">
+        <a href="https://t.me/+yPwOWrT6zHo5ZDky" class="project-item" target="_blank" aria-label="Проєкт VR Shopping">
             <div class="project-circle">
-                <img src="Screenshot_20260327-210532.png" onerror="this.src='https://i.postimg.cc/mD8z4qW0/vr-shopping.jpg'">
+                <img src="Screenshot_20260327-210532.png" alt="VR Shopping" onerror="this.src='https://i.postimg.cc/mD8z4qW0/vr-shopping.jpg'">
             </div>
             <span class="project-name">VR<br>Shopping</span>
         </a>
     </div>
 </div>
 
-<a href="https://t.me/viktoriia_viktoriia_r" class="floating-tg">
+<a href="https://t.me/viktoriia_viktoriia_r" class="floating-tg" aria-label="Зв'язатися в Telegram">
     <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.13-.31-1.08-.66.02-.18.27-.36.74-.55 2.91-1.27 4.85-2.11 5.81-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
 </a>
 
-<div class="cart-floating-btn" onclick="toggleCart()" id="cartFloatingBtn">
+<div class="cart-floating-btn" onclick="toggleCart()" id="cartFloatingBtn" role="button" aria-label="Відкрити кошик" tabindex="0">
     <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1.003 1.003 0 0 0 20 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
     <div class="cart-badge" id="cartBadge">0</div>
 </div>
 
 <div class="cart-drawer-backdrop" id="cartBackdrop" onclick="toggleCart()"></div>
 
-<div class="cart-drawer" id="cartDrawer">
+<div class="cart-drawer" id="cartDrawer" role="dialog" aria-label="Ваш кошик">
     <div class="cart-header">
         <h3 class="cart-title">Ваш кошик</h3>
-        <button class="cart-close" onclick="toggleCart()">×</button>
+        <button class="cart-close" onclick="toggleCart()" aria-label="Закрити кошик">×</button>
     </div>
     
     <div class="shipping-progress-container" id="shippingContainer">
@@ -626,7 +644,7 @@
         <div id="cartUpsellBlock" style="display: none; margin-bottom: 20px; padding: 12px; border: 1px dashed var(--gold); border-radius: 8px; background: rgba(197, 160, 89, 0.05);">
             <div style="font-size: 11px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-weight: 800; text-align: center;">Додати на пробу? ✨</div>
             <div style="display: flex; align-items: center; gap: 10px;">
-                <img id="upsellImg" src="" style="width: 44px; height: 44px; object-fit: cover; border-radius: 6px;">
+                <img id="upsellImg" src="" style="width: 44px; height: 44px; object-fit: cover; border-radius: 6px;" alt="Аромат">
                 <div style="flex: 1; overflow: hidden;">
                     <div id="upsellBrand" style="font-size: 9px; color: #999; text-transform: uppercase; font-weight: 800;"></div>
                     <div id="upsellName" style="font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
@@ -643,8 +661,11 @@
         </label>
 
         <div style="border-top: 1px solid rgba(128,128,128,0.1); padding-top: 20px;">
-            <input type="text" id="cartContact" class="cart-comment-input" placeholder="Ваш Telegram нік або телефон *" required style="margin-bottom: 8px;">
-            <textarea id="cartComment" class="cart-comment-input" rows="2" placeholder="Місто, відділення НП або коментар..." style="margin-bottom: 10px;"></textarea>
+            <input type="text" id="cartContact" class="cart-comment-input" placeholder="Ваш Телеграм @нік або номер телефону *" aria-label="Номер або Телеграм" required style="margin-bottom: 8px;">
+            <small style="display:block; font-size:10px; color:#999; margin-bottom:12px; padding:0 5px; line-height: 1.3;">
+                Будь ласка, вкажіть номер телефону або Telegram (з @), щоб Вікторія могла з вами зв'язатися ✨
+            </small>
+            <textarea id="cartComment" class="cart-comment-input" rows="2" placeholder="Місто, відділення НП або коментар..." aria-label="Місто та коментар" style="margin-bottom: 10px;"></textarea>
         </div>
         
         <button class="cart-return-btn" onclick="toggleCart()" style="margin-top: 0; margin-bottom: 10px;">Повернутися до покупок</button>
@@ -662,12 +683,12 @@
 <div id="infoModal" class="modal" onclick="this.style.display='none'">
     <div class="modal-content glass-panel" onclick="event.stopPropagation()" style="padding: 0; display: flex; flex-direction: column; max-height: 85vh; border: none; overflow: hidden;">
         
-        <button class="modal-close-x" onclick="document.getElementById('infoModal').style.display='none'" style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.07); color: var(--text-dark); border: none; width: 34px; height: 34px; border-radius: 50%; z-index: 100; font-weight: bold; cursor: pointer;">✕</button>
+        <button class="modal-close-x" onclick="document.getElementById('infoModal').style.display='none'" style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.07); color: var(--text-dark); border: none; width: 34px; height: 34px; border-radius: 50%; z-index: 100; font-weight: bold; cursor: pointer;" aria-label="Закрити вікно">✕</button>
         
         <div class="modal-scroll-area" style="padding: 20px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; padding-bottom: 80px;">
             
             <div style="text-align: center; margin: 20px 0;">
-                <img id="mImg" src="" style="max-height: 200px; max-width: 100%; object-fit: contain; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.12)); border-radius: 10px;">
+                <img id="mImg" src="" style="max-height: 200px; max-width: 100%; object-fit: contain; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.12)); border-radius: 10px;" alt="Фото парфуму">
             </div>
 
             <div style="text-align: center;">
@@ -723,6 +744,10 @@
         }
     });
 
+    // НОВЕ: Обробник помилок завантаження зображень у модалці та кошику
+    document.getElementById('mImg').onerror = function() { this.src = 'https://i.postimg.cc/CxkmFFJ3/logo.png'; };
+    document.getElementById('upsellImg').onerror = function() { this.src = 'https://i.postimg.cc/CxkmFFJ3/logo.png'; };
+
     function initSwipe() {
         const s = document.getElementById('heroCarousel');
         s.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX; }, {passive:true});
@@ -738,16 +763,38 @@
 
     function toggleFaq(el) { el.parentElement.classList.toggle('active'); }
 
+    // НОВЕ: Smart Share (Поділитися одним ароматом з генерацією лінка)
     function sharePerfume() {
         const brand = document.getElementById('mB').innerText;
         const name = document.getElementById('mN').innerText;
+        const url = window.location.origin + window.location.pathname + '?p=' + encodeURIComponent(brand + ' ' + name);
         if (navigator.share) {
             navigator.share({
                 title: `${brand} ${name} | VR-PERFUMES`,
                 text: `Подивись на цей аромат: ${brand} ${name} ✨`,
-                url: window.location.href
+                url: url
             }).catch(err => console.log('Share error:', err));
-        } else { alert("Ваш браузер не підтримує швидке поширення."); }
+        } else { 
+            navigator.clipboard.writeText(url);
+            alert("Посилання на аромат скопійовано в буфер обміну!"); 
+        }
+    }
+
+    // НОВЕ: Smart Share (Поділитися списком бажань)
+    function shareWishlist() {
+        if(wishlist.length === 0) return;
+        const ids = wishlist.map(id => encodeURIComponent(id)).join(',');
+        const url = window.location.origin + window.location.pathname + '?wishlist=' + ids;
+        if (navigator.share) {
+            navigator.share({
+                title: `Мій Wishlist | VR-PERFUMES`,
+                text: `Поглянь на мої улюблені аромати ✨`,
+                url: url
+            }).catch(err => console.log('Share error:', err));
+        } else {
+            navigator.clipboard.writeText(url);
+            alert("Посилання на ваш Wishlist скопійовано!");
+        }
     }
 
     function showReviewFields() { document.getElementById('reviewHiddenParts').style.display = 'block'; }
@@ -848,7 +895,6 @@
             catalogData.forEach(c => {
                 const [brand, name, price, minVol, desc, img, dateStr, top, weekText, , , bottleMl, bottlePrice, , stockCol] = c;
                 
-                // БЕЗПЕЧНИЙ ПАРСИНГ ЦІН ДЛЯ ЗНИЖОК
                 const oldPricePerMl = c[15] ? parseFloat(String(c[15]).replace(',', '.')) || 0 : 0;
                 const currentPricePerMl = parseFloat(String(price).replace(',', '.')) || 0;
                 
@@ -877,7 +923,6 @@
                 const isWished = wishlist.includes(cardId);
                 const safeDesc = desc ? desc.replace(/<[^>]*>?/gm, ' ').replace(/"/g, '&quot;') : '';
 
-                // НОВИЙ ПІДРАХУНОК ЗІРОК (БЕЗПЕЧНИЙ)
                 let rawDesc = desc || '';
                 let count5 = (rawDesc.match(/\[\+\+\]/g) || []).length;
                 let count4 = (rawDesc.replace(/\[\+\+\]/g, '').match(/\[\+\]/g) || []).length;
@@ -894,7 +939,6 @@
                     cardStarsHTML = `<div class="card-stars">${starsStr} <span style="font-size:10px; color:#999; letter-spacing:0;">(${totalRev})</span></div>`;
                 }
 
-                // ЛОГІКА ЗНИЖОК (Sale Badge)
                 let saleBadgeHTML = '';
                 let oldPriceHTML = '';
                 if (isSale && oldPricePerMl > currentPricePerMl) {
@@ -932,7 +976,7 @@
                         <span class="week-label">Ексклюзив тижня</span>
                         <div style="position: relative; display: inline-block;">
                             ${saleBadgeHTML}
-                            <img src="${safeImg}" class="week-img">
+                            <img src="${safeImg}" class="week-img" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
                         </div>
                         <div class="brand">${brand}</div>
                         <div class="name">${name}</div>
@@ -950,6 +994,7 @@
                 div.setAttribute('data-desc', safeDesc); 
                 div.setAttribute('data-category', (isNew ? 'new ' : '') + (isTop ? 'top ' : '') + (isBottle ? 'bottle ' : '') + (isSet ? 'set ' : '') + (top ? top.toLowerCase() : ''));
                 
+                // НОВЕ: alt та onerror для картинок, aria-label для сердечка
                 div.innerHTML = `
                     <div class="badges-wrapper">
                         ${saleBadgeHTML}
@@ -959,8 +1004,8 @@
                         ${isBottle?'<div class="badge badge-bottle">Флакон</div>':''}
                         ${isLastDrops?'<div class="badge badge-last">Останні мл</div>':''}
                     </div>
-                    <div class="wishlist-btn ${isWished ? 'active' : ''}" onclick="toggleWishlist(event, '${brand.replace(/'/g, "\\'")}', '${name.replace(/'/g, "\\'")}', this)">${isWished ? '♥' : '♡'}</div>
-                    <img loading="lazy" src="${safeImg}">
+                    <div class="wishlist-btn ${isWished ? 'active' : ''}" onclick="toggleWishlist(event, '${brand.replace(/'/g, "\\'")}', '${name.replace(/'/g, "\\'")}', this)" aria-label="Додати в улюблені" role="button">${isWished ? '♥' : '♡'}</div>
+                    <img loading="lazy" src="${safeImg}" alt="${brand} ${name}" onerror="this.onerror=null; this.src='https://i.postimg.cc/CxkmFFJ3/logo.png';">
                     <div class="price-display-wrapper">
                         ${oldPriceHTML}
                         <div class="card-price-label">${isOutOfStock ? 'Тимчасово відсутній' : displayPriceStr}</div>
@@ -988,6 +1033,32 @@
             if (promoDataRow) renderPremiumPromo(promoDataRow);
             
             updateCartUI();
+
+            // НОВЕ: Smart Share обробник лінків
+            const urlParams = new URLSearchParams(window.location.search);
+            if(urlParams.has('p')) {
+                const pId = urlParams.get('p').toLowerCase();
+                const item = globalCatalogData.find(c => (c[0] + ' ' + c[1]).toLowerCase() === pId);
+                if(item) setTimeout(() => showModal(item), 800);
+                window.history.replaceState({}, document.title, window.location.pathname);
+            } else if (urlParams.has('wishlist')) {
+                const wIds = urlParams.get('wishlist').split(',');
+                let added = 0;
+                wIds.forEach(id => {
+                    const decId = decodeURIComponent(id);
+                    if(!wishlist.includes(decId)) { wishlist.push(decId); added++; }
+                });
+                if(added > 0) {
+                    localStorage.setItem('vr_wishlist', JSON.stringify(wishlist));
+                    setTimeout(() => {
+                        const wBtn = document.querySelector('.tab-btn[onclick*="wishlist"]');
+                        if(wBtn) setCategory('wishlist', wBtn);
+                        alert('Список бажань успішно імпортовано! ✨ Додано нових ароматів: ' + added);
+                    }, 800);
+                }
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
         } catch (e) { 
             console.error(e); 
             document.getElementById('catalog').innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #999; font-family: var(--serif); font-style: italic; font-size: 14px;">Оновлюємо асортимент.<br>Будь ласка, зачекайте хвилинку та оновіть сторінку ✨</div>';
@@ -1015,7 +1086,6 @@
         let rawText = (isWeekly && weekText) ? weekText : desc;
         let f = rawText;
 
-        // === ВІЗУАЛІЗАЦІЯ ПАРФУМІВ У ТЕКСТІ (РОЗУМНИЙ ПОШУК) ===
         f = f.replace(/\{(.*?)\}/g, function(match, perfName) {
             let searchStr = perfName.toLowerCase().trim();
             let found = globalCatalogData.find(p => (p[0] + ' ' + p[1]).toLowerCase().includes(searchStr));
@@ -1033,14 +1103,13 @@
             if (found) {
                 let imgSrc = found[5].replace(/'/g, "%27");
                 return `<div style="display:flex; align-items:center; gap:12px; margin: 8px 0; padding: 6px 12px; background: rgba(128,128,128,0.05); border-radius: 8px; border: 1px dashed rgba(197,160,89,0.4);">
-                            <img src="${imgSrc}" style="width: 35px; height: 35px; object-fit: contain; border-radius: 4px; background: transparent;">
+                            <img src="${imgSrc}" style="width: 35px; height: 35px; object-fit: contain; border-radius: 4px; background: transparent;" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
                             <span style="font-family: var(--serif); font-size: 13px; font-weight: 700; color: var(--text-dark);">${found[0]} ${found[1]}</span>
                         </div>`;
             }
             return `<b style="color: var(--gold);">${perfName}</b>`;
         });
         
-        // НОВИЙ ПІДРАХУНОК ЗІРОК В МОДАЛЦІ (БЕЗПЕЧНИЙ)
         let c5 = (f.match(/\[\+\+\]/g) || []).length;
         let c4 = (f.replace(/\[\+\+\]/g, '').match(/\[\+\]/g) || []).length;
         let c3 = (f.match(/\[=\]/g) || []).length;
@@ -1137,13 +1206,15 @@
             sameBrand.forEach(c => {
                 let sImg = c[5].replace(/'/g, "%27");
                 let cStr = JSON.stringify(c).replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-                recsHTML += `<div class="rec-item" onclick='showModal(${cStr})'><img src="${sImg}"><span>${c[1]}</span></div>`;
+                // НОВЕ: onerror для рекомендацій
+                recsHTML += `<div class="rec-item" onclick='showModal(${cStr})'><img src="${sImg}" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'"><span>${c[1]}</span></div>`;
             });
             recsHTML += '</div></div>';
         }
 
         f = aggregatedStarsHTML + f + recsHTML + reviewsHTML;
 
+        // НОВЕ: Smart Share Button для конкретного парфуму
         const shareBtnHTML = `<div style="text-align: right; margin-top: 15px; margin-bottom: 5px;"><button onclick="sharePerfume()" style="background:none; border:none; cursor:pointer; color:var(--gold); display:inline-flex; align-items:center; font-size:11px; text-transform:uppercase; letter-spacing:1.5px; font-weight:800; padding: 0;"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="margin-right:6px;"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92zM18 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM6 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 7.02c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg>Поділитися</button></div>`;
 
         const disable2ml = minVol && String(minVol).includes('5');
@@ -1349,7 +1420,6 @@
                 shippingText.style.color = 'inherit';
             }
 
-            // === РОЗУМНИЙ АПСЕЛ ===
             if(upsellBlock) {
                 const cartItemNames = cart.map(item => item.name);
                 
@@ -1404,18 +1474,16 @@
         const totalSumText = document.getElementById('cartTotalSum').innerText;
         const totalSumNum = parseInt(totalSumText.replace(/\D/g, '')) || 0;
 
-        if (!contact) { 
-            alert('Будь ласка, вкажіть ваш Telegram нік або номер телефону для зв\'язку!'); 
+        // НОВЕ: Розумна валідація контакту (перевірка на цифри або @)
+        const digitCount = (contact.match(/\\d/g) || []).length;
+        const isTelegram = contact.includes('@');
+        
+        if (!contact || (digitCount < 5 && !isTelegram)) { 
+            alert('Увага! 🛑\\nБудь ласка, вкажіть коректний номер телефону або Telegram-нік із символом @.\\n\\nПросто імені замало — Вікторія не зможе з вами зв’язатися для підтвердження замовлення.'); 
             return; 
         }
         
-        // ВАЛІДАЦІЯ ТЕЛЕФОНУ/ТЕЛЕГРАМУ (чи є хоча б одна цифра або знак @)
-        if (!/[0-9@]/.test(contact)) {
-            alert('Будь ласка, вкажіть коректний номер телефону (має містити цифри) або Telegram нік (починається з @)!');
-            return;
-        }
-        
-                if (typeof gtag === 'function') {
+        if (typeof gtag === 'function') {
             gtag('event', 'conversion', {
                 'send_to': 'AW-18051738791/n67FCM-Pz5ccEKfZ3p9D',
                 'value': totalSumNum,
@@ -1424,17 +1492,16 @@
             });
         }
 
-        
         const btn = document.getElementById('checkoutBtn');
         const originalText = btn.innerText;
         btn.innerText = 'ВІДПРАВКА...';
         btn.style.opacity = '0.7';
         btn.style.pointerEvents = 'none';
 
-        let orderDetails = cart.map((item, i) => `${i+1}. ${item.brand} - ${item.name}\n   Об'єм: ${item.volume} (${item.priceText})`).join('\n');
+        let orderDetails = cart.map((item, i) => `${i+1}. ${item.brand} - ${item.name}\\n   Об'єм: ${item.volume} (${item.priceText})`).join('\\n');
         
         const giftBox = document.getElementById('giftWrapCheckbox');
-        if (giftBox && giftBox.checked) { orderDetails += '\n\n🎁 + Подарункове пакування (100 грн)'; }
+        if (giftBox && giftBox.checked) { orderDetails += '\\n\\n🎁 + Подарункове пакування (100 грн)'; }
 
         const comment = document.getElementById('cartComment').value.trim();
 
@@ -1458,11 +1525,11 @@
                 btn.style.opacity = '1';
                 btn.style.pointerEvents = 'auto';
                 toggleCart();
-                alert('Дякуємо! Ваше замовлення успішно відправлено. Вікторія скоро з вами зв\'яжеться ✨');
+                alert('Дякуємо! Ваше замовлення успішно відправлено. Вікторія скоро з вами зв\\'яжеться ✨');
             }, 2000);
 
         } catch (error) {
-            alert('Сталася помилка при відправці. Перевірте з\'єднання з інтернетом.');
+            alert('Сталася помилка при відправці. Перевірте з\\'єднання з інтернетом.');
             btn.innerText = originalText;
             btn.style.opacity = '1';
             btn.style.pointerEvents = 'auto';
@@ -1470,7 +1537,7 @@
     }
 
     function fixKeyboardLayout(text) {
-        const layoutMap = {'й':'q','ц':'w','у':'e','к':'r','е':'t','н':'y','г':'u','ш':'i','щ':'o','з':'p','х':'[','ї':']','ф':'a','і':'s','в':'d','а':'f','п':'g','р':'h','о':'j','л':'k','д':'l','ж':';','є':'\'','я':'z','ч':'x','с':'c','м':'v','и':'b','т':'n','ь':'m','б':',','ю':'.','q':'й','w':'ц','e':'у','r':'к','t':'е','y':'н','u':'г','i':'ш','o':'щ','p':'з','[':'х',']':'ї','a':'ф','s':'і','d':'в','f':'а','g':'п','h':'р','j':'о','k':'л','l':'д',';':'ж','\'':'є','z':'я','x':'ч','c':'с','v':'м','b':'и','n':'т','m':'ь',',':'б','.':'ю'};
+        const layoutMap = {'й':'q','ц':'w','у':'e','к':'r','е':'t','н':'y','г':'u','ш':'i','щ':'o','з':'p','х':'[','ї':']','ф':'a','і':'s','в':'d','а':'f','п':'g','р':'h','о':'j','л':'k','д':'l','ж':';','є':'\\'','я':'z','ч':'x','с':'c','м':'v','и':'b','т':'n','ь':'m','б':',','ю':'.','q':'й','w':'ц','e':'у','r':'к','t':'е','y':'н','u':'г','i':'ш','o':'щ','p':'з','[':'х',']':'ї','a':'ф','s':'і','d':'в','f':'а','g':'п','h':'р','j':'о','k':'л','l':'д',';':'ж','\\'':'є','z':'я','x':'ч','c':'с','v':'м','b':'и','n':'т','m':'ь',',':'б','.':'ю'};
         return text.split('').map(c => layoutMap[c.toLowerCase()] || c).join('');
     }
 
@@ -1531,7 +1598,6 @@
                 resContainer.appendChild(item);
             });
         } else {
-            // === РОЗУМНІ РЕКОМЕНДАЦІЇ ЯКЩО НЕМАЄ РЕЗУЛЬТАТІВ ===
             resContainer.innerHTML = `<div class="search-empty" style="padding-bottom: 12px;">
                 На жаль, за запитом <b>"${inputVal}"</b> нічого не знайдено 😔<br>
                 <div style="margin-top: 12px; font-size:11px; color:var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
@@ -1644,6 +1710,27 @@
             const mC = currentCategory === 'all' || (currentCategory === 'wishlist' ? isWished : c.getAttribute('data-category').includes(currentCategory));
             c.style.display = (mS && mB && mC) ? 'flex' : 'none';
         });
+
+        // НОВЕ: Банер для шерінгу списку бажань
+        let wShare = document.getElementById('wishlistShareBanner');
+        if(currentCategory === 'wishlist' && wishlist.length > 0) {
+            if(!wShare) {
+                wShare = document.createElement('div');
+                wShare.id = 'wishlistShareBanner';
+                wShare.style.gridColumn = '1 / -1';
+                wShare.style.textAlign = 'center';
+                wShare.style.padding = '15px';
+                wShare.style.background = 'rgba(197, 160, 89, 0.05)';
+                wShare.style.border = '1px dashed var(--gold)';
+                wShare.style.borderRadius = '8px';
+                wShare.style.marginBottom = '20px';
+                wShare.innerHTML = `<button onclick="shareWishlist()" style="background:var(--gold); color:#fff; border:none; padding:12px 24px; border-radius:6px; font-weight:800; text-transform:uppercase; letter-spacing:1px; cursor:pointer; font-size:12px; box-shadow:0 4px 15px rgba(197,160,89,0.3);">Поділитися моїм Wishlist 🎁</button>`;
+                document.getElementById('catalog').prepend(wShare);
+            }
+            wShare.style.display = 'block';
+        } else {
+            if(wShare) wShare.style.display = 'none';
+        }
     }
 
     function init3DEffect() {
@@ -1895,14 +1982,14 @@
 </script>
 
 <div class="tg-chat-bubble" id="tgChatBubble">
-    <span class="bubble-close" onclick="document.getElementById('tgChatBubble').classList.remove('show')">×</span>
-    <img src="Screenshot_20260328-171201.png" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
+    <span class="bubble-close" onclick="document.getElementById('tgChatBubble').classList.remove('show')" aria-label="Закрити" role="button">×</span>
+    <img src="Screenshot_20260328-171201.png" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'" alt="Вікторія">
     <div class="bubble-text">
         <b>Вікторія</b><br>
         Привіт! Я Вікторія. Потрібна допомога у виборі аромату? ✨
     </div>
 </div>
-<button id="scrollTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Наверх">↑</button>
+<button id="scrollTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Наверх" aria-label="Вгору">↑</button>
 
 </body>
 </html>

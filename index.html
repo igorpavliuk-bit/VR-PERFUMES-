@@ -448,6 +448,21 @@
             }
         }
 
+        /* === НОВІ ФІШКИ: СОРТУВАННЯ, ЛОР, НЕЩОДАВНО ПЕРЕГЛЯНУТІ === */
+        .sort-wrapper { padding: 0 20px 10px; display: flex; justify-content: flex-end; }
+        .sort-select { background: transparent; border: 1px solid rgba(128,128,128,0.3); border-radius: 6px; padding: 6px 12px; font-size: 11px; font-family: var(--sans); color: var(--text-dark); outline: none; cursor: pointer; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; transition: 0.3s; }
+        body.dark-theme .sort-select { color: #fff; background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+        .sort-select:focus { border-color: var(--gold); }
+        
+        .brand-lore-box { display: none; padding: 20px; margin: 0 20px 20px; background: rgba(197, 160, 89, 0.05); border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; font-family: var(--serif); font-size: 13px; line-height: 1.6; color: var(--text-dark); animation: fadeIn 0.5s ease; }
+        .brand-lore-title { font-family: var(--cinzel); font-size: 14px; font-weight: 800; color: var(--gold); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .recent-section { padding: 30px 20px 10px; border-top: 1px solid rgba(128,128,128,0.1); display: none; }
+        .recent-title { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); font-weight: 800; margin-bottom: 20px; display: block; text-align: center; }
+        .recent-scroll { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none; }
+        .recent-scroll::-webkit-scrollbar { display: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
     </style>
 </head>
 <body>
@@ -496,9 +511,23 @@
         <button class="tab-btn" onclick="setCategory('bottle', this)">Залишки у флаконі</button>
         <button class="tab-btn" onclick="setCategory('wishlist', this)">Улюблені ♡</button>
     </div>
-  </div>
+    
+    <div class="sort-wrapper">
+        <select id="sortSelect" class="sort-select" onchange="sortCatalog()">
+            <option value="default">За замовчуванням (Нові)</option>
+            <option value="price-asc">Ціна: від дешевих</option>
+            <option value="price-desc">Ціна: від дорогих</option>
+            <option value="name-asc">За алфавітом (А-Я)</option>
+        </select>
+    </div>
+</div>
 
 <div id="weekPerfumeContainer"></div>
+
+<div id="brandLoreBox" class="brand-lore-box">
+    <div class="brand-lore-title" id="brandLoreTitle"></div>
+    <div id="brandLoreText"></div>
+</div>
 
 <div id="wishlistShareAction" style="display:none; text-align:center; padding: 0 20px 20px;">
     <button onclick="shareWishlist()" style="background:var(--gold); color:#fff; border:none; padding:15px 30px; font-size:12px; text-transform:uppercase; font-weight:800; letter-spacing:1.5px; border-radius:8px; cursor:pointer; box-shadow:0 5px 15px rgba(197,160,89,0.3); width:100%; max-width:400px;">Поділитися моїм Wishlist 🎁</button>
@@ -515,6 +544,11 @@
     <div class="card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
     <div class="card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
     <div class="card"><div class="skeleton skeleton-img"></div><div class="skeleton skeleton-text"></div><div class="skeleton skeleton-text short"></div></div>
+</div>
+
+<div class="recent-section" id="recentSection">
+    <span class="recent-title">Нещодавно переглянуті</span>
+    <div class="recent-scroll" id="recentScrollContainer"></div>
 </div>
 
 <div class="about-section">
@@ -714,7 +748,6 @@
         <button class="modal-btn-full" style="background:var(--bg); color:var(--text-dark); border:1px solid rgba(128,128,128,0.3); margin-top: 25px;" onclick="document.getElementById('newsModalWindow').style.display='none'">Закрити</button>
     </div>
 </div>
-
 <script>
     const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=339534482&single=true&output=csv';
     const REVIEWS_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=1478567043&single=true&output=csv';
@@ -728,6 +761,14 @@
     
     let cart = JSON.parse(localStorage.getItem('vr_cart')) || [];
     let wishlist = JSON.parse(localStorage.getItem('vr_wishlist')) || [];
+    let recentlyViewed = JSON.parse(localStorage.getItem('vr_recent')) || [];
+    
+    // Словник Бренд-лору
+    const brandLoreData = {
+        "Nasomatto": "Бунтарський бренд від Алессандро Гуалтьєрі. Кожен аромат — це провокація, екстракт чистих емоцій та порушення класичних правил парфумерії. Справжнє мистецтво у краплі, що залишає незабутній шлейф.",
+        "V Canto": "Італійська ніша, натхненна «Божественною комедією» Данте та історією замку Градара. Це аромати пристрасті, таємних зіллів та глибоких почуттів, створені Паоло Теренці. Отруйні та прекрасні композиції.",
+        "Maison Francis Kurkdjian": "Творіння одного з найвидатніших парфумерів сучасності Франсіса Куркджяна. Бренд балансує між французькою класикою та інноваційною свободою, створюючи справжній ольфакторний гардероб."
+    };
 
     const originalTitle = document.title;
     document.addEventListener('visibilitychange', () => {
@@ -737,6 +778,53 @@
             document.title = originalTitle;
         }
     });
+
+    // 1. ФУНКЦІЯ СОРТУВАННЯ
+    function sortCatalog() {
+        const val = document.getElementById('sortSelect').value;
+        const container = document.getElementById('catalog');
+        const cards = Array.from(container.querySelectorAll('.card'));
+        
+        cards.sort((a, b) => {
+            if (val === 'default') return 0; // Залишає початкове сортування за датою
+            
+            let priceA = parseFloat(a.querySelector('.card-price-label').innerText.replace(/\D/g, '')) || 0;
+            let priceB = parseFloat(b.querySelector('.card-price-label').innerText.replace(/\D/g, '')) || 0;
+            let nameA = a.querySelector('.name').innerText.trim();
+            let nameB = b.querySelector('.name').innerText.trim();
+            
+            if (val === 'price-asc') return priceA - priceB;
+            if (val === 'price-desc') return priceB - priceA;
+            if (val === 'name-asc') return nameA.localeCompare(nameB);
+            return 0;
+        });
+        
+        cards.forEach(card => container.appendChild(card));
+    }
+
+    // 2. ФУНКЦІЯ ВІДОБРАЖЕННЯ НЕЩОДАВНО ПЕРЕГЛЯНУТИХ
+    function renderRecentlyViewed() {
+        const sec = document.getElementById('recentSection');
+        const cont = document.getElementById('recentScrollContainer');
+        if (!recentlyViewed.length) { sec.style.display = 'none'; return; }
+        
+        cont.innerHTML = '';
+        sec.style.display = 'block';
+        
+        recentlyViewed.forEach(id => {
+            const item = globalCatalogData.find(c => (c[0] + ' ' + c[1]) === id);
+            if (item) {
+                const sImg = item[5].replace(/'/g, "%27");
+                const cStr = JSON.stringify(item).replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                cont.innerHTML += `
+                    <div class="rec-item" style="min-width: 80px; width: 80px;" onclick='showModal(${cStr})'>
+                        <img src="${sImg}" style="width: 80px; height: 80px; border-radius: 8px; object-fit: cover; margin-bottom: 5px;">
+                        <span style="font-size: 10px; color: var(--gold); font-weight: 800; text-transform: uppercase;">${item[0]}</span>
+                        <span style="font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; margin-top: 2px;">${item[1]}</span>
+                    </div>`;
+            }
+        });
+    }
 
     function initSwipe() {
         const s = document.getElementById('heroCarousel');
@@ -1052,6 +1140,7 @@
             }, 500);
 
             updateCartUI();
+            renderRecentlyViewed();
         } catch (e) { 
             console.error(e); 
             document.getElementById('catalog').innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #999; font-family: var(--serif); font-style: italic; font-size: 14px;">Оновлюємо асортимент.<br>Будь ласка, зачекайте хвилинку та оновіть сторінку ✨</div>';
@@ -1060,6 +1149,14 @@
 
     function showModal(pArr, isWeekly = false) {
         const [brand, name, price, minVol, desc, img, , top, weekText, , , bottleMl, bottlePrice, , stockCol] = pArr;
+        
+        // Збереження в Нещодавно переглянуті
+        const itemId = brand + ' ' + name;
+        recentlyViewed = recentlyViewed.filter(id => id !== itemId); // Видаляємо, якщо вже є
+        recentlyViewed.unshift(itemId); // Додаємо на початок
+        if (recentlyViewed.length > 6) recentlyViewed.pop(); // Лишаємо тільки 6 останніх
+        localStorage.setItem('vr_recent', JSON.stringify(recentlyViewed));
+        renderRecentlyViewed();
         
         const stock = parseFloat(stockCol);
         const isOutOfStock = !isNaN(stock) && stock <= 0;
@@ -1478,7 +1575,7 @@
             return; 
         }
         
-        // ВАЛІДАЦІЯ ТЕЛЕФОНУ/ТЕЛЕГРАМУ (чи є хоча б одна цифра або знак @)
+        // ВАЛІДАЦІЯ ТЕЛЕФОНУ/ТЕЛЕГРАМУ
         if (!/[0-9@]/.test(contact)) {
             alert('Будь ласка, вкажіть коректний номер телефону (має містити цифри) або Telegram нік (починається з @)!');
             return;
@@ -1705,6 +1802,17 @@
         triggerCatalogAnimation();
         document.querySelectorAll('.brand-btn').forEach(x => x.classList.remove('active'));
         if (btn) btn.classList.add('active');
+        
+        // НОВЕ: Бренд-лор
+        const loreBox = document.getElementById('brandLoreBox');
+        if (b && brandLoreData[b]) {
+            document.getElementById('brandLoreTitle').innerText = 'Історія ' + b;
+            document.getElementById('brandLoreText').innerText = brandLoreData[b];
+            loreBox.style.display = 'block';
+        } else {
+            loreBox.style.display = 'none';
+        }
+        
         scrollToFirstCards();
     }
     
@@ -1718,6 +1826,9 @@
             const mC = currentCategory === 'all' || (currentCategory === 'wishlist' ? isWished : c.getAttribute('data-category').includes(currentCategory));
             c.style.display = (mS && mB && mC) ? 'flex' : 'none';
         });
+        
+        // НОВЕ: Застосовуємо сортування після фільтрації
+        sortCatalog();
     }
 
     function init3DEffect() {

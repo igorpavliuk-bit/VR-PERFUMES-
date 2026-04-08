@@ -942,7 +942,7 @@
         recognition.start();
     }
 
-// === ІНТЕЛЕКТУАЛЬНИЙ МОДУЛЬ ВІРИ 13.0 (COMPLIMENTS & SALES PRO) ===
+// === ІНТЕЛЕКТУАЛЬНИЙ МОДУЛЬ ВІРИ 16.0 (FINAL SEDUCTIVE EDITION) ===
     
     const audioVibes = {
         "Molecular": "https://cdn.pixabay.com/download/audio/2022/03/15/audio_783ef2829a.mp3",
@@ -960,96 +960,97 @@
     function toggleSynesthesia(brand, name, btn) {
         let vibeKey = "default";
         const s = (brand + " " + name).toLowerCase();
-        if (s.includes("trussardi") || s.includes("prada") || s.includes("gritti")) vibeKey = "ItalianChic";
+        
+        if (s.includes("trussardi") || s.includes("prada") || s.includes("gritti") || s.includes("armani")) vibeKey = "ItalianChic";
         else if (s.includes("zarko") || s.includes("molecule") || s.includes("juliette")) vibeKey = "Molecular";
-        else if (s.includes("chloé") || s.includes("hermes") || s.includes("ella k") || s.includes("kilian")) vibeKey = "FrenchSilk";
+        else if (s.includes("chloé") || s.includes("hermes") || s.includes("ella k") || s.includes("kilian") || s.includes("marly")) vibeKey = "FrenchSilk";
         else if (s.includes("lattafa") || s.includes("attar") || s.includes("kajal") || s.includes("nishane")) vibeKey = "OrientalGold";
-        else if (s.includes("cedrus") || s.includes("sage") || s.includes("wood") || s.includes("essential") || s.includes("pistache")) vibeKey = "ForestDew";
+        else if (s.includes("cedrus") || s.includes("sage") || s.includes("wood") || s.includes("essential") || s.includes("pistache") || s.includes("fig")) vibeKey = "ForestDew";
         else if (s.includes("latte") || s.includes("caffe") || s.includes("cola")) vibeKey = "GourmandCream";
-        else if (s.includes("gaba") || s.includes("hormone") || s.includes("zadig")) vibeKey = "ModernVibe";
+        else if (s.includes("gaba") || s.includes("hormone") || s.includes("zadig") || s.includes("2787")) vibeKey = "ModernVibe";
 
-        let audioUrl = audioVibes[vibeKey];
-        if (currentAudio && !currentAudio.paused) { currentAudio.pause(); if(btn) btn.classList.remove('playing'); return; }
-        if (currentAudio) currentAudio.pause(); 
-        currentAudio = new Audio(audioUrl);
-        currentAudio.loop = true; currentAudio.volume = 0.08;
-        currentAudio.play().catch(e => console.log("Музика активна"));
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+            currentAudio = null;
+        }
+
+        currentAudio = new Audio(audioVibes[vibeKey]);
+        currentAudio.loop = true; 
+        currentAudio.volume = 0.06; // Дуже інтимний фон
+        
+        let playPromise = currentAudio.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(() => console.log("Музика запрацює після взаємодії з інтерфейсом"));
+        }
         if(btn) btn.classList.add('playing');
     }
 
-    function prepareViraText(brand, name, rawDesc, currentVol) {
+    function prepareViraText(brand, name, rawDesc) {
         const orthoepy = {
-            "Trussardi": "Труссáрді", "Behind The Curtain": "Біхáйнд зе Кéртейн", "Piazza Alla Scala": "Піáцца áлла Скáла",
-            "Zarkoperfume": "Зáрко парфýм", "Molecule": "Молéкула", "Gritti": "Ґрітті", "Pomelo Sorrento": "Помéло Соррéнто",
-            "Hormone Paris": "Ормóн Парі", "Gaba": "Ґабá", "Chloe": "Клоé", "Cedrus": "Цéдрус", "Hermes": "Ермéс",
-            "Bianко Latte": "Б'янко Лáтте", "Lattafa": "Латтáфа", "Attar Collection": "Аттáр Коллéкшн", "Une Pistache": "Юн Пістáш"
+            "Trussardi": "Труссáрді", "Zarkoperfume": "Зáрко парфýм", "Molecule": "Молéкула", 
+            "Hormone Paris": "Ормóн Парі", "Gaba": "Ґабá", "Chloe": "Клоé", "Cedrus": "Цéдрус", 
+            "Hermes": "Ермéс", "Bianco Latte": "Б'янко Лáтте", "Lattafa": "Латтáфа", 
+            "Attar Collection": "Аттáр Коллéкшн", "Ella K": "Елльá Ка", "Mancera": "Мансерá"
         };
-
         let fName = name, fBrand = brand;
         for (let key in orthoepy) {
             if (name.includes(key)) fName = orthoepy[key];
             if (brand.includes(key)) fBrand = orthoepy[key];
         }
 
-        const starNotes = ["уд", "мускус", "амбра", "шафран", "шкіра", "ваніль", "сандал", "ірис", "пачулі", "троянда", "жасмин", "бергамот", "кардамон", "кедр", "півонія", "фісташка"];
-        let cleanDesc = rawDesc.split('[+]')[0].split('Також від')[0].split('💬 Відгуки')[0].trim();
+        // ПОВНЕ ОЧИЩЕННЯ ВІД ТЕХНІЧНОГО ТЕКСТУ
+        let cleanDesc = rawDesc.split('[+]')[0]
+                              .replace(/🔊 ШІ Асистент/g, '')
+                              .replace(/ШІ Асистент/g, '')
+                              .replace(/\d+\s+відгук(ів|и|а)?/g, '')
+                              .split('Також від')[0].trim();
         const dLower = cleanDesc.toLowerCase();
 
-        // 1. ЕМОЦІЙНІ ВСТУПИ
+        // 1. ВСТУП (Вкрадливий)
         const intros = [
-            `Привіт! Це Віра. О, цей аромат — справжній магніт! ${cleanDesc.split('.')[0]}. `,
-            `Вітаю! Ти щойно знайшла свій ідеальний парфум. Тільки послухай, як звучить ${fName}. `,
-            `Гарний вибір! Вікторія каже, що це справжня інвестиція у твій настрій та впевненість. `
+            `Послухай... Цей аромат — твоя нова таємна зброя. `,
+            `Ти тільки уяви... Як ${fName} розкривається на твоїй шкірі. Це справжня спокуса. `,
+            `Гарний вибір... Вікторія каже, що цей аромат від ${fBrand} — це найкоротший шлях до тисячі компліментів. `
         ];
+        let speech = intros[Math.floor(Math.random() * intros.length)];
 
-        // 2. ПАРФУМЕР
-        let perfumerSpeech = "";
-        const perfMatch = cleanDesc.match(/(?:парфумер|автор|ніс|perfumer):\s*([^<|\n|\.]+)/i);
-        if (perfMatch) perfumerSpeech = `Над цим шедевром працював геніальний парфумер ${perfMatch[1].trim()}. `;
+        // 2. СИТУАТИВНИЙ КОНТЕКСТ
+        if (dLower.includes('вечір') || dLower.includes('подій')) speech += "Я бачу його на тобі... під час особливого вечора. Він додасть образу неймовірної загадковості. ";
+        else if (dLower.includes('ділов') || dLower.includes('офіс')) speech += "Він ідеально підкреслить твій статус... на важливій зустрічі. Звучить дуже впевнено. ";
+        else speech += "Це твій ідеальний супутник... Він огортає тебе наче дорога тканина, додаючи неймовірного шику. ";
 
-        // 3. МАРКЕТИНГОВИЙ ХУК (Ефект Wow)
-        const hooks = [
-            "Приготуйся до нескінченних компліментів, адже цей аромат просто неможливо ігнорувати. ",
-            "Його шлейф настільки розкішний, що всі навколо будуть у справжньому захваті. ",
-            "Це той самий секретний інгредієнт твого ідеального образу, який додає сто відсотків до харизми. ",
-            "Він лягає на шкіру наче дорога тканина, створюючи ауру ексклюзивності та шику. "
-        ];
-        let hook = hooks[Math.floor(Math.random() * hooks.length)];
-
-        // 4. ІНТЕЛЕКТУАЛЬНИЙ ВІДБІР НОТ
+        // 3. ІНТЕЛЕКТУАЛЬНІ НОТИ
+        const starNotes = ["уд", "мускус", "амбра", "шафран", "шкіра", "ваніль", "сандал", "ірис", "пачулі", "троянда", "жасмин", "бергамот", "кардамон", "кедр", "фісташка", "карамель"];
         const getBestNote = (regex) => {
             const m = cleanDesc.match(regex);
             if (!m || m[1].toLowerCase().includes('відсутні')) return null;
             const allNotes = m[1].split(',').map(n => n.trim());
-            for (let note of allNotes.slice(0, 3)) {
-                if (starNotes.some(star => note.toLowerCase().includes(star))) return note;
-            }
-            return allNotes[0];
+            return allNotes.find(note => starNotes.some(star => note.toLowerCase().includes(star))) || allNotes[0];
         };
 
         const top = getBestNote(/Верхні ноти:\s*([^<|\n|\.]+)/i);
         const heart = getBestNote(/Ноти серця:\s*([^<|\n|\.]+)/i);
         const base = getBestNote(/Базові ноти:\s*([^<|\n|\.]+)/i);
 
-        let notesSpeech = "";
-        if (top) notesSpeech += `З перших секунд він заворожує нотами ${top}. `;
-        if (heart) notesSpeech += `У серці аромату розкривається благородний ${heart}. `;
-        if (base) notesSpeech += `А неймовірно стійкий та статусний шлейф дарує ${base}. `;
+        if (top) speech += `У перші секунди... ти відчуєш спокусливий ${top}. `;
+        if (heart) speech += `Але зачекай... Коли розкриється серце з нотами ${heart}, ти закохаєшся остаточно. `;
+        if (base) speech += `І цей фінал... Глибокий, стійкий шлейф із ${base}, який залишиться в пам'яті назавжди. `;
 
-        // 5. ОБ'ЄМ ТА ЗАКЛИК
-        let volSpeech = "Це ідеальний момент, щоб побалувати себе. ";
-        if (currentVol.includes("2 мл")) volSpeech = "Два мілілітри — ідеально, щоб закохатися в цей аромат назавжди. ";
-        else if (currentVol.includes("5 мл")) volSpeech = "П'яти мілілітрів тобі вистачить на цілий місяць щоденної насолоди та компліментів. ";
-        else if (currentVol.includes("10 мл")) volSpeech = "Десять мілілітрів — це два місяці твого розкішного шлейфу. Дуже вигідна інвестиція. ";
-        else if (currentVol.includes("флакон")) volSpeech = "Залишок у рідному флаконі — це справжній скарб для твоєї парфумерної полиці. ";
+        // 4. ОБ'ЄМ ТА ФІНАЛ
+        const activeVolInput = document.querySelector('input[name="volume"]:checked');
+        let volText = activeVolInput ? activeVolInput.parentElement.innerText.trim() : "5 мл";
+        
+        if (volText.includes("2")) speech += "Два мілілітри... ідеально, щоб познайомитися з цією магією. ";
+        else if (volText.includes("10")) speech += "Десять мілілітрів... Це два місяці твого розкішного шлейфу. Найкраща інвестиція у твій настрій. ";
+        else speech += "Цього об'єму... тобі вистачить на цілий місяць чистої насолоди та компліментів. ";
 
         const closings = [
-            "Вікторія вже підготувала твій атомайзер. Додаємо цю магію до кошика?",
-            "Цей шлейф точно стане твоїм фаворитом. Оформлюємо замовлення?",
-            "Не зволікай, таку красу розбирають дуже швидко. Спробуємо?"
+            " Тільки ти... і цей аромат. Додамо його в кошик?",
+            " Ця магія вже чекає на тебе... Оформлюємо замовлення?",
+            " Впевнена, ти будеш у захваті... Спробуємо?"
         ];
-
-        return intros[Math.floor(Math.random() * intros.length)] + perfumerSpeech + hook + notesSpeech + volSpeech + closings[Math.floor(Math.random() * closings.length)];
+        return speech + closings[Math.floor(Math.random() * closings.length)];
     }
 
     function speakDescription() {
@@ -1057,11 +1058,13 @@
         const brand = document.getElementById('mB').innerText;
         const name = document.getElementById('mN').innerText;
         const modalContent = document.getElementById('mD').innerText;
-        const speechText = prepareViraText(brand, name, modalContent, selectedVol);
+        const speechText = prepareViraText(brand, name, modalContent);
         const syncBtn = document.querySelector('.synesthesia-btn');
         toggleSynesthesia(brand, name, syncBtn);
         const utterance = new SpeechSynthesisUtterance(speechText);
-        utterance.lang = 'uk-UA'; utterance.pitch = 1.05; utterance.rate = 0.76; 
+        utterance.lang = 'uk-UA'; 
+        utterance.pitch = 0.95; // Низький оксамитовий голос
+        utterance.rate = 0.72;  // Вкрадливий повільний темп
         utterance.onstart = () => { isSpeaking = true; updateVoiceBtn(true); };
         utterance.onend = () => { isSpeaking = false; updateVoiceBtn(false); };
         synth.speak(utterance);
@@ -1078,61 +1081,99 @@
         if (isSpeaking) { synth.cancel(); isSpeaking = false; updateVoiceBtn(false); }
     }
 
-    // === ОЛЬФАКТОРНА ЛАБОРАТОРІЯ (LAYERING) ===
-    const layeringPairs = [
-        { a: "Baccarat Rouge 540", b: "Wood Sage & Sea Salt", result: "Неймовірний контраст: морська сіль пом'якшує солодкість, створюючи ефект 'дорогого курорту'." },
-        { a: "Lost Cherry", b: "Tobacco Vanille", result: "Класика спокуси. Вишня стає димною та густою. Ідеально для вечора." },
-        { a: "Molecule 01", b: "Будь-який аромат", result: "Молекула посилить стійкість та додасть глибини будь-якому вашому парфуму." },
-        { a: "Delina", b: "Not A Perfume", result: "Троянда стає більш чистою та дзвінкою, прибираючи зайву пудровість." }
-    ];
+    // === ОЛЬФАКТОРНА ЛАБОРАТОРІЯ 2.0 (DYNAMIC MATCHING) ===
 
     function populateLayeringSelects() {
         const s1 = document.getElementById('layer1');
         const s2 = document.getElementById('layer2');
         if (!s1 || !s2 || globalCatalogData.length === 0) return;
         
+        // Витягуємо назви з нашої бази (індекс 1 - Назва)
         const options = globalCatalogData.map(p => `<option value="${p[1]}">${p[1]}</option>`).join('');
         s1.innerHTML = `<option value="">Аромат №1</option>` + options;
-        s2.innerHTML = `<option value="">Аромат №2</option><option value="Будь-який аромат">Molecule 01 (Підсилювач)</option>` + options;
+        s2.innerHTML = `<option value="">Аромат №2</option>` + options;
     }
 
     function checkLayering() {
-        const p1 = document.getElementById('layer1').value;
-        const p2 = document.getElementById('layer2').value;
+        const p1Name = document.getElementById('layer1').value;
+        const p2Name = document.getElementById('layer2').value;
         const resultBox = document.getElementById('layeringResult');
 
-        if (!p1 || !p2) {
-            resultBox.innerHTML = "Оберіть комбінацію для магії ✨";
+        if (!p1Name || !p2Name) {
+            resultBox.innerHTML = "Послухай... Оберіть два аромати, щоб я відчула їхню синергію. ✨";
             return;
         }
-        if (p1 === p2) {
-            resultBox.innerHTML = "Спробуйте обрати два різні аромати 🪄";
+        if (p1Name === p2Name) {
+            resultBox.innerHTML = "Це один і той самий аромат... Спробуй змішати різні характери. 🪄";
             return;
         }
 
-        const match = layeringPairs.find(pair => 
-            (pair.a === p1 && pair.b === p2) || (pair.a === p2 && pair.b === p1) || (pair.b === "Будь-який аромат" && (p1 !== "" || p2 !== ""))
-        );
+        // Шукаємо дані в базі (індекс 10 зазвичай опис)
+        const data1 = globalCatalogData.find(p => p[1] === p1Name);
+        const data2 = globalCatalogData.find(p => p[1] === p2Name);
+        
+        const desc1 = (data1[10] || "").toLowerCase();
+        const desc2 = (data2[10] || "").toLowerCase();
+        const fullS1 = (p1Name + " " + desc1).toLowerCase();
+        const fullS2 = (p2Name + " " + desc2).toLowerCase();
 
-        if (match) {
-            let resText = match.result;
-            if (match.b === "Будь-який аромат") resText = "Цей аромат чудово посилиться та отримає додатковий шлейф завдяки молекулі.";
-            resultBox.innerHTML = `<div class="layer-success"><b>Ідеальна пара!</b><br>${resText}</div>`;
-        } else {
-            resultBox.innerHTML = "Це сміливий експеримент! Спробуйте і розкажіть нам про результат 🧪";
+        let score = 70; // Базовий бал
+        let reason = "Це цікаве поєднання... Вони створять нову, нетипову грань твого образу.";
+        let verdict = "ЦІКАВИЙ ЕКСПЕРИМЕНТ";
+        let color = "#f39c12";
+
+        // ЛОГІКА АНАЛІЗУ
+        
+        // 1. ПЕРЕВІРКА НА МОЛЕКУЛИ (Бустери)
+        if (fullS1.includes("molecule") || fullS2.includes("molecule") || fullS1.includes("234") || fullS2.includes("234") || fullS1.includes("gaba") || fullS2.includes("gaba") || fullS1.includes("bliss") || fullS2.includes("bliss")) {
+            score = 98;
+            verdict = "💎 ІДЕАЛЬНИЙ МЕТЧ";
+            reason = "Один із ароматів — молекулярний... Він спрацює як чиста магія, підсилюючи кожен акорд і створюючи розкішний об'єм.";
+            color = "#2ecc71";
         }
+        // 2. КОНФЛІКТ (Цитрус + Уд/Важкий схід)
+        else if ((desc1.includes("цитрус") && desc2.includes("уд")) || (desc2.includes("цитрус") && desc1.includes("уд"))) {
+            score = 45;
+            verdict = "⚠️ РИЗИКОВАНИЙ МІКС";
+            reason = "Обережно... Легкі цитруси можуть просто згаснути під натиском глибокого уда. Це поєднання для дуже сміливих.";
+            color = "#e74c3c";
+        }
+        // 3. ГАРМОНІЯ (Дерево + Спеції / Мускус + Квіти)
+        else if ((desc1.includes("дерев") && desc2.includes("прян")) || (desc1.includes("мускус") && desc2.includes("квіт"))) {
+            score = 92;
+            verdict = "✨ ГАРМОНІЙНИЙ ДУЕТ";
+            reason = "Неймовірна синергія... Ці компоненти мають споріднені душі. Вони створять шляхетний, дуже дорогий шлейф.";
+            color = "#27ae60";
+        }
+        // 4. ГУРМАНІКА (Солодке + Солодке)
+        else if ((desc1.includes("ваніль") || desc1.includes("латте")) && (desc2.includes("карам") || desc2.includes("кава"))) {
+            score = 88;
+            verdict = "🍰 ГУРМАНСЬКА СПОКУСА";
+            reason = "Це справжня насолода... Вийде густий, затишний мікс, від якого оточуючі будуть просто в захваті.";
+            color = "#d35400";
+        }
+
+        // ВИВІД РЕЗУЛЬТАТУ
+        resultBox.innerHTML = `
+            <div style="border-left: 4px solid ${color}; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px; text-align: left;">
+                <h4 style="color: ${color}; margin: 0 0 10px 0; font-size: 1.1em;">${verdict} — ${score}%</h4>
+                <p style="font-size: 0.95em; line-height: 1.4; font-style: italic;">"${reason}"</p>
+                <div style="margin-top: 10px; font-size: 0.8em; opacity: 0.7;">
+                    📌 <b>Порада від Віри:</b> Нанось спочатку важчий аромат, а за кілька хвилин накрий його легшим... так магія триватиме довше.
+                </div>
+            </div>
+        `;
     }
 
-    // === ЛОГІКА ДИНАМІЧНОЇ АУРИ ТА СОРТУВАННЯ ===
+   // === ЛОГІКА ДИНАМІЧНОЇ АУРИ 2.0 (SAFE VERSION) ===
     function updateAura(imgElement) {
         const aura = document.getElementById('modalAura');
-        if (!aura) return;
+        if (!aura || !imgElement || !imgElement.src) return;
 
-        aura.classList.remove('active');
+        aura.style.opacity = '0'; // Сховати стару
         
         const tempImg = new Image();
         tempImg.crossOrigin = "Anonymous"; 
-        tempImg.src = imgElement.src;
 
         tempImg.onload = function() {
             const canvas = document.createElement('canvas');
@@ -1142,14 +1183,25 @@
             
             try {
                 const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-                aura.style.background = `radial-gradient(circle, rgba(${r}, ${g}, ${b}, 0.8) 0%, rgba(${r}, ${g}, ${b}, 0) 70%)`;
+                // Якщо картинка прозора або чорна - ставимо золото
+                if (r + g + b === 0) throw "Empty";
+                aura.style.background = `radial-gradient(circle, rgba(${r}, ${g}, ${b}, 0.5) 0%, rgba(${r}, ${g}, ${b}, 0) 70%)`;
             } catch (e) {
-                aura.style.background = 'radial-gradient(circle, rgba(197, 160, 89, 0.6) 0%, rgba(197, 160, 89, 0) 70%)';
+                // FALLBACK: Теплий вайб, якщо колір не зчитався
+                aura.style.background = 'radial-gradient(circle, rgba(197, 160, 89, 0.4) 0%, rgba(197, 160, 89, 0) 70%)';
             }
+            aura.style.opacity = '1';
             aura.classList.add('active');
         };
-    }
 
+        // На випадок помилки завантаження
+        tempImg.onerror = function() {
+            aura.style.background = 'radial-gradient(circle, rgba(197, 160, 89, 0.3) 0%, rgba(197, 160, 89, 0) 70%)';
+            aura.style.opacity = '1';
+        };
+
+        tempImg.src = imgElement.src;
+    }
     function toggleSortMenu(e) {
         e.stopPropagation();
         document.getElementById('sortOptionsList').classList.toggle('show');

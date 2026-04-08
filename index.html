@@ -979,50 +979,110 @@
         btn.innerHTML = `<div class="audio-bars"><span></span><span></span><span></span></div> Відчути вайб...`;
     }
 
-    // === AI VOICE ASSISTANT (ОЗВУЧКА ВІКТОРІЇ) ===
+ // ==========================================
+    // БЛОК ШІ-АСИСТЕНТА ТА АУДІО (РЕАНІМАЦІЯ)
+    // ==========================================
+
+    const brandPronunciation = {
+        "Byredo": "Байрéдо", "By Kilian": "Бай Кіліан", "Zarkoperfume": "Заркоперфýм",
+        "Ella K Parfums": "Елла Ка Парфýм", "Mancera": "Мансéра", "Nishane": "Нішанé",
+        "Kajal": "Кажáл", "Memo Paris": "Мемо Парі", "V Canto": "Ві Канто",
+        "Giardini Di Toscana": "Джардіні Ді Тоскáна", "Lattafa": "Латтáфа",
+        "Juliette Has A Gun": "Джульєтта Хес е Ган", "Jo Malone": "Джо Малóун",
+        "Tom Ford": "Том Форд", "Baccarat": "Баккарá", "Zadig & Voltaire": "Задіг е Вольтéр"
+    };
+
     let synth = window.speechSynthesis;
     let isSpeaking = false;
+    let currentAudio = null;
 
-    function speakDescription() {
-        if (isSpeaking) {
-            synth.cancel();
-            isSpeaking = false;
-            updateVoiceBtn(false);
+    const audioVibes = {
+        "Tom Ford": "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3", 
+        "Baccarat": "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3", 
+        "Zarkoperfume": "https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3", 
+        "Kilian": "https://cdn.pixabay.com/download/audio/2022/10/25/audio_2490ebf927.mp3", 
+        "default": "https://cdn.pixabay.com/download/audio/2022/02/07/audio_67eb2eaed8.mp3" 
+    };
+
+    function startVoiceSearch() {
+        const micBtn = document.getElementById('micBtn');
+        const inputField = document.getElementById('searchInput');
+        if (!('webkitSpeechRecognition' in window)) return alert('Ваш браузер не підтримує голос 😔');
+
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = 'uk-UA';
+        recognition.onstart = () => micBtn.classList.add('listening');
+        recognition.onresult = (e) => {
+            inputField.value = e.results[0][0].transcript;
+            handleSearchInput();
+        };
+        recognition.onend = () => micBtn.classList.remove('listening');
+        recognition.start();
+    }
+
+    function toggleSynesthesia(brand, name, btn) {
+        let audioUrl = audioVibes.default;
+        for (let key in audioVibes) {
+            if (brand.toLowerCase().includes(key.toLowerCase()) || name.toLowerCase().includes(key.toLowerCase())) {
+                audioUrl = audioVibes[key];
+                break;
+            }
+        }
+        if (currentAudio && !currentAudio.paused) {
+            currentAudio.pause();
+            btn.classList.remove('playing');
+            btn.innerHTML = `<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Атмосфера аромату`;
             return;
         }
+        if (currentAudio) currentAudio.pause(); 
+        currentAudio = new Audio(audioUrl);
+        currentAudio.loop = true;
+        currentAudio.volume = isSpeaking ? 0.1 : 0.4; 
+        currentAudio.play();
+        document.querySelectorAll('.synesthesia-btn').forEach(b => b.classList.remove('playing'));
+        btn.classList.add('playing');
+        btn.innerHTML = `<div class="audio-bars"><span></span><span></span><span></span></div> Відчути вайб...`;
+    }
 
+    function speakDescription() {
+        if (isSpeaking) { synth.cancel(); isSpeaking = false; updateVoiceBtn(false); return; }
         const brand = document.getElementById('mB').innerText;
         const name = document.getElementById('mN').innerText;
         const descHTML = document.getElementById('mD').innerHTML;
         
-        let tempDiv = document.createElement("div");
-        tempDiv.innerHTML = descHTML;
-        let cleanDesc = tempDiv.innerText.split('💬 Відгуки')[0]; 
-        
-        const fullText = `${brand}. ${name}. ${cleanDesc}`;
-        const utterance = new SpeechSynthesisUtterance(fullText);
-        
-        utterance.lang = 'uk-UA'; 
-        utterance.pitch = 1.1; 
-        utterance.rate = 0.9;  
+        let spokenBrand = brand;
+        for (let key in brandPronunciation) {
+            if (brand.toLowerCase().includes(key.toLowerCase())) { spokenBrand = brandPronunciation[key]; break; }
+        }
 
-        utterance.onstart = () => { isSpeaking = true; updateVoiceBtn(true); };
-        utterance.onend = () => { isSpeaking = false; updateVoiceBtn(false); };
+        let narrative = `Привіт! Це Вікторія. Дозвольте познайомити вас із витвором ${spokenBrand}, ароматом ${name}. `;
+        if (descHTML.includes('Верхні ноти')) narrative += "Знайомство починається з яскравих акордів. ";
+        if (descHTML.includes('серця') || descHTML.includes('Середні')) narrative += "В серці композиції розкривається справжня магія. ";
+        if (descHTML.includes('Базові') || descHTML.includes('бази')) narrative += "А розкішний шлейф залишиться з вами надовго. ";
+        narrative += "Це чудовий вибір. Бажаєте додати цей розпив у кошик?";
 
+        const utterance = new SpeechSynthesisUtterance(narrative);
+        utterance.lang = 'uk-UA';
+        utterance.pitch = 1.1;
+        utterance.rate = 0.9;
+        utterance.onstart = () => { 
+            isSpeaking = true; updateVoiceBtn(true);
+            if (currentAudio) currentAudio.volume = 0.1;
+        };
+        utterance.onend = () => { 
+            isSpeaking = false; updateVoiceBtn(false);
+            if (currentAudio) currentAudio.volume = 0.4;
+        };
         synth.speak(utterance);
     }
 
     function updateVoiceBtn(active) {
         const btn = document.getElementById('voiceBtn');
         if (!btn) return;
-        if (active) {
-            btn.innerHTML = `<div class="voice-wave"><span></span><span></span><span></span></div> Зупинити`;
-            btn.classList.add('voice-active');
-        } else {
-            btn.innerHTML = `<span>🔊</span> ШІ Асистент`;
-            btn.classList.remove('voice-active');
-        }
+        btn.innerHTML = active ? `<div class="voice-wave"><span></span><span></span><span></span></div> Зупинити` : `<span>🔊</span> ШІ Асистент`;
+        active ? btn.classList.add('voice-active') : btn.classList.remove('voice-active');
     }
+    // ==========================================
 
     function closeModalAudio() {
         document.getElementById('infoModal').style.display='none';

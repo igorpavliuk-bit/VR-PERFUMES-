@@ -856,6 +856,8 @@
     const TG_NICK = 'viktoriia_viktoriia_r'; 
     
     let carouselIndex = 0, carouselInterval, currentCategory = 'all', currentBrand = '', touchstartX = 0, touchendX = 0;
+    let isSpeaking = false;
+    const synth = window.speechSynthesis;
     let selectedVol = "5 мл", currentBasePrice = 0, currentFixedPrice = 0, currentModalImg = '';
     
     let globalCatalogData = []; 
@@ -940,7 +942,7 @@
         recognition.start();
     }
 
-    // === ПАРФУМЕРНА СИНЕСТЕЗІЯ (АУДІО ВАЙБ) ===
+  // === ПАРФУМЕРНА СИНЕСТЕЗІЯ ТА ШІ-КОНСУЛЬТАНТ ВІРА ===
     const audioVibes = {
         "Tom Ford": "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3", 
         "Baccarat": "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3", 
@@ -959,69 +961,93 @@
                 break;
             }
         }
-
         if (currentAudio && !currentAudio.paused) {
             currentAudio.pause();
             btn.classList.remove('playing');
             btn.innerHTML = `<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Атмосфера аромату`;
             return;
         }
-
         if (currentAudio) currentAudio.pause(); 
-        
         currentAudio = new Audio(audioUrl);
         currentAudio.loop = true;
-        currentAudio.volume = 0.4; 
-        currentAudio.play();
-        
-        document.querySelectorAll('.synesthesia-btn').forEach(b => b.classList.remove('playing'));
+        currentAudio.volume = 0.3; 
+        currentAudio.play().catch(e => console.log("Чекаємо на взаємодію..."));
         btn.classList.add('playing');
         btn.innerHTML = `<div class="audio-bars"><span></span><span></span><span></span></div> Відчути вайб...`;
     }
 
-    
+    function prepareViraText(brand, name, rawDesc, currentVol) {
+        const orthoepy = {
+            "Nasomatto": "Назомáтто", "Black Afgano": "Блек Афґáно", "V Canto": "Ві Кáнто", 
+            "Baccarat Rouge 540": "Баккарá Руж пятсόт сорок", "Xerjoff": "Ксерджόфф", 
+            "Tiziana Terenzi": "Тіціáна Терéнзі", "Byredo": "Байрéдо", "Ganymede": "Ганімéд", 
+            "Zarkoperfume": "Зарко парфýм", "Kilian": "Кіліáн", "Tom Ford": "Том Форд"
+        };
+        let fName = name, fBrand = brand;
+        for (let key in orthoepy) {
+            if (name.includes(key)) fName = orthoepy[key];
+            if (brand.includes(key)) fBrand = orthoepy[key];
+        }
+        const d = rawDesc.toLowerCase();
+        const intros = [
+            `Привіт! Я Віра. Давай зануримось в атмосферу ${fName}. Це справжній маніфест розкоші від ${fBrand}. `,
+            `Вітаю! Це Віра. Ти обрала ${fName}. Зараз розкажу, чому Вікторія вважає цей аромат шедевром. `,
+            `Гарний вибір! Це ${fBrand}. Я Віра, допоможу тобі відчути магію цього флакона. `
+        ];
+        let notesSpeech = "";
+        const notesMatch = rawDesc.match(/(?:ноти:|Піраміда:|склад:)\s*([^<|\n|\.]+)/i);
+        if (notesMatch) {
+            const top3 = notesMatch[1].split(',').slice(0, 3).map(n => n.trim()).join(', ');
+            notesSpeech = `Він розкривається неймовірно дорогим звучанням ${top3}. `;
+        }
+        let usage = "";
+        if (currentVol.includes("5 мл")) usage = "Об'єму п'ять мілілітрів тобі вистачить приблизно на шістдесят розпилень — це цілий місяць задоволення. ";
+        else if (currentVol.includes("10 мл")) usage = "Формат десять мілілітрів набагато вигідніший, його вистачить на два повних місяці твого шлейфу. ";
+        
+        let tech = "";
+        if (d.includes('шлейф')) tech = "Це справжній магніт для компліментів, приготуйся до захоплених поглядів. ";
+
+        const closings = [
+            "Вікторія вже підготувала твій атомайзер. Додавай у кошик!",
+            "Це ідеальна інвестиція у твій настрій. Спробуємо?",
+            "Думаю, цей шлейф стане твоїм новим фаворитом."
+        ];
+        return {
+            speech: intros[Math.floor(Math.random() * intros.length)] + notesSpeech + tech + usage + closings[Math.floor(Math.random() * closings.length)]
+        };
+    }
+
     function speakDescription() {
         if (isSpeaking) {
             synth.cancel();
-            if (currentAudio) currentAudio.pause(); // Зупиняємо звук разом з Вірою
+            if (currentAudio) currentAudio.pause(); 
             isSpeaking = false;
             updateVoiceBtn(false);
             return;
         }
-
         const brand = document.getElementById('mB').innerText;
         const name = document.getElementById('mN').innerText;
         const descHTML = document.getElementById('mD').innerHTML;
-        
         let tempDiv = document.createElement("div");
         tempDiv.innerHTML = descHTML;
         let cleanDesc = tempDiv.innerText.split('💬 Відгуки')[0]; 
-
-        // Отримуємо текст від Віри з урахуванням обраного об'єму
         const vira = prepareViraText(brand, name, cleanDesc, selectedVol);
-        
-        // --- СИНЕСТЕЗІЯ: АВТОМАТИЧНИЙ ЗВУК ---
-        const syncBtn = document.querySelector('.synesthesia-btn');
-        if (syncBtn && !syncBtn.classList.contains('playing')) {
-            toggleSynesthesia(brand, name, syncBtn);
-        }
-
+        try {
+            const syncBtn = document.querySelector('.synesthesia-btn');
+            if (syncBtn && !syncBtn.classList.contains('playing')) toggleSynesthesia(brand, name, syncBtn);
+        } catch (e) { console.log("Звук чекає..."); }
         const utterance = new SpeechSynthesisUtterance(vira.speech);
-        utterance.lang = 'uk-UA'; 
-        
-        // Налаштування "приємного" голосу
-        utterance.pitch = 1.15; // Трохи вищий, "усміхнений" тон
-        utterance.rate = 0.85;  // Не поспішаємо, даємо насолодитися
-
+        utterance.lang = 'uk-UA'; utterance.pitch = 1.12; utterance.rate = 0.86;
         utterance.onstart = () => { isSpeaking = true; updateVoiceBtn(true); };
-        utterance.onend = () => { 
-            isSpeaking = false; 
-            updateVoiceBtn(false);
-            // За бажанням: можна зупиняти музику після завершення промови
-            // if (currentAudio) { currentAudio.pause(); syncBtn.classList.remove('playing'); }
-        };
-
+        utterance.onend = () => { isSpeaking = false; updateVoiceBtn(false); };
         synth.speak(utterance);
+    }
+
+    function updateVoiceBtn(active) {
+        const btn = document.getElementById('voiceBtn');
+        if (!btn) return;
+        btn.innerHTML = active ? `<div class="voice-wave"><span></span><span></span><span></span></div> Зупинити` : `<span>🔊</span> ШІ Асистент`;
+        if (active) btn.classList.add('voice-active'); else btn.classList.remove('voice-active');
     }
     function updateVoiceBtn(active) {
         const btn = document.getElementById('voiceBtn');

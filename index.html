@@ -979,96 +979,11 @@
         btn.innerHTML = `<div class="audio-bars"><span></span><span></span><span></span></div> Відчути вайб...`;
     }
 
-    // === AI VOICE ASSISTANT (ОЗВУЧКА ВІКТОРІЇ) ===
-    let synth = window.speechSynthesis;
-    let isSpeaking = false;
-
-      // --- ЕКСПЕРТНИЙ МОДУЛЬ ВІРИ 4.0 (КОНТЕКСТНИЙ АНАЛІЗ) ---
-    function prepareViraText(brand, name, rawDesc) {
-        // 1. ФОНЕТИКА (Вимова назв)
-        const orthoepy = {
-            "Baccarat Rouge 540": "Баккарá Руж пятсот сорок",
-            "Maison Francis Kurkdjian": "Мейсон Френсіс Куркджян",
-            "Xerjoff": "Ксерджόфф",
-            "Tiziana Terenzi": "Тіціáна Терéнзі",
-            "Byredo": "Байрéдо",
-            "Nasomatto": "Назомáтто",
-            "V Canto": "Ві Канто",
-            "Gritti": "Грітті",
-            "Ganymede": "Ганімéд",
-            "Zarkoperfume": "Зарко парфýм",
-            "Kilian": "Кіліáн",
-            "Initio": "Ініціо",
-            "Roja": "Рόжа",
-            "Parfums de Marly": "Парфáм де Марлі"
-        };
-
-        let fName = name;
-        for (let key in orthoepy) { if (name.includes(key)) fName = orthoepy[key]; }
-
-        const d = rawDesc; // Працюємо з оригінальним регістром для пошуку заголовків
-        const dLower = d.toLowerCase();
-
-        // 2. ЕКСТРАКЦІЯ ДАНИХ (Витягуємо конкретні блоки з вашого опису)
-        const getSection = (regex) => {
-            const match = d.match(regex);
-            return match ? match[1].trim() : null;
-        };
-
-        // Шукаємо ноти та характеристики
-        const topNotes = getSection(/(?:Верхні ноти:|Ноти:|Піраміда:)\s*([^<|\n|\.]+)/i);
-        const baseNotes = getSection(/(?:Базові ноти:|Ноти бази:|Шлейф:)\s*([^<|\n|\.]+)/i);
-        const longevity = getSection(/Стійкість:\s*([^<|\n|\.]+)/i);
-        const sillage = getSection(/Шлейф:\s*([^<|\n|\.]+)/i);
-
-        // 3. ФОРМУВАННЯ СЕНСІВ (Аналіз за змістом)
-        let speechParts = [];
-
-        // Аналіз нот (якщо є в описі)
-        if (topNotes) {
-            const firstNote = topNotes.split(',')[0];
-            speechParts.push(`Аромат відкривається яскравим аккордом ${firstNote}.`);
-        }
-
-        // Аналіз характеру через ключові слова
-        if (dLower.includes('солодк') || dLower.includes('ваніль')) speechParts.push("Він звучить дуже затишно та спокусливо.");
-        if (dLower.includes('свіж') || dLower.includes('морськ')) speechParts.push("Це неймовірно легка та чиста композиція.");
-        if (dLower.includes('шкір') || dLower.includes('дерев')) speechParts.push("Це дуже статусна та впевнена робота.");
-
-        // Аналіз стійкості (якщо є в описі)
-        if (longevity) {
-            if (longevity.includes('5') || longevity.includes('фантастич') || longevity.includes('добу'))
-                speechParts.push("Вікторія каже, що він феноменально стійкий — триматиметься неймовірно довго.");
-            else if (longevity.includes('4') || longevity.includes('день'))
-                speechParts.push("Він дуже надійний і буде супроводжувати тебе весь день.");
-        }
-
-        // Аналіз шлейфу (якщо є в описі)
-        if (sillage) {
-            if (sillage.includes('5') || sillage.includes('довгий') || sillage.includes('величезний'))
-                speechParts.push("Будь готова до компліментів, бо шлейф тут просто королівський.");
-            else if (sillage.includes('близько') || sillage.includes('інтим'))
-                speechParts.push("Він створює дуже приємну, інтимну ауру навколо тебе.");
-        }
-
-        // 4. ВАРІАТИВНІСТЬ (Щоб кожна озвучка була різною)
-        const intros = [
-            `Привіт! Я Віра. Давай подивимось на ${fName}. `,
-            `Вітаю! Це Віра. Ти обрала ${fName}, зараз розкажу деталі. `,
-            `О, ${brand}! Гарний смак. Давай розберемо цей аромат. `
-        ];
-        
-        const finalIntro = intros[Math.floor(Math.random() * intros.length)];
-        const bodyText = speechParts.length > 0 ? speechParts.join(' ') : "Це дуже складна композиція, яка розкривається безліччю нюансів.";
-        
-        return {
-            fullText: `${finalIntro} ${bodyText} Сподіваюсь, це допомогло тобі з вибором!`
-        };
-    }
-
+    
     function speakDescription() {
         if (isSpeaking) {
             synth.cancel();
+            if (currentAudio) currentAudio.pause(); // Зупиняємо звук разом з Вірою
             isSpeaking = false;
             updateVoiceBtn(false);
             return;
@@ -1080,22 +995,34 @@
         
         let tempDiv = document.createElement("div");
         tempDiv.innerHTML = descHTML;
-        // Беремо весь текст, включаючи технічні параметри
         let cleanDesc = tempDiv.innerText.split('💬 Відгуки')[0]; 
 
-        const viraData = prepareViraText(brand, name, cleanDesc);
+        // Отримуємо текст від Віри з урахуванням обраного об'єму
+        const vira = prepareViraText(brand, name, cleanDesc, selectedVol);
         
-        const utterance = new SpeechSynthesisUtterance(viraData.fullText);
+        // --- СИНЕСТЕЗІЯ: АВТОМАТИЧНИЙ ЗВУК ---
+        const syncBtn = document.querySelector('.synesthesia-btn');
+        if (syncBtn && !syncBtn.classList.contains('playing')) {
+            toggleSynesthesia(brand, name, syncBtn);
+        }
+
+        const utterance = new SpeechSynthesisUtterance(vira.speech);
         utterance.lang = 'uk-UA'; 
-        utterance.pitch = 1.08; 
-        utterance.rate = 0.92;
+        
+        // Налаштування "приємного" голосу
+        utterance.pitch = 1.15; // Трохи вищий, "усміхнений" тон
+        utterance.rate = 0.85;  // Не поспішаємо, даємо насолодитися
 
         utterance.onstart = () => { isSpeaking = true; updateVoiceBtn(true); };
-        utterance.onend = () => { isSpeaking = false; updateVoiceBtn(false); };
+        utterance.onend = () => { 
+            isSpeaking = false; 
+            updateVoiceBtn(false);
+            // За бажанням: можна зупиняти музику після завершення промови
+            // if (currentAudio) { currentAudio.pause(); syncBtn.classList.remove('playing'); }
+        };
 
         synth.speak(utterance);
     }
-
     function updateVoiceBtn(active) {
         const btn = document.getElementById('voiceBtn');
         if (!btn) return;

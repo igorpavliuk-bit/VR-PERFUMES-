@@ -979,68 +979,126 @@
         btn.innerHTML = `<div class="audio-bars"><span></span><span></span><span></span></div> Відчути вайб...`;
     }
 
-    // === AI VOICE ASSISTANT (ОЗВУЧКА ВІКТОРІЇ) ===
-    let synth = window.speechSynthesis;
-    let isSpeaking = false;
+   // --- VIRA AI ENGINE V3.0 PREVIEW ---
 
-   // 1. Глобальна змінна для музики (встав після let isSpeaking)
 let viraMusic = null;
+let isSpeaking = false;
 
-// 2. Функція фонової музики
+// 1. Словник правильної вимови (Ортоепія)
+const orthoepyMap = {
+    "Hermes": "Ермéс", "Trussardi": "Труссáрді", "Zarkoperfume": "Зáрко парфýм",
+    "Byredo": "Байрéдо", "Mancera": "Мансéра", "Montale": "Монтáль",
+    "Kilian": "Кіліáн", "Attar": "Аттáр", "Nishane": "Нішáне",
+    "Gaba": "Ґабá", "Chloe": "Клоé", "V Canto": "Ві Кáнто",
+    "Xerjoff": "Ксéрджофф", "Roja": "Рóжа", "Molecule": "Молéкула"
+};
+
+function getSmartName(name) {
+    let newName = name;
+    for (let eng in orthoepyMap) {
+        if (name.includes(eng)) newName = name.replace(eng, orthoepyMap[eng]);
+    }
+    return newName;
+}
+
+// 2. Гігантська база скриптів (Комбінаторика)
+const viraDatabase = {
+    intros: [
+        (n, b) => `Послухай... ${n} від ${b}. Це не просто парфум, це твій новий маніфест. `,
+        (n, b) => `Ти тільки відчуй цей вайб... ${b} створили у ${n} щось неймовірно інтимне. `,
+        (n, b) => `Вітаю! Давай розповім про ${n}. Це справжній аристократ у лінійці ${b}. `,
+        (n, b) => `Заплющ очі... Дозволь аромату ${n} розказати тобі свою історію. `,
+        (n, b) => `О, цей вибір... ${b} справді знають толк у розкоші. Зустрічай — ${n}. `
+    ],
+    emotions: [
+        "Він звучить дуже дорого, наче ти щойно з приватної вечірки в Мілані. ",
+        "Це справжня ольфакторна спокуса, від якої просто неможливо відірватися. ",
+        "Аромат огортає тебе, наче невидима хмаринка чистої впевненості. ",
+        "Його магнетичний шлейф змусить людей озиратися тобі услід. ",
+        "Це дуже глибока, інтелектуальна ніша. Вона підкреслить твій характер. "
+    ],
+    details: (desc) => {
+        let text = "";
+        const d = desc.toLowerCase();
+        if (d.includes("ноти:")) text += `У піраміді яскраво грають ${desc.split(/ноти:/i)[1].split(/[.<]/)[0].trim()}. `;
+        if (d.includes("стійкість")) text += "Він неймовірно стійкий — триматиметься на шкірі весь день. ";
+        if (d.includes("вечір")) text += "Це ідеальний варіант для особливих вечорів. ";
+        if (d.includes("жіноч")) text += "Неймовірно ніжна, жіночна композиція. ";
+        if (d.includes("чоловіч")) text += "Мужній та харизматичний аромат для впевнених. ";
+        return text;
+    },
+    volumes: {
+        "2 мл": "Два мілілітри... ідеально для твого першого інтимного знайомства. ",
+        "5 мл": "П'яти мілілітрів тобі вистачить на цілий місяць щоденної насолоди. ",
+        "10 мл": "Десять мілілітрів — це два місяці нескінченних компліментів. ",
+        "20 мл": "Двадцять мілілітрів... коли ти точно знаєш, що це — кохання. ",
+        "флакон": "Цілий флакон — це вже серйозна заява. Напиши нам, обговоримо деталі. "
+    },
+    closings: [
+        " Додамо цю магію в кошик?",
+        " Спробуємо? Ти будеш у захваті...",
+        " Оформлюємо замовлення? Твій ідеальний шлейф вже чекає."
+    ]
+};
+
+// 3. Управління музикою та пульсацією Аури
 function handleViraBackground(action) {
+    const aura = document.getElementById('modalAura');
     if (!viraMusic) {
         viraMusic = new Audio("https://cdn.pixabay.com/download/audio/2022/05/24/audio_9650993096.mp3");
         viraMusic.loop = true;
     }
     if (action === 'start') {
-        viraMusic.volume = 0.08;
-        viraMusic.currentTime = 0;
-        viraMusic.play().catch(e => console.log("Музика чекає взаємодії"));
+        viraMusic.volume = 0;
+        viraMusic.play();
+        let vol = 0;
+        const fadeIn = setInterval(() => {
+            if (vol < 0.08) { vol += 0.01; viraMusic.volume = vol; }
+            else clearInterval(fadeIn);
+        }, 100);
+        if(aura) aura.style.animation = "auraPulse 2s infinite ease-in-out";
     } else {
-        const fade = setInterval(() => {
-            if (viraMusic.volume > 0.01) viraMusic.volume -= 0.01;
-            else { clearInterval(fade); viraMusic.pause(); }
+        const fadeOut = setInterval(() => {
+            if (viraMusic && viraMusic.volume > 0.01) viraMusic.volume -= 0.01;
+            else { 
+                clearInterval(fadeOut); 
+                if(viraMusic) viraMusic.pause(); 
+                if(aura) aura.style.animation = "none";
+            }
         }, 50);
     }
 }
 
-// 3. Генератор тексту (бачить об'єм)
-function prepareViraText(brand, name) {
+// 4. Генератор фінального скрипта
+function generateViraSpeech(brand, name, desc) {
     const activeBtn = document.querySelector('.vol-chip.active');
-    const vText = activeBtn ? activeBtn.innerText.toLowerCase() : "5 мл";
+    const vKey = activeBtn ? activeBtn.innerText.toLowerCase() : "5 мл";
+    
+    const sBrand = getSmartName(brand);
+    const sName = getSmartName(name);
 
-    const intros = [
-        `Послухай... ${name} — це твоя нова пристрасть. `,
-        `Ти тільки відчуй... цей аромат від ${brand} просто збиває з ніг. `,
-        `Вітаю... Вікторія каже, що ${name} — це вибір для впевнених. `,
-        `Заплющ очі... і дозволь цій магії від ${brand} заповнити все навколо. `
-    ];
-    const vibes = [
-        "Він огортає тебе... наче невидима хмаринка чистої впевненості. ",
-        "Його магнетичний шлейф... змушує людей озиратися тобі услід. ",
-        "Це звучить дуже дорого... наче ти щойно з приватної вечірки. "
-    ];
+    const intro = viraDatabase.intros[Math.floor(Math.random() * viraDatabase.intros.length)](sName, sBrand);
+    const emotion = viraDatabase.emotions[Math.floor(Math.random() * viraDatabase.emotions.length)];
+    const details = viraDatabase.details(desc);
+    
+    let volSpeech = viraDatabase.volumes["5 мл"]; // дефолт
+    for (let key in viraDatabase.volumes) {
+        if (vKey.includes(key)) volSpeech = viraDatabase.volumes[key];
+    }
 
-    let volSpeech = "";
-    if (vText.includes("2")) volSpeech = "Два мілілітри... ідеально для першого інтимного знайомства. ";
-    else if (vText.includes("10")) volSpeech = "Десять мілілітрів... це два місяці нескінченних компліментів. ";
-    else if (vText.includes("20")) volSpeech = "Двадцять мілілітрів... коли ти точно знаєш, що це кохання. ";
-    else volSpeech = "П'яти мілілітрів... тобі вистачить на цілий місяць щоденного задоволення. ";
+    const outro = viraDatabase.closings[Math.floor(Math.random() * viraDatabase.closings.length)];
 
-    const closings = [" Додамо в кошик?", " Спробуємо?", " Ти будеш у захваті... "];
-
-    return intros[Math.floor(Math.random() * intros.length)] + 
-           vibes[Math.floor(Math.random() * vibes.length)] + 
-           volSpeech + 
-           closings[Math.floor(Math.random() * closings.length)];
+    return intro + emotion + details + volSpeech + outro;
 }
 
-// 4. Оновлена основна функція Віри
+// 5. Основна функція speakDescription
 function speakDescription() {
-    if (!isSpeaking) handleViraBackground('start');
+    if (!isSpeaking) {
+        handleViraBackground('start');
+    }
 
     if (isSpeaking) {
-        synth.cancel();
+        window.speechSynthesis.cancel();
         handleViraBackground('stop');
         isSpeaking = false;
         updateVoiceBtn(false);
@@ -1049,45 +1107,24 @@ function speakDescription() {
 
     const brand = document.getElementById('mB').innerText;
     const name = document.getElementById('mN').innerText;
-    const speechText = prepareViraText(brand, name);
+    const rawDesc = document.getElementById('mD').innerText;
+    
+    const speechText = generateViraSpeech(brand, name, rawDesc);
 
     const utterance = new SpeechSynthesisUtterance(speechText);
     utterance.lang = 'uk-UA';
     utterance.pitch = 0.95; 
-    utterance.rate = 0.75; 
+    utterance.rate = 0.78; 
 
     utterance.onstart = () => { isSpeaking = true; updateVoiceBtn(true); };
-    utterance.onend = () => { isSpeaking = false; updateVoiceBtn(false); handleViraBackground('stop'); };
+    utterance.onend = () => { 
+        isSpeaking = false; 
+        updateVoiceBtn(false); 
+        handleViraBackground('stop'); 
+    };
 
-    synth.speak(utterance);
+    window.speechSynthesis.speak(utterance);
 }
-
-// 5. Також ЗАМІНИ свою стару closeModalAudio (рядок 492) на цю, 
-// щоб при закритті вікна музика теж вимикалася:
-function closeModalAudio() {
-    document.getElementById('infoModal').style.display='none';
-    if (currentAudio) { currentAudio.pause(); currentAudio = null; }
-    if (viraMusic) { handleViraBackground('stop'); } // ДОДАНО ЦЕ
-    if (isSpeaking) { synth.cancel(); isSpeaking = false; updateVoiceBtn(false); }
-}
-
-    function updateVoiceBtn(active) {
-        const btn = document.getElementById('voiceBtn');
-        if (!btn) return;
-        if (active) {
-            btn.innerHTML = `<div class="voice-wave"><span></span><span></span><span></span></div> Зупинити`;
-            btn.classList.add('voice-active');
-        } else {
-            btn.innerHTML = `<span>🔊</span> ШІ Асистент`;
-            btn.classList.remove('voice-active');
-        }
-    }
-
-    function closeModalAudio() {
-        document.getElementById('infoModal').style.display='none';
-        if (currentAudio) { currentAudio.pause(); currentAudio = null; }
-        if (isSpeaking) { synth.cancel(); isSpeaking = false; updateVoiceBtn(false); }
-    }
 
     // === ОЛЬФАКТОРНА ЛАБОРАТОРІЯ (LAYERING) ===
     const layeringPairs = [
@@ -1135,32 +1172,7 @@ function closeModalAudio() {
     }
 
     // === ЛОГІКА ДИНАМІЧНОЇ АУРИ ТА СОРТУВАННЯ ===
-    function updateAura(imgElement) {
-        const aura = document.getElementById('modalAura');
-        if (!aura) return;
-
-        aura.classList.remove('active');
-        
-        const tempImg = new Image();
-        tempImg.crossOrigin = "Anonymous"; 
-        tempImg.src = imgElement.src;
-
-        tempImg.onload = function() {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 1; canvas.height = 1;
-            ctx.drawImage(tempImg, 0, 0, 1, 1);
-            
-            try {
-                const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-                aura.style.background = `radial-gradient(circle, rgba(${r}, ${g}, ${b}, 0.8) 0%, rgba(${r}, ${g}, ${b}, 0) 70%)`;
-            } catch (e) {
-                aura.style.background = 'radial-gradient(circle, rgba(197, 160, 89, 0.6) 0%, rgba(197, 160, 89, 0) 70%)';
-            }
-            aura.classList.add('active');
-        };
-    }
-
+    
     function toggleSortMenu(e) {
         e.stopPropagation();
         document.getElementById('sortOptionsList').classList.toggle('show');

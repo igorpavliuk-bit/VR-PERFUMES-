@@ -539,7 +539,7 @@
 .modal-aura.active { opacity: 0.45; }
     </style>
 </head>
-    </head>
+    
 <body>
 
 <div class="tt-hint">💡 Не переходить у Telegram? Тисніть <b>(⋯)</b> та <b>«Відкрити у браузері»</b>.</div>
@@ -1034,16 +1034,10 @@ function updateAura(imgElement) {
     }
 
     // === AI VOICE ASSISTANT (ОЗВУЧКА ВІКТОРІЇ) ===
-    let synth = window.speechSynthesis;
+   
     let isSpeaking = false;
 
-    function speakDescription() {
-        if (isSpeaking) {
-            synth.cancel();
-            isSpeaking = false;
-            updateVoiceBtn(false);
-            return;
-        }
+  
 
         const brand = document.getElementById('mB').innerText;
         const name = document.getElementById('mN').innerText;
@@ -1804,7 +1798,7 @@ function updateAura(imgElement) {
             </div>
         `;
         
-        document.getElementById('mD').innerHTML = voiceBtnHTML + f + shareBtnHTML + synesthesiaHTML + volHTML;
+       document.getElementById('mD').innerHTML = voiceBtnHTML + f + shareBtnHTML + synesthesiaHTML + volHTML;
         document.getElementById('reviewFormContainerHTML').innerHTML = reviewFormHTML;
         
         const orderBtn = document.getElementById('modalOrderBtn');
@@ -2117,11 +2111,14 @@ function updateAura(imgElement) {
         let cleanQ = q.replace(/(хочу|шукаю|знайти|порайдьте|підкажіть|аромат|парфум|духи|мені|якийсь|з|на|купити|покажи)/gi, ' ').replace(/\s+/g, ' ').trim();
         if(cleanQ.length < 2) cleanQ = q; 
 
+       let q = inputVal.toLowerCase().trim();
+        
+        // РОЗУМНИЙ ФІЛЬТР СТОП-СЛІВ (Лагодить пошук!)
+        let cleanQ = q.replace(/(хочу|шукаю|знайти|порайдьте|підкажіть|аромат|парфум|духи|мені|якийсь|з|на|купити|покажи)/gi, ' ').replace(/\s+/g, ' ').trim();
+        if(cleanQ.length < 2) cleanQ = q; 
+
         let q1 = applySynonyms(cleanQ);
         let q2 = applySynonyms(fixKeyboardLayout(cleanQ));
-
-        let results = globalCatalogData.filter(p => {
-            let searchableText = (p[0] + " " + p[1] + " " + (p[4] || "")).toLowerCase();
             return searchableText.includes(q1) || searchableText.includes(q2);
         });
 

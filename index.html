@@ -900,45 +900,71 @@
         "Chloé Atelier des Fleurs": "Вишукана колекція, присвячена магії квітів. Кожен парфум — це моно-букет, що ідеально передає чистоту та крихкість живої рослини."
     };
 
-    // === ШІ-СОМЕЛЬЄ (ГОЛОСОВИЙ ПОШУК) ===
-    function startVoiceSearch() {
-        const micBtn = document.getElementById('micBtn');
-        const inputField = document.getElementById('searchInput');
-        
-        if (!('webkitSpeechRecognition' in window)) {
-            alert('Ваш браузер не підтримує голосовий пошук 😔');
-            return;
-        }
+   // === РОЗУМНИЙ ШІ-АСИСТЕНТ (ВЕРСІЯ: СОМЕЛЬЄ) ===
 
-        const recognition = new webkitSpeechRecognition();
-        recognition.lang = 'uk-UA';
-        recognition.interimResults = false;
-        recognition.maxAlternatives = 1;
+const brandPronunciation = {
+    "Byredo": "Байрéдо", "By Kilian": "Бай Кіліан", "Zarkoperfume": "Заркоперфýм",
+    "Ella K Parfums": "Елла Ка Парфýм", "Mancera": "Мансéра", "Nishane": "Нішанé",
+    "Kajal": "Кажáл", "Memo Paris": "Мемо Парі", "V Canto": "Ві Канто",
+    "Giardini Di Toscana": "Джардіні Ді Тоскáна", "Lattafa": "Латтáфа",
+    "Juliette Has A Gun": "Джульєтта Хес е Ган", "Jo Malone": "Джо Малóун",
+    "Tom Ford": "Том Форд", "Baccarat": "Баккарá", "Zadig & Voltaire": "Задіг е Вольтéр"
+};
 
-        recognition.onstart = function() {
-            micBtn.classList.add('listening');
-            inputField.placeholder = "Слухаю... Назвіть аромат...";
-            inputField.value = '';
-        };
+function startVoiceSearch() {
+    const micBtn = document.getElementById('micBtn');
+    const inputField = document.getElementById('searchInput');
+    if (!('webkitSpeechRecognition' in window)) return alert('Браузер не підтримує голос 😔');
 
-        recognition.onresult = function(event) {
-            const speechResult = event.results[0][0].transcript;
-            inputField.value = speechResult;
-            handleSearchInput();
-        };
+    const recognition = new webkitSpeechRecognition();
+    recognition.lang = 'uk-UA';
+    recognition.onstart = () => micBtn.classList.add('listening');
+    recognition.onresult = (e) => {
+        inputField.value = e.results[0][0].transcript;
+        handleSearchInput();
+    };
+    recognition.onend = () => micBtn.classList.remove('listening');
+    recognition.start();
+}
 
-        recognition.onerror = function(event) {
-            micBtn.classList.remove('listening');
-            inputField.placeholder = "ПОШУК АРОМАТУ АБО БРЕНДУ...";
-        };
+function speakDescription() {
+    if (isSpeaking) { synth.cancel(); isSpeaking = false; updateVoiceBtn(false); return; }
 
-        recognition.onend = function() {
-            micBtn.classList.remove('listening');
-            inputField.placeholder = "ПОШУК АРОМАТУ АБО БРЕНДУ...";
-        };
-
-        recognition.start();
+    const brand = document.getElementById('mB').innerText;
+    const name = document.getElementById('mN').innerText;
+    const descHTML = document.getElementById('mD').innerHTML;
+    
+    // 1. Корекція вимови бренду
+    let spokenBrand = brand;
+    for (let key in brandPronunciation) {
+        if (brand.toLowerCase().includes(key.toLowerCase())) { spokenBrand = brandPronunciation[key]; break; }
     }
+
+    // 2. Створення "живого" сценарію (інтерпретація)
+    let narrative = `Привіт! Це Вікторія. Дозвольте познайомити вас із витвором ${spokenBrand}, ароматом ${name}. `;
+    
+    if (descHTML.includes('Верхні ноти')) narrative += "Знайомство починається з яскравих акордів на самому початку. ";
+    if (descHTML.includes('серця') || descHTML.includes('Середні')) narrative += "В серці композиції розкривається справжня магія та глибина. ";
+    if (descHTML.includes('Базові') || descHTML.includes('бази')) narrative += "А розкішний шлейф у базі аромату залишиться з вами надовго. ";
+
+    narrative += "Це чудовий вибір. Бажаєте додати цей розпив у кошик?";
+
+    const utterance = new SpeechSynthesisUtterance(narrative);
+    utterance.lang = 'uk-UA';
+    utterance.pitch = 1.1; // Жіночний тембр
+    utterance.rate = 0.9;  // Спокійна швидкість
+
+    utterance.onstart = () => { isSpeaking = true; updateVoiceBtn(true); };
+    utterance.onend = () => { isSpeaking = false; updateVoiceBtn(false); };
+    synth.speak(utterance);
+}
+
+function updateVoiceBtn(active) {
+    const btn = document.getElementById('voiceBtn');
+    if (!btn) return;
+    btn.innerHTML = active ? `<div class="voice-wave"><span></span><span></span><span></span></div> Зупинити` : `<span>🔊</span> ШІ Асистент`;
+    active ? btn.classList.add('voice-active') : btn.classList.remove('voice-active');
+}
 
     // === ПАРФУМЕРНА СИНЕСТЕЗІЯ (АУДІО ВАЙБ) ===
     const audioVibes = {
@@ -983,13 +1009,7 @@
     let synth = window.speechSynthesis;
     let isSpeaking = false;
 
-    function speakDescription() {
-        if (isSpeaking) {
-            synth.cancel();
-            isSpeaking = false;
-            updateVoiceBtn(false);
-            return;
-        }
+   
 
         const brand = document.getElementById('mB').innerText;
         const name = document.getElementById('mN').innerText;

@@ -1143,20 +1143,7 @@
         if (isSpeaking) { synth.cancel(); isSpeaking = false; updateVoiceBtn(false); }
     }
 
-    // === ОЛЬФАКТОРНА ЛАБОРАТОРІЯ 2.0 (DYNAMIC MATCHING) ===
-
-    function populateLayeringSelects() {
-        const s1 = document.getElementById('layer1');
-        const s2 = document.getElementById('layer2');
-        if (!s1 || !s2 || globalCatalogData.length === 0) return;
-        
-        // Витягуємо назви з нашої бази (індекс 1 - Назва)
-        const options = globalCatalogData.map(p => `<option value="${p[1]}">${p[1]}</option>`).join('');
-        s1.innerHTML = `<option value="">Аромат №1</option>` + options;
-        s2.innerHTML = `<option value="">Аромат №2</option>` + options;
-    }
-
-    function checkLayering() {
+  function checkLayering() {
         const p1Name = document.getElementById('layer1').value;
         const p2Name = document.getElementById('layer2').value;
         const resultBox = document.getElementById('layeringResult');
@@ -1170,58 +1157,74 @@
             return;
         }
 
-        // Шукаємо дані в базі (індекс 10 зазвичай опис)
         const data1 = globalCatalogData.find(p => p[1] === p1Name);
         const data2 = globalCatalogData.find(p => p[1] === p2Name);
         
+        // Перевірка індексу опису (якщо опис не в 10-й колонці, підправ цифру)
         const desc1 = (data1[10] || "").toLowerCase();
         const desc2 = (data2[10] || "").toLowerCase();
-        const fullS1 = (p1Name + " " + desc1).toLowerCase();
-        const fullS2 = (p2Name + " " + desc2).toLowerCase();
+        const full1 = (p1Name + " " + desc1);
+        const full2 = (p2Name + " " + desc2);
 
-        let score = 70; // Базовий бал
-        let reason = "Це цікаве поєднання... Вони створять нову, нетипову грань твого образу.";
-        let verdict = "ЦІКАВИЙ ЕКСПЕРИМЕНТ";
+        // --- КАТЕГОРІЇ (СЛОВНИК) ---
+        const isMoly = (s) => /molecule|234|gaba|bliss|not a perfume|m01|m02/i.test(s);
+        const isCitrus = (s) => /цитрус|лимон|бергамот|апельсин|мандарин|грейпфрут|лайм|помело|pomelo/i.test(s);
+        const isWoody = (s) => /кедр|пачулі|ветивер|дерев|сандал|кедр|мох|cedrus|wood/i.test(s);
+        const isFloral = (s) => /троянда|жасмин|півонія|квіт|фіалка|ірис|роза|півонія|flowers/i.test(s);
+        const isOriental = (s) => /уд|амбра|шафран|ладан|східн|прян|спец|oud|amber/i.test(s);
+        const isGourmand = (s) => /ваніль|карамель|кава|шоколад|латте|солод|цукор|caffe|latte|vanilla/i.test(s);
+        const isMusky = (s) => /мускус|чист|пудр|musk/i.test(s);
+
+        let score = 70 + Math.floor(Math.random() * 6); // Базовий бал 70-75%
+        let reason = "Це цікавий експеримент. Ці аромати не конфліктують і можуть створити нетипове, дуже особисте звучання.";
+        let verdict = "ЕКСПЕРИМЕНТАЛЬНИЙ МІКС";
         let color = "#f39c12";
 
-        // ЛОГІКА АНАЛІЗУ
-        
-        // 1. ПЕРЕВІРКА НА МОЛЕКУЛИ (Бустери)
-        if (fullS1.includes("molecule") || fullS2.includes("molecule") || fullS1.includes("234") || fullS2.includes("234") || fullS1.includes("gaba") || fullS2.includes("gaba") || fullS1.includes("bliss") || fullS2.includes("bliss")) {
-            score = 98;
+        // --- ЛОГІКА МЕТЧИНГУ ---
+
+        // 1. МОЛЕКУЛЯРНІ БУСТЕРИ
+        if (isMoly(full1) || isMoly(full2)) {
+            score = 95 + Math.floor(Math.random() * 4);
             verdict = "💎 ІДЕАЛЬНИЙ МЕТЧ";
-            reason = "Один із ароматів — молекулярний... Він спрацює як чиста магія, підсилюючи кожен акорд і створюючи розкішний об'єм.";
+            reason = "Один з ароматів — молекулярний. Він спрацює як ідеальна база, підсилюючи кожну ноту іншого парфуму та додаючи йому стійкості.";
             color = "#2ecc71";
         }
-        // 2. КОНФЛІКТ (Цитрус + Уд/Важкий схід)
-        else if ((desc1.includes("цитрус") && desc2.includes("уд")) || (desc2.includes("цитрус") && desc1.includes("уд"))) {
-            score = 45;
-            verdict = "⚠️ РИЗИКОВАНИЙ МІКС";
-            reason = "Обережно... Легкі цитруси можуть просто згаснути під натиском глибокого уда. Це поєднання для дуже сміливих.";
-            color = "#e74c3c";
-        }
-        // 3. ГАРМОНІЯ (Дерево + Спеції / Мускус + Квіти)
-        else if ((desc1.includes("дерев") && desc2.includes("прян")) || (desc1.includes("мускус") && desc2.includes("квіт"))) {
-            score = 92;
-            verdict = "✨ ГАРМОНІЙНИЙ ДУЕТ";
-            reason = "Неймовірна синергія... Ці компоненти мають споріднені душі. Вони створять шляхетний, дуже дорогий шлейф.";
+        // 2. ЦИТРУС + ДЕРЕВО (Свіжість та Статус)
+        else if ((isCitrus(full1) && isWoody(full2)) || (isCitrus(full2) && isWoody(full1))) {
+            score = 88 + Math.floor(Math.random() * 5);
+            verdict = "🌿 ШЛЯХЕТНА СВІЖІСТЬ";
+            reason = "Цитруси додають енергії, а деревні ноти — стійкості та глибини. Це поєднання звучить дуже дорого та аристократично.";
             color = "#27ae60";
         }
-        // 4. ГУРМАНІКА (Солодке + Солодке)
-        else if ((desc1.includes("ваніль") || desc1.includes("латте")) && (desc2.includes("карам") || desc2.includes("кава"))) {
-            score = 88;
-            verdict = "🍰 ГУРМАНСЬКА СПОКУСА";
-            reason = "Це справжня насолода... Вийде густий, затишний мікс, від якого оточуючі будуть просто в захваті.";
+        // 3. КВІТИ + МУСКУС (Ніжність)
+        else if ((isFloral(full1) && isMusky(full2)) || (isFloral(full2) && isMusky(full1))) {
+            score = 92 + Math.floor(Math.random() * 4);
+            verdict = "🌸 ЧУТТЄВИЙ ТАНДЕМ";
+            reason = "Мускус робить квіти більш 'тілесними' та м'якими. Ви отримаєте неймовірно ніжний, жіночний та чистий шлейф.";
+            color = "#e84393";
+        }
+        // 4. ГУРМАНІКА + СПЕЦІЇ/СХІД
+        else if ((isGourmand(full1) && isOriental(full2)) || (isGourmand(full2) && isOriental(full1))) {
+            score = 85 + Math.floor(Math.random() * 6);
+            verdict = "🔥 ПРЯНА СПОКУСА";
+            reason = "Східні спеції прибирають зайву солодкість гурманіки, роблячи аромат глибоким, димним та неймовірно звабливим.";
             color = "#d35400";
         }
+        // 5. КОНФЛІКТ (Цитрус + Важкий Схід/Уд)
+        else if ((isCitrus(full1) && isOriental(full2)) || (isCitrus(full2) && isOriental(full1))) {
+            score = 40 + Math.floor(Math.random() * 10);
+            verdict = "⚠️ СКЛАДНИЙ КОНТРАСТ";
+            reason = "Важкі східні ноти можуть повністю 'задушити' легкі цитруси. Спробуйте наносити їх на різні ділянки шкіри, щоб вони не перебивали один одного.";
+            color = "#e74c3c";
+        }
 
-        // ВИВІД РЕЗУЛЬТАТУ
+        // ВИВІД
         resultBox.innerHTML = `
-            <div style="border-left: 4px solid ${color}; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px; text-align: left;">
+            <div style="border-left: 4px solid ${color}; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px; text-align: left; animation: fadeIn 0.5s ease;">
                 <h4 style="color: ${color}; margin: 0 0 10px 0; font-size: 1.1em;">${verdict} — ${score}%</h4>
-                <p style="font-size: 0.95em; line-height: 1.4; font-style: italic;">"${reason}"</p>
-                <div style="margin-top: 10px; font-size: 0.8em; opacity: 0.7;">
-                    📌 <b>Порада від Віри:</b> Нанось спочатку важчий аромат, а за кілька хвилин накрий його легшим... так магія триватиме довше.
+                <p style="font-size: 0.95em; line-height: 1.4; color: var(--text-dark); font-style: italic;">"${reason}"</p>
+                <div style="margin-top: 10px; font-size: 0.8em; opacity: 0.7; color: var(--text-dark);">
+                    📌 <b>Порада від Віри:</b> Спробуй цей мікс ввечері. Спочатку нанеси важчий аромат, а зверху — легший.
                 </div>
             </div>
         `;

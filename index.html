@@ -942,77 +942,137 @@
         recognition.start();
     }
 
-  // === ІНТЕЛЕКТУАЛЬНИЙ МОДУЛЬ ВІРИ 7.5 (RELAX EDITION) ===
+ // === ІНТЕЛЕКТУАЛЬНИЙ МОДУЛЬ ВІРИ 8.5 (GLOBAL PERFUME EXPERT) ===
+    
+    // 10 ВАЙБІВ: Кожен бренд має свій музичний світ
     const audioVibes = {
-        "Tom Ford": "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3", 
-        "Baccarat": "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3", 
-        "Zarkoperfume": "https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3",
-        "Molecule": "https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3",
-        "Kilian": "https://cdn.pixabay.com/download/audio/2022/10/25/audio_2490ebf927.mp3",
-        "Nasomatto": "https://cdn.pixabay.com/download/audio/2022/03/24/audio_b0f1a6f88d.mp3",
-        "Tiziana Terenzi": "https://cdn.pixabay.com/download/audio/2022/03/24/audio_b0f1a6f88d.mp3",
-        "default": "https://cdn.pixabay.com/download/audio/2022/02/07/audio_67eb2eaed8.mp3" 
+        "Molecular": "https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3", // Zarkoperfume, 2787, Juliette
+        "Gourmand": "https://cdn.pixabay.com/download/audio/2022/02/07/audio_67eb2eaed8.mp3",  // Giardini, Chopard, Alhambra
+        "Oriental": "https://cdn.pixabay.com/download/audio/2022/03/24/audio_b0f1a6f88d.mp3",  // Lattafa, Attar, Kajal, Nishane
+        "FrenchChic": "https://cdn.pixabay.com/download/audio/2022/10/25/audio_2490ebf927.mp3",// Ella K, Hermes, Chloe, Kilian
+        "Dark": "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3",      // Tom Ford Noir, Fortis, Nasomatto
+        "ItalianSun": "https://cdn.pixabay.com/download/audio/2022/08/02/audio_884b96603d.mp3",// Gritti, Prada, Armani, Trussardi
+        "Minimalist": "https://cdn.pixabay.com/download/audio/2021/11/25/audio_91b1236751.mp3",// Byredo, Jo Malone, Obvious
+        "SexyNight": "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3", // Zadig&Voltaire, Gucci, Victoria's Secret
+        "Nature": "https://cdn.pixabay.com/download/audio/2022/04/27/audio_34b397b987.mp3",     // Essential Parfums, Cedrus
+        "default": "https://cdn.pixabay.com/download/audio/2022/02/22/audio_d6930d9dd0.mp3"
     };
 
     let currentAudio = null;
 
     function toggleSynesthesia(brand, name, btn) {
-        let audioUrl = audioVibes.default;
-        const searchStr = (brand + " " + name).toLowerCase();
-        for (let key in audioVibes) {
-            if (searchStr.includes(key.toLowerCase())) {
-                audioUrl = audioVibes[key];
-                break;
-            }
-        }
+        let vibeKey = "default";
+        const b = brand.toLowerCase();
+        const n = name.toLowerCase();
+
+        // Логіка розподілу брендів по вайбах
+        if (b.includes("zarko") || b.includes("2787") || b.includes("juliette") || n.includes("molecule")) vibeKey = "Molecular";
+        else if (b.includes("giardini") || b.includes("chopard") || b.includes("alhambra") || n.includes("latte") || n.includes("cherie")) vibeKey = "Gourmand";
+        else if (b.includes("lattafa") || b.includes("attar") || b.includes("kajal") || b.includes("nishane")) vibeKey = "Oriental";
+        else if (b.includes("ella k") || b.includes("hermes") || b.includes("chloé") || b.includes("kilian") || b.includes("barrois")) vibeKey = "FrenchChic";
+        else if (b.includes("ford") || b.includes("fortis") || n.includes("noir") || n.includes("black")) vibeKey = "Dark";
+        else if (b.includes("gritti") || b.includes("prada") || b.includes("armani") || b.includes("trussardi")) vibeKey = "ItalianSun";
+        else if (b.includes("byredo") || b.includes("jo malone") || b.includes("obvious") || b.includes("essential")) vibeKey = "Minimalist";
+        else if (b.includes("gucci") || b.includes("zadig") || b.includes("secret") || b.includes("eilish")) vibeKey = "SexyNight";
+        
+        let audioUrl = audioVibes[vibeKey] || audioVibes.default;
+
         if (currentAudio && !currentAudio.paused) {
             currentAudio.pause();
             if(btn) btn.classList.remove('playing');
             return;
         }
+
         if (currentAudio) currentAudio.pause(); 
         currentAudio = new Audio(audioUrl);
         currentAudio.loop = true;
-        currentAudio.volume = 0.12; // ТИХИЙ ФОН
-        currentAudio.play().catch(e => console.log("Музика чекає на клік"));
+        currentAudio.volume = 0.12; // ФОНОВА ГУЧНІСТЬ
+        currentAudio.play().catch(e => console.log("Музика запрацює після кліку"));
         if(btn) btn.classList.add('playing');
     }
 
     function prepareViraText(brand, name, rawDesc, currentVol) {
+        // КАРТА ПРАВИЛЬНОЇ ВИМОВИ (Ортоепія)
         const orthoepy = {
-            "Nasomatto": "Назомáтто", "Black Afgano": "Блек Афґáно", "V Canto": "Ві Кáнто", 
-            "Baccarat Rouge 540": "Баккарá Руж пятсόт сорок", "Xerjoff": "Ксерджόфф", 
-            "Tiziana Terenzi": "Тіціáна Терéнзі", "Byredo": "Байрéдо", "Ganymede": "Ганімéд", 
-            "Zarkoperfume": "Зарко парфýм", "Kilian": "Кіліáн", "Tom Ford": "Том Форд"
+            "Ella K": "Елла Ка", "Musc K": "Мюск Ка", "Orchid K": "Оркíд Ка",
+            "Zadig & Voltaire": "Задíг е Вольтéр", "This is Her": "Зіс із Хе",
+            "2787": "Двадцять сім вісімдесят сім", "Genetic Bliss": "Дженéтік Блісс",
+            "Mancera": "Мансéра", "Cedrat Boise": "Седрá Буазé", "Amore Caffe": "Амόре Каффé",
+            "Les Liquides Imaginaires": "Ле Лікід Імажінер", "Fortis": "Фόртіс",
+            "Zarkoperfume": "Зарко парфýм", "Pink Molecule": "Пінк Молéкула",
+            "Emporio Armani": "Емпόріо Армáні", "Stronger With You": "Стронґер віз ю",
+            "Montale": "Монтáль", "Soleil de Capri": "Солéй де Капрі",
+            "Attar Collection": "Атáр Коллéкшн", "Fleur de Santal": "Флер де Сантáл", "Musk Kashmir": "Муск Кашмір",
+            "Nishane": "Нішанé", "Hacivat": "Хаціват", "Byredo": "Байрéдо", "Bal d'Afrique": "Бал д'Афрік",
+            "Kajal": "Кажáл", "Äican": "Айкан", "Memo Paris": "Мемό Парі", "Sintra": "Сінтрá",
+            "Gucci": "Гýччі", "Flora Gorgeous Gardenia": "Флόра Ґόрджес Ґардéнія",
+            "Billie Eilish": "Біллі Айліш", "Victoria's Secret": "Віктόрія Сíкрет", "Bombshell": "Бомбшéлл",
+            "V Canto": "Ві Кáнто", "Ricina": "Річíна", "By Kilian": "Бай Кіліáн",
+            "Giardini Di Toscana": "Джардíні ді Тоскáна", "Bianco Latte": "Б'янко Лáтте",
+            "Lattafa": "Латтáфа", "Oud for Glory": "Уд фор Ґлόрі", "Teriaq": "Теріáк",
+            "Maison Alhambra": "Мейсон Алямбрá", "Lovely Cherie": "Лавлі Шері",
+            "Prada": "Прáда", "Luna Rossa Black": "Лýна Рόсса Блек",
+            "Tom Ford": "Том Форд", "Noir Extreme": "Нуáр Екстрéм",
+            "Hermes": "Ермéс", "Terre d'Hermes": "Тер д'Ермéс",
+            "Juliette Has A Gun": "Джульєтта хез е ган", "Pear Inc": "Пеар Інк",
+            "Jo Malone": "Джо Малόн", "Blackberry & Bay": "Блекбері енд Бей", "Wood Sage": "Вуд Сейдж",
+            "Gritti": "Грітті", "Pomelo Sorrento": "Помéло Соррéнто",
+            "Chopard": "Шопáр", "Orlov Paris": "Орлόв Парі", "Essential Parfums": "Ессеншіал Парфáм",
+            "Fig Infusion": "Фіг Інф'южн", "Obvious": "Обвіýс", "Une Pistache": "Юн Пістáш",
+            "Trussardi": "Труссáрді", "Limitless Shopping": "Лімітлесс Шόппінґ",
+            "Hormone Paris": "Ормόн Парі", "Chloe": "Клоé", "Cedrus": "Цéдрус"
         };
+
         let fName = name, fBrand = brand;
         for (let key in orthoepy) {
             if (name.includes(key)) fName = orthoepy[key];
             if (brand.includes(key)) fBrand = orthoepy[key];
         }
-        const d = rawDesc.toLowerCase();
-        const intros = [
-            `Привіт! Я Віра. Давай не поспішаючи розберемо ${fName}. Це вишукана робота бренду ${fBrand}. `,
-            `Вітаю! Це Віра. Ти обрала ${fName}. Зараз розкажу, чому Вікторія вважає цей аромат особливим. `,
-            `Рада допомогти. ${fName} від ${fBrand} — це справжнє задоволення. Давай зануримось у його характер. `
-        ];
+
+        const d = rawDesc;
+        const dLower = d.toLowerCase();
+
+        // 1. СТАТЬ (Природно)
+        let genderSpeech = "";
+        if (dLower.includes('жіноч')) genderSpeech = "Це вишукана жіноча композиція. ";
+        else if (dLower.includes('чолові')) genderSpeech = "Це характерний чоловічий аромат. ";
+        else if (dLower.includes('унісекс')) genderSpeech = "Цей аромат не має меж, він чудово звучить і на жінках, і на чоловіках. ";
+
+        // 2. РОЗУМНІ НОТИ (Динамічний розбір)
         let notesSpeech = "";
-        const notesMatch = rawDesc.match(/(?:ноти:|Піраміда:|склад:)\s*([^<|\n|\.]+)/i);
-        if (notesMatch) {
-            const notesArray = notesMatch[1].split(',').map(n => n.trim()).filter(n => n.length > 2);
-            const top3 = notesArray.slice(0, 3).join(', та ');
-            notesSpeech = `У цій композиції я особливо відчуваю ${top3}. `;
-        }
-        let genderSpeech = d.includes('унісекс') ? "До речі, він ідеально пасує і жінкам, і чоловікам. " : "";
-        let vibe = "Це дуже компліментарний аромат з дорогим звучанням. ";
-        if (d.includes('стійк')) vibe += "Він неймовірно гідно тримається на шкірі протягом усього дня. ";
-        let usage = currentVol.includes("5 мл") ? "Такого об'єму тобі вистачить на цілий місяць щоденного задоволення. " : (currentVol.includes("10 мл") ? "Десять мілілітрів — це два місяці твого особистого шлейфу, дуже вигідно. " : "");
-        const closings = [
-            "Вікторія вже підготувала твій атомайзер. Додаси в кошик?",
-            "Думаю, цей шлейф стане твоїм новим фаворитом. Що скажеш?",
-            "Цей аромат ідеально доповнить твій образ. Спробуємо?"
+        const getNote = (regex) => {
+            const m = d.match(regex);
+            return m ? m[1].split(',')[0].trim() : null;
+        };
+
+        const top = getNote(/(?:Верхні ноти:|Верхні:|Ноти:|Піраміда:)\s*([^<|\n|\.]+)/i);
+        const heart = getNote(/(?:Ноти серця:|Серце:|Середні ноти:|Середні:)\s*([^<|\n|\.]+)/i);
+        const base = getNote(/(?:Базові ноти:|Базові:|База:|Шлейф:)\s*([^<|\n|\.]+)/i);
+
+        if (top) notesSpeech += `Спочатку я відчуваю тут ${top}. `;
+        if (heart) notesSpeech += `Згодом проявляється ${heart}. `;
+        if (base) notesSpeech += `А в основі залишається приємний шлейф із ${base}. `;
+
+        // 3. ОБ'ЄМ ТА ВИГОДА
+        let volSpeech = "";
+        if (currentVol.includes("5 мл")) volSpeech = "П'яти мілілітрів тобі якраз вистачить на місяць, щоб по-справжньому звикнути до цього шлейфу. ";
+        else if (currentVol.includes("10 мл")) volSpeech = "Десять мілілітрів — це дуже практичний вибір, вистачить на два місяці щоденної насолоди. ";
+
+        const intros = [
+            `Привіт! Я Віра. Давай зануримось в атмосферу ${fName}. `,
+            `Вітаю! Це Віра. Ти обрала ${fName} від ${fBrand}, зараз розкажу про нього докладніше. `,
+            `О, ${fName}! Це один з моїх улюблених ароматів у ${fBrand}. `
         ];
-        return intros[Math.floor(Math.random() * intros.length)] + notesSpeech + genderSpeech + vibe + usage + closings[Math.floor(Math.random() * closings.length)];
+
+        const closings = [
+            "Вікторія вже готова підготувати твій розпив. Додаси в кошик?",
+            "Думаю, цей шлейф стане твоїм новим фаворитом. Що скажеш?",
+            "Це ідеальна інвестиція у твій сьогоднішній настрій. Оформлюємо?"
+        ];
+
+        return intros[Math.floor(Math.random() * intros.length)] + 
+               genderSpeech + notesSpeech + volSpeech + 
+               closings[Math.floor(Math.random() * closings.length)];
     }
 
     function speakDescription() {
@@ -1023,17 +1083,27 @@
             updateVoiceBtn(false);
             return;
         }
+
         const brand = document.getElementById('mB').innerText;
         const name = document.getElementById('mN').innerText;
         const modalContent = document.getElementById('mD').innerText;
+        
+        // Фільтрація тексту (не читаємо список інших товарів)
         let cleanText = modalContent.split('Також від')[0].split('💬 Відгуки')[0].split('Поділитися')[0].trim();
+
         const speechText = prepareViraText(brand, name, cleanText, selectedVol);
+        
         const syncBtn = document.querySelector('.synesthesia-btn');
         toggleSynesthesia(brand, name, syncBtn);
+
         const utterance = new SpeechSynthesisUtterance(speechText);
-        utterance.lang = 'uk-UA'; utterance.pitch = 1.08; utterance.rate = 0.82; // ПОВІЛЬНИЙ ТЕМП
+        utterance.lang = 'uk-UA'; 
+        utterance.pitch = 1.08; 
+        utterance.rate = 0.81; // ЩЕ ПОВІЛЬНІШЕ ТА ВПЕВНЕНІШЕ
+
         utterance.onstart = () => { isSpeaking = true; updateVoiceBtn(true); };
         utterance.onend = () => { isSpeaking = false; updateVoiceBtn(false); };
+
         synth.speak(utterance);
     }
 

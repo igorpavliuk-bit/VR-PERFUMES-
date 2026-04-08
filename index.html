@@ -983,34 +983,93 @@
     let synth = window.speechSynthesis;
     let isSpeaking = false;
 
-    function speakDescription() {
-        if (isSpeaking) {
-            synth.cancel();
-            isSpeaking = false;
-            updateVoiceBtn(false);
-            return;
-        }
+   // 1. Глобальна змінна для музики (встав після let isSpeaking)
+let viraMusic = null;
 
-        const brand = document.getElementById('mB').innerText;
-        const name = document.getElementById('mN').innerText;
-        const descHTML = document.getElementById('mD').innerHTML;
-        
-        let tempDiv = document.createElement("div");
-        tempDiv.innerHTML = descHTML;
-        let cleanDesc = tempDiv.innerText.split('💬 Відгуки')[0]; 
-        
-        const fullText = `${brand}. ${name}. ${cleanDesc}`;
-        const utterance = new SpeechSynthesisUtterance(fullText);
-        
-        utterance.lang = 'uk-UA'; 
-        utterance.pitch = 1.1; 
-        utterance.rate = 0.9;  
-
-        utterance.onstart = () => { isSpeaking = true; updateVoiceBtn(true); };
-        utterance.onend = () => { isSpeaking = false; updateVoiceBtn(false); };
-
-        synth.speak(utterance);
+// 2. Функція фонової музики
+function handleViraBackground(action) {
+    if (!viraMusic) {
+        viraMusic = new Audio("https://cdn.pixabay.com/download/audio/2022/05/24/audio_9650993096.mp3");
+        viraMusic.loop = true;
     }
+    if (action === 'start') {
+        viraMusic.volume = 0.08;
+        viraMusic.currentTime = 0;
+        viraMusic.play().catch(e => console.log("Музика чекає взаємодії"));
+    } else {
+        const fade = setInterval(() => {
+            if (viraMusic.volume > 0.01) viraMusic.volume -= 0.01;
+            else { clearInterval(fade); viraMusic.pause(); }
+        }, 50);
+    }
+}
+
+// 3. Генератор тексту (бачить об'єм)
+function prepareViraText(brand, name) {
+    const activeBtn = document.querySelector('.vol-chip.active');
+    const vText = activeBtn ? activeBtn.innerText.toLowerCase() : "5 мл";
+
+    const intros = [
+        `Послухай... ${name} — це твоя нова пристрасть. `,
+        `Ти тільки відчуй... цей аромат від ${brand} просто збиває з ніг. `,
+        `Вітаю... Вікторія каже, що ${name} — це вибір для впевнених. `,
+        `Заплющ очі... і дозволь цій магії від ${brand} заповнити все навколо. `
+    ];
+    const vibes = [
+        "Він огортає тебе... наче невидима хмаринка чистої впевненості. ",
+        "Його магнетичний шлейф... змушує людей озиратися тобі услід. ",
+        "Це звучить дуже дорого... наче ти щойно з приватної вечірки. "
+    ];
+
+    let volSpeech = "";
+    if (vText.includes("2")) volSpeech = "Два мілілітри... ідеально для першого інтимного знайомства. ";
+    else if (vText.includes("10")) volSpeech = "Десять мілілітрів... це два місяці нескінченних компліментів. ";
+    else if (vText.includes("20")) volSpeech = "Двадцять мілілітрів... коли ти точно знаєш, що це кохання. ";
+    else volSpeech = "П'яти мілілітрів... тобі вистачить на цілий місяць щоденного задоволення. ";
+
+    const closings = [" Додамо в кошик?", " Спробуємо?", " Ти будеш у захваті... "];
+
+    return intros[Math.floor(Math.random() * intros.length)] + 
+           vibes[Math.floor(Math.random() * vibes.length)] + 
+           volSpeech + 
+           closings[Math.floor(Math.random() * closings.length)];
+}
+
+// 4. Оновлена основна функція Віри
+function speakDescription() {
+    if (!isSpeaking) handleViraBackground('start');
+
+    if (isSpeaking) {
+        synth.cancel();
+        handleViraBackground('stop');
+        isSpeaking = false;
+        updateVoiceBtn(false);
+        return;
+    }
+
+    const brand = document.getElementById('mB').innerText;
+    const name = document.getElementById('mN').innerText;
+    const speechText = prepareViraText(brand, name);
+
+    const utterance = new SpeechSynthesisUtterance(speechText);
+    utterance.lang = 'uk-UA';
+    utterance.pitch = 0.95; 
+    utterance.rate = 0.75; 
+
+    utterance.onstart = () => { isSpeaking = true; updateVoiceBtn(true); };
+    utterance.onend = () => { isSpeaking = false; updateVoiceBtn(false); handleViraBackground('stop'); };
+
+    synth.speak(utterance);
+}
+
+// 5. Також ЗАМІНИ свою стару closeModalAudio (рядок 492) на цю, 
+// щоб при закритті вікна музика теж вимикалася:
+function closeModalAudio() {
+    document.getElementById('infoModal').style.display='none';
+    if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+    if (viraMusic) { handleViraBackground('stop'); } // ДОДАНО ЦЕ
+    if (isSpeaking) { synth.cancel(); isSpeaking = false; updateVoiceBtn(false); }
+}
 
     function updateVoiceBtn(active) {
         const btn = document.getElementById('voiceBtn');
@@ -1684,13 +1743,7 @@
             </div>
         `;
         
-        const synesthesiaHTML = `
-            <div style="text-align: center; margin-bottom: 15px;">
-                <button class="synesthesia-btn" onclick="toggleSynesthesia('${brand.replace(/'/g, "\\'")}', '${name.replace(/'/g, "\\'")}', this)">
-                    <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Атмосфера аромату
-                </button>
-            </div>
-        `;
+       const synesthesiaHTML = ``;
 
         f = aggregatedStarsHTML + voiceBtnHTML + f + recsHTML + reviewsHTML;
 
@@ -1738,7 +1791,7 @@
             </div>
         `;
         
-        document.getElementById('mD').innerHTML = f + shareBtnHTML + synesthesiaHTML + volHTML;
+        document.getElementById('mD').innerHTML = f ;
         document.getElementById('reviewFormContainerHTML').innerHTML = reviewFormHTML;
         
         const orderBtn = document.getElementById('modalOrderBtn');

@@ -148,17 +148,18 @@
         .mic-btn.listening { animation: mic-pulse 1.2s infinite; stroke: #ff3b30; }
         @keyframes mic-pulse { 0% { transform: translateY(-50%) scale(1); opacity: 1; } 50% { transform: translateY(-50%) scale(1.15); opacity: 0.6; } 100% { transform: translateY(-50%) scale(1); opacity: 1; } }
         
-        /* NOTE SUGGESTIONS CHIPS */
+        /* NOTE SUGGESTIONS CHIPS (Оновлений золотий контур) */
         .note-suggestions { padding: 8px 20px 10px; overflow-x: auto; white-space: nowrap; display: flex; gap: 8px; scrollbar-width: none; border-bottom: 1px solid rgba(0,0,0,0.03); }
         .note-suggestions::-webkit-scrollbar { display: none; }
         .note-label { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 1px; align-self: center; font-weight: 700; }
-        .note-chip { display: inline-block; padding: 5px 14px; background: rgba(255,255,255,0.7); border: 1px solid rgba(0,0,0,0.1); border-radius: 20px; font-size: 11px; color: #555; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;}
-        .note-chip:active { transform: scale(0.95); }
-        .note-chip.active-note { border-color: var(--gold); color: var(--gold); background: #fdfbf7; font-weight: 700; box-shadow: 0 2px 8px rgba(197,160,89,0.2); }
         
-        /* КОНТУРНІ SVG НОТИ ДЛЯ МОДАЛКИ */
+        .note-chip { display: inline-block; padding: 5px 14px; background: transparent; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 20px; font-size: 11px; color: var(--text-dark); cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;}
+        .note-chip:active { transform: scale(0.95); }
+        .note-chip.active-note { border-color: var(--gold); color: #fff; background: var(--gold); font-weight: 700; box-shadow: 0 2px 8px rgba(197,160,89,0.2); }
+        
+        /* КОНТУРНІ SVG НОТИ ДЛЯ МОДАЛКИ (Золоті) */
         .note-header { display: flex; align-items: center; gap: 8px; font-family: var(--cinzel); color: var(--gold); text-transform: uppercase; font-size: 11px; font-weight: 800; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px solid rgba(197, 160, 89, 0.1); padding-bottom: 4px; }
-        .note-icon-svg { width: 14px; height: 14px; fill: none; stroke: var(--gold); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+        .note-icon-svg { width: 14px; height: 14px; fill: none !important; stroke: var(--gold) !important; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
         
         .modal-note-tag { display: inline-block; background: #fff; border: 1px solid #eaeaea; padding: 4px 10px; border-radius: 4px; font-size: 12px; margin: 0 4px 4px 0; cursor: pointer; color: #444; transition: all 0.2s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.02); font-weight: 500;}
         .modal-note-tag:hover, .modal-note-tag:active { border-color: var(--gold); color: #fff; background: var(--gold); box-shadow: 0 3px 8px rgba(197,160,89,0.3); transform: translateY(-1px); }
@@ -191,6 +192,9 @@
         @media (min-width: 768px) { .tabs-container { justify-content: center; } }
         .tab-btn { background: none; border: none; font-size: 11px; font-weight: 600; color: #a0a0a0; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; padding: 5px 0; transition: 0.3s; white-space: nowrap; flex-shrink: 0; }
         .tab-btn.active { color: var(--gold); font-weight: 800; border-bottom: 2px solid var(--gold); }
+
+        /* === КНОПКА ШВИДКОГО ПЕРЕХОДУ ДО ЛАБОРАТОРІЇ === */
+        .lab-shortcut { position: absolute; right: 15px; top: 15px; background: var(--gold); color: #fff; font-size: 9px; padding: 6px 12px; border-radius: 20px; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; cursor: pointer; box-shadow: 0 4px 10px rgba(197,160,89,0.3); z-index: 1001; border: none; }
 
         /* === КАСТОМНЕ ЗОЛОТЕ СОРТУВАННЯ === */
         .sort-wrapper { padding: 0 20px 10px; }
@@ -257,13 +261,13 @@
         .week-img { max-height: 200px; width: auto; max-width: 90%; object-fit: contain; margin-bottom: 15px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.1)); cursor: pointer; }
         .week-card-btn { width: 220px; height: 44px; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; background: #1a1a1a; color: #fff; border: none; cursor: pointer; border-radius: 4px; }
 
-        /* ЧИСТА ТА ЧИТАБЕЛЬНА МОДАЛКА + ЕФЕКТИВНА АУРА */
+        /* ЧИСТА ТА ЧИТАБЕЛЬНА МОДАЛКА + ОНОВЛЕНА АУРА (БЕЗ CANVAS) */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 2000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         .modal-content { background: var(--bg); width: 100%; max-width: 420px; border-radius: 12px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
         .modal-close-x { position: absolute; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; font-size: 16px; z-index: 20; transition: 0.3s; }
         
         .aura-wrapper { position: relative; display: inline-block; transition: all 0.8s ease; }
-        .modal-aura { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -60%); width: 220px; height: 220px; border-radius: 50%; filter: blur(45px); opacity: 0; z-index: 0; pointer-events: none; transition: background 1s ease, opacity 1s ease; }
+        .modal-aura { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -60%); width: 220px; height: 220px; border-radius: 50%; filter: blur(45px); opacity: 0; z-index: 0; pointer-events: none; transition: background-image 0.5s ease, opacity 1s ease; background-size: cover; background-position: center; }
         .modal-aura.active { opacity: 0.45; }
         body.dark-theme .modal-aura.active { opacity: 0.25; }
 
@@ -526,7 +530,6 @@
 
     </style>
 </head>
-    </head>
 <body>
 
 <div class="tt-hint">💡 Не переходить у Telegram? Тисніть <b>(⋯)</b> та <b>«Відкрити у браузері»</b>.</div>
@@ -548,6 +551,7 @@
 </div>
 
 <div id="stickyControls" class="sticky-active glass-panel">
+    <button class="lab-shortcut" onclick="document.querySelector('.layering-section').scrollIntoView({behavior: 'smooth'})">MIX LAB 🧪</button>
     <button class="theme-switch" onclick="toggleTheme()" id="themeBtn">☾</button>
     <div class="search-wrapper">
         <input type="text" id="searchInput" placeholder="ПОШУК АРОМАТУ АБО БРЕНДУ..." oninput="handleSearchInput()">
@@ -991,13 +995,18 @@ const orthoepyMap = {
     "Byredo": "Байрéдо", "Mancera": "Мансéра", "Montale": "Монтáль",
     "Kilian": "Кіліáн", "Attar": "Аттáр", "Nishane": "Нішáне",
     "Chloe": "Клоé", "V Canto": "Ві Кáнто", "Xerjoff": "Ксéрджофф",
-    "Roja": "Рóжа", "Molecule": "Молéкула", "Zadig": "Задіґ", "Voltaire": "Вольтéр"
+    "Roja": "Рóжа", "Molecule": "Молéкула", "Zadig": "Задіґ", "Voltaire": "Вольтéр",
+    "Tom Ford": "Том Форд", "Baccarat": "Баккарá", "Ganymede": "Ганімéд", 
+    "Bois Imperial": "Буá Імперіáль", "Ex Nihilo": "Екс Ніхілó", "Tiziana Terenzi": "Тіціáна Терéнці"
 };
 
 function getSmartName(name) {
     let newName = name;
     for (let eng in orthoepyMap) {
-        if (name.includes(eng)) newName = name.replace(eng, orthoepyMap[eng]);
+        if (name.toLowerCase().includes(eng.toLowerCase())) {
+            let regex = new RegExp(eng, "gi");
+            newName = newName.replace(regex, orthoepyMap[eng]);
+        }
     }
     return newName;
 }
@@ -1039,27 +1048,30 @@ function generateViraSpeech(brand, name, rawDesc) {
     const sBrand = getSmartName(brand);
     const sName = getSmartName(name);
 
-    // База варіацій
     const intros = [
-        `Послухай... ${sName} від ${sBrand}. Це не просто парфум, це твій новий маніфест. `,
-        `Вітаю! Давай розповім про ${sName}. Це справжній аристократ у лінійці ${sBrand}. `,
-        `О, цей вибір... ${sBrand} справді знають толк у розкоші. Зустрічай — ${sName}. `
+        `Вітаю! Я цифровий сомельє Вікторії. Ви зупинилися на ${sBrand} ${sName} - і це чудовий смак! `,
+        `О, цей аромат від ${sBrand} - справжній бестселер. Давай розкажу про ${sName} детальніше. `,
+        `Привіт! Ти відчуваєш цей вайб? ${sBrand} ${sName} створений саме для того, щоб збирати компліменти. `
     ];
 
     const emotions = [
-        "Він звучить дуже дорого, наче ти щойно з приватної вечірки. ",
-        "Це справжня ольфакторна спокуса, від якої просто неможливо відірватися. ",
-        "Аромат огортає тебе, наче невидима хмаринка чистої впевненості. "
+        "Він звучить дуже дорого і шляхетно. ",
+        "Це ідеальний вибір для тих, хто не боїться бути в центрі уваги. ",
+        "Аромат дуже компліментарний, він заповнює простір м'якою впевненістю. "
     ];
 
-    let details = "";
-    if (d.includes("ноти:")) {
-        const extracted = rawDesc.split(/ноти:/i)[1].split(/[.<]/)[0].trim();
-        details += `Тут неймовірно грають ${extracted}. `;
+    let notesSummary = "Це неймовірно гармонійний та багатогранний букет.";
+    let top = rawDesc.match(/(Верхні ноти|Ноти):?\s*([^,.\n]*)/i)?.[2] || "";
+    let heart = rawDesc.match(/(Серце|Середні ноти):?\s*([^,.\n]*)/i)?.[2] || "";
+    let base = rawDesc.match(/(Базові ноти|База):?\s*([^,.\n]*)/i)?.[2] || "";
+
+    if (top || heart || base) {
+        let nParts = [];
+        if (top) nParts.push(top.trim().substring(0, 30));
+        if (heart) nParts.push("переходячи у " + heart.trim().substring(0, 30));
+        if (base) nParts.push("з шлейфом " + base.trim().substring(0, 30));
+        notesSummary = "Він розкривається нотами: " + nParts.join(", ") + ". ";
     }
-    if (d.includes("стійкість")) details += "Він дуже стійкий, триматиметься весь день. ";
-    if (d.includes("жіноч")) details += "Неймовірно ніжна, жіночна композиція. ";
-    if (d.includes("чоловіч")) details += "Мужній та харизматичний аромат. ";
 
     const volQuotes = {
         "2 мл": "Два мілілітри... ідеально для першого інтимного знайомства. ",
@@ -1071,11 +1083,11 @@ function generateViraSpeech(brand, name, rawDesc) {
     let volSpeech = volQuotes["5 мл"];
     for (let key in volQuotes) { if (vKey.includes(key)) volSpeech = volQuotes[key]; }
 
-    const outro = " Додамо цю красу в кошик?";
+    const outro = "Додамо цю красу в кошик?";
 
     return intros[Math.floor(Math.random() * intros.length)] + 
            emotions[Math.floor(Math.random() * emotions.length)] + 
-           details + volSpeech + outro;
+           getSmartName(notesSummary) + volSpeech + outro;
 }
 
 // 4. Основні функції управління
@@ -1128,15 +1140,7 @@ function closeModalAudio() {
     if (viraMusic) { handleViraAtmosphere('stop'); }
     if (isSpeaking) { synth.cancel(); isSpeaking = false; updateVoiceBtn(false); }
 }
-
     // === ОЛЬФАКТОРНА ЛАБОРАТОРІЯ (LAYERING) ===
-    const layeringPairs = [
-        { a: "Baccarat Rouge 540", b: "Wood Sage & Sea Salt", result: "Неймовірний контраст: морська сіль пом'якшує солодкість, створюючи ефект 'дорогого курорту'." },
-        { a: "Lost Cherry", b: "Tobacco Vanille", result: "Класика спокуси. Вишня стає димною та густою. Ідеально для вечора." },
-        { a: "Molecule 01", b: "Будь-який аромат", result: "Молекула посилить стійкість та додасть глибини будь-якому вашому парфуму." },
-        { a: "Delina", b: "Not A Perfume", result: "Троянда стає більш чистою та дзвінкою, прибираючи зайву пудровість." }
-    ];
-
     function populateLayeringSelects() {
         const s1 = document.getElementById('layer1');
         const s2 = document.getElementById('layer2');
@@ -1148,57 +1152,49 @@ function closeModalAudio() {
     }
 
     function checkLayering() {
-        const p1 = document.getElementById('layer1').value;
-        const p2 = document.getElementById('layer2').value;
+        const p1Name = document.getElementById('layer1').value;
+        const p2Name = document.getElementById('layer2').value;
         const resultBox = document.getElementById('layeringResult');
 
-        if (!p1 || !p2) {
-            resultBox.innerHTML = "Оберіть комбінацію для магії ✨";
-            return;
-        }
-        if (p1 === p2) {
-            resultBox.innerHTML = "Спробуйте обрати два різні аромати 🪄";
-            return;
+        if (!p1Name || !p2Name) { resultBox.innerHTML = "Оберіть комбінацію для магії ✨"; return; }
+        if (p1Name === p2Name) { resultBox.innerHTML = "Спробуйте обрати два різні аромати 🪄"; return; }
+        
+        const p1 = globalCatalogData.find(x => x[1] === p1Name);
+        const p2 = globalCatalogData.find(x => x[1] === p2Name);
+
+        const d1 = p1 ? p1[4].toLowerCase() : "";
+        const d2 = (p2Name === "Будь-який аромат") ? "молекула 01" : (p2 ? p2[4].toLowerCase() : "");
+
+        let title = "Цікавий експеримент! 🧪";
+        let text = "Ці аромати створять абсолютно новий, авторський шлейф. Спробуйте змішати їх у пропорції 2 до 1.";
+
+        if (d1.includes('молекул') || d2.includes('молекул')) {
+            title = "Ідеальне підсилення! 🚀";
+            text = "Молекула виступить як закріплювач: вона зробить другий аромат більш дифузним, шлейфовим та стійким.";
+        } else if ((d1.includes('цитрус') && d2.includes('дерев')) || (d2.includes('цитрус') && d1.includes('дерев'))) {
+            title = "Класичний баланс 🪵🍋";
+            text = "Це професійний прийом: свіжість цитрусів 'підсвітить' глибоке дерево, роблячи аромат легким, але статусним.";
+        } else if ((d1.includes('ваніл') && d2.includes('тютюн')) || (d2.includes('ваніл') && d1.includes('тютюн'))) {
+            title = "Вечірня розкіш 🍒🔥";
+            text = "Тютюн додасть ванілі характеру, а ваніль пом'якшить димність. Ви отримаєте неймовірно сексуальний, густий шлейф.";
+        } else if ((d1.includes('троянд') && d2.includes('мускус')) || (d2.includes('троянд') && d1.includes('мускус'))) {
+            title = "Ольфакторна чистота 🌹☁️";
+            text = "Мускус зробить троянду 'кришталевою'. Це поєднання створює ефект чистої, дорогої доглянутої шкіри.";
+        } else if ((d1.includes('шкір') && d2.includes('квіт')) || (d2.includes('шкір') && d1.includes('квіт'))) {
+            title = "Зухвала ніжність 🖤🌸";
+            text = "Груба шкіра ідеально збалансовується ніжними квітами, створюючи дуже харизматичний контраст.";
         }
 
-        const match = layeringPairs.find(pair => 
-            (pair.a === p1 && pair.b === p2) || (pair.a === p2 && pair.b === p1) || (pair.b === "Будь-який аромат" && (p1 !== "" || p2 !== ""))
-        );
-
-        if (match) {
-            let resText = match.result;
-            if (match.b === "Будь-який аромат") resText = "Цей аромат чудово посилиться та отримає додатковий шлейф завдяки молекулі.";
-            resultBox.innerHTML = `<div class="layer-success"><b>Ідеальна пара!</b><br>${resText}</div>`;
-        } else {
-            resultBox.innerHTML = "Це сміливий експеримент! Спробуйте і розкажіть нам про результат 🧪";
-        }
+        resultBox.innerHTML = `<div class="layer-success"><b>${title}</b><br>${text}</div>`;
     }
 
     // === ЛОГІКА ДИНАМІЧНОЇ АУРИ ТА СОРТУВАННЯ ===
     function updateAura(imgElement) {
         const aura = document.getElementById('modalAura');
         if (!aura) return;
-
         aura.classList.remove('active');
-        
-        const tempImg = new Image();
-        tempImg.crossOrigin = "Anonymous"; 
-        tempImg.src = imgElement.src;
-
-        tempImg.onload = function() {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 1; canvas.height = 1;
-            ctx.drawImage(tempImg, 0, 0, 1, 1);
-            
-            try {
-                const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-                aura.style.background = `radial-gradient(circle, rgba(${r}, ${g}, ${b}, 0.8) 0%, rgba(${r}, ${g}, ${b}, 0) 70%)`;
-            } catch (e) {
-                aura.style.background = 'radial-gradient(circle, rgba(197, 160, 89, 0.6) 0%, rgba(197, 160, 89, 0) 70%)';
-            }
-            aura.classList.add('active');
-        };
+        aura.style.backgroundImage = `url('${imgElement.src}')`;
+        aura.classList.add('active');
     }
 
     function toggleSortMenu(e) {
@@ -2144,10 +2140,12 @@ function closeModalAudio() {
             return;
         }
 
-        let qOriginal = inputVal.toLowerCase().trim();
-        let qFixedLayout = fixKeyboardLayout(qOriginal);
+        let cleanQ = inputVal.toLowerCase().replace(/(хочу|шукаю|знайди|підкажіть|покажи|мені|аромат|парфум|духи|купити|якийсь|щось|стійкий|найди)/gi, ' ').trim();
+        let qForSearch = cleanQ.length > 1 ? cleanQ : inputVal.toLowerCase().trim();
 
-        let q1 = applySynonyms(qOriginal);
+        let qFixedLayout = fixKeyboardLayout(qForSearch);
+
+        let q1 = applySynonyms(qForSearch);
         let q2 = applySynonyms(qFixedLayout);
 
         let results = globalCatalogData.filter(p => {
@@ -2564,3 +2562,4 @@ function closeModalAudio() {
 
 </body>
 </html>
+

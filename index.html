@@ -979,56 +979,155 @@
         btn.innerHTML = `<div class="audio-bars"><span></span><span></span><span></span></div> Відчути вайб...`;
     }
 
-    // === AI VOICE ASSISTANT (ОЗВУЧКА ВІКТОРІЇ) ===
-    let synth = window.speechSynthesis;
-    let isSpeaking = false;
+   // === VIRA AI PREMIUM 3.0: ОЛЬФАКТОРНИЙ СОМЕЛЬЄ ===
 
-    function speakDescription() {
-        if (isSpeaking) {
-            synth.cancel();
-            isSpeaking = false;
-            updateVoiceBtn(false);
-            return;
-        }
+let viraMusic = null;
+let isSpeaking = false;
+const synth = window.speechSynthesis;
 
-        const brand = document.getElementById('mB').innerText;
-        const name = document.getElementById('mN').innerText;
-        const descHTML = document.getElementById('mD').innerHTML;
-        
-        let tempDiv = document.createElement("div");
-        tempDiv.innerHTML = descHTML;
-        let cleanDesc = tempDiv.innerText.split('💬 Відгуки')[0]; 
-        
-        const fullText = `${brand}. ${name}. ${cleanDesc}`;
-        const utterance = new SpeechSynthesisUtterance(fullText);
-        
-        utterance.lang = 'uk-UA'; 
-        utterance.pitch = 1.1; 
-        utterance.rate = 0.9;  
+// 1. Словник наголосів та вимови
+const orthoepyMap = {
+    "Hermes": "Ермéс", "Trussardi": "Труссáрді", "Zarkoperfume": "Зáрко парфýм",
+    "Byredo": "Байрéдо", "Mancera": "Мансéра", "Montale": "Монтáль",
+    "Kilian": "Кіліáн", "Attar": "Аттáр", "Nishane": "Нішáне",
+    "Chloe": "Клоé", "V Canto": "Ві Кáнто", "Xerjoff": "Ксéрджофф",
+    "Roja": "Рóжа", "Molecule": "Молéкула", "Zadig": "Задіґ", "Voltaire": "Вольтéр"
+};
 
-        utterance.onstart = () => { isSpeaking = true; updateVoiceBtn(true); };
-        utterance.onend = () => { isSpeaking = false; updateVoiceBtn(false); };
+function getSmartName(name) {
+    let newName = name;
+    for (let eng in orthoepyMap) {
+        if (name.includes(eng)) newName = name.replace(eng, orthoepyMap[eng]);
+    }
+    return newName;
+}
 
-        synth.speak(utterance);
+// 2. Управління музикою та пульсацією
+function handleViraAtmosphere(action) {
+    const aura = document.getElementById('modalAura');
+    if (!viraMusic) {
+        viraMusic = new Audio("https://cdn.pixabay.com/download/audio/2022/05/24/audio_9650993096.mp3");
+        viraMusic.loop = true;
+    }
+    if (action === 'start') {
+        viraMusic.volume = 0;
+        viraMusic.play().catch(() => console.log("Музика заблокована браузером"));
+        let vol = 0;
+        const fadeIn = setInterval(() => {
+            if (vol < 0.1) { vol += 0.01; viraMusic.volume = vol; }
+            else clearInterval(fadeIn);
+        }, 150);
+        if(aura) aura.classList.add('speaking-pulse');
+    } else {
+        const fadeOut = setInterval(() => {
+            if (viraMusic && viraMusic.volume > 0.01) viraMusic.volume -= 0.01;
+            else { 
+                clearInterval(fadeOut); 
+                if(viraMusic) viraMusic.pause(); 
+                if(aura) aura.classList.remove('speaking-pulse');
+            }
+        }, 50);
+    }
+}
+
+// 3. Генератор інтелектуального скрипта
+function generateViraSpeech(brand, name, rawDesc) {
+    const activeBtn = document.querySelector('.vol-chip.active');
+    const vKey = activeBtn ? activeBtn.innerText.toLowerCase() : "5 мл";
+    const d = rawDesc.toLowerCase();
+    
+    const sBrand = getSmartName(brand);
+    const sName = getSmartName(name);
+
+    // База варіацій
+    const intros = [
+        `Послухай... ${sName} від ${sBrand}. Це не просто парфум, це твій новий маніфест. `,
+        `Вітаю! Давай розповім про ${sName}. Це справжній аристократ у лінійці ${sBrand}. `,
+        `О, цей вибір... ${sBrand} справді знають толк у розкоші. Зустрічай — ${sName}. `
+    ];
+
+    const emotions = [
+        "Він звучить дуже дорого, наче ти щойно з приватної вечірки. ",
+        "Це справжня ольфакторна спокуса, від якої просто неможливо відірватися. ",
+        "Аромат огортає тебе, наче невидима хмаринка чистої впевненості. "
+    ];
+
+    let details = "";
+    if (d.includes("ноти:")) {
+        const extracted = rawDesc.split(/ноти:/i)[1].split(/[.<]/)[0].trim();
+        details += `Тут неймовірно грають ${extracted}. `;
+    }
+    if (d.includes("стійкість")) details += "Він дуже стійкий, триматиметься весь день. ";
+    if (d.includes("жіноч")) details += "Неймовірно ніжна, жіночна композиція. ";
+    if (d.includes("чоловіч")) details += "Мужній та харизматичний аромат. ";
+
+    const volQuotes = {
+        "2 мл": "Два мілілітри... ідеально для першого інтимного знайомства. ",
+        "5 мл": "П'яти мілілітрів тобі вистачить на цілий місяць насолоди. ",
+        "10 мл": "Десять мілілітрів — це два місяці нескінченних компліментів. ",
+        "20 мл": "Двадцять мілілітрів — коли ти точно знаєш, що це кохання. "
+    };
+
+    let volSpeech = volQuotes["5 мл"];
+    for (let key in volQuotes) { if (vKey.includes(key)) volSpeech = volQuotes[key]; }
+
+    const outro = " Додамо цю красу в кошик?";
+
+    return intros[Math.floor(Math.random() * intros.length)] + 
+           emotions[Math.floor(Math.random() * emotions.length)] + 
+           details + volSpeech + outro;
+}
+
+// 4. Основні функції управління
+function speakDescription() {
+    if (isSpeaking) {
+        synth.cancel();
+        handleViraAtmosphere('stop');
+        isSpeaking = false;
+        updateVoiceBtn(false);
+        return;
     }
 
-    function updateVoiceBtn(active) {
-        const btn = document.getElementById('voiceBtn');
-        if (!btn) return;
-        if (active) {
-            btn.innerHTML = `<div class="voice-wave"><span></span><span></span><span></span></div> Зупинити`;
-            btn.classList.add('voice-active');
-        } else {
-            btn.innerHTML = `<span>🔊</span> ШІ Асистент`;
-            btn.classList.remove('voice-active');
-        }
-    }
+    const brand = document.getElementById('mB').innerText;
+    const name = document.getElementById('mN').innerText;
+    const rawDesc = document.getElementById('mD').innerText;
+    
+    const speechText = generateViraSpeech(brand, name, rawDesc);
+    const utterance = new SpeechSynthesisUtterance(speechText);
+    
+    utterance.lang = 'uk-UA';
+    utterance.pitch = 1.0; 
+    utterance.rate = 0.85; 
 
-    function closeModalAudio() {
-        document.getElementById('infoModal').style.display='none';
-        if (currentAudio) { currentAudio.pause(); currentAudio = null; }
-        if (isSpeaking) { synth.cancel(); isSpeaking = false; updateVoiceBtn(false); }
-    }
+    utterance.onstart = () => { 
+        isSpeaking = true; 
+        updateVoiceBtn(true); 
+        handleViraAtmosphere('start');
+    };
+    utterance.onend = () => { 
+        isSpeaking = false; 
+        updateVoiceBtn(false); 
+        handleViraAtmosphere('stop'); 
+    };
+
+    synth.speak(utterance);
+}
+
+function updateVoiceBtn(active) {
+    const btn = document.getElementById('voiceBtn');
+    if (!btn) return;
+    btn.innerHTML = active ? 
+        `<div class="voice-wave"><span></span><span></span><span></span></div> Зупинити` : 
+        `<span>🔊</span> ШІ Асистент`;
+    btn.classList.toggle('voice-active', active);
+}
+
+function closeModalAudio() {
+    document.getElementById('infoModal').style.display='none';
+    if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+    if (viraMusic) { handleViraAtmosphere('stop'); }
+    if (isSpeaking) { synth.cancel(); isSpeaking = false; updateVoiceBtn(false); }
+}
 
     // === ОЛЬФАКТОРНА ЛАБОРАТОРІЯ (LAYERING) ===
     const layeringPairs = [

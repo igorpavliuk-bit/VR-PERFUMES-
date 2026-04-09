@@ -2773,7 +2773,18 @@
             from { opacity: 0; transform: translateY(-5px); } 
             to { opacity: 1; transform: translateY(0); } 
         }
+/* 1. Заморожуємо фон сторінки */
+body.modal-open {
+    overflow: hidden; 
+}
 
+/* 2. Ховаємо кнопки, щоб не заважали */
+body.modal-open .floating-tg, 
+body.modal-open #scrollTopBtn, 
+body.modal-open .cart-floating-btn {
+    display: none !important;
+}
+        
     </style>
 </head>
 <body>
@@ -3208,6 +3219,7 @@
     }
 
     function closeModalAudio() {
+        document.body.classList.remove('modal-open');
         document.getElementById('infoModal').style.display = 'none';
         
         if (viraAmbient) handleViraAtmosphere('stop');
@@ -3799,7 +3811,8 @@
             </div>`;
     }
 
-    function showModal(pArr, isWeekly = false) {
+    function showModal(pArr, isWeekly = false) 
+    {document.body.classList.add('modal-open');
         const [brand, name, price, minVol, desc, img, , top, weekText, , , bottleMl, bottlePrice, , stockCol] = pArr;
         
         const itemId = brand + ' ' + name;

@@ -2944,7 +2944,7 @@
 <div class="other-projects">
     <span class="projects-title">Наші Проєкти</span>
     <div class="projects-flex">
-        <a href="https://www.instagram.com/sweet_plan_b/" class="project-item" target="_blank">
+        <a href="https://www.instagram.com/mysweetplanb/" class="project-item" target="_blank">
             <div class="project-circle">
                 <img src="Screenshot_20260323-001755.png" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
             </div>
@@ -4312,6 +4312,53 @@
         return t;
     }
 
+    // === РОЗУМНИЙ ГОЛОСОВИЙ ПОШУК ===
+    function startVoiceSearch() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        
+        if (!SpeechRecognition) {
+            alert("На жаль, ваш браузер не підтримує голосовий пошук. Спробуйте Google Chrome або Safari.");
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'uk-UA'; // Розпізнавання українською мовою
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        const micBtn = document.getElementById('micBtn');
+        const searchInput = document.getElementById('searchInput');
+        const originalPlaceholder = searchInput.placeholder;
+
+        recognition.onstart = function() {
+            micBtn.style.stroke = 'var(--gold)'; 
+            micBtn.classList.add('cart-pulse-anim'); // Анімація пульсації під час прослуховування
+            searchInput.value = '';
+            searchInput.placeholder = "Слухаю вас... 🎤";
+        };
+
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            searchInput.value = transcript; // Вставляємо почутий текст
+            
+            // Одразу запускаємо фільтрацію каталогу
+            handleSearchInput();
+            document.getElementById('searchResults').style.display = 'block';
+        };
+
+        recognition.onerror = function(event) {
+            console.error("Помилка мікрофона: ", event.error);
+            searchInput.placeholder = "Не розчув 😔 Спробуйте ще";
+        };
+
+        recognition.onend = function() {
+            micBtn.style.stroke = ''; // Повертаємо стандартний колір
+            micBtn.classList.remove('cart-pulse-anim');
+            setTimeout(() => { searchInput.placeholder = originalPlaceholder; }, 2000);
+        };
+
+        recognition.start();
+    }
     function handleSearchInput() {
         const inputVal = document.getElementById('searchInput').value;
         const resContainer = document.getElementById('searchResults');
@@ -4712,5 +4759,19 @@
 
 
 </script>
-</body>
+<div class="tg-chat-bubble" id="tgChatBubble">
+        <span class="bubble-close" onclick="this.parentElement.classList.remove('show')">×</span>
+        <img src="Screenshot_20260328-171201.png" alt="Viktoriia" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
+        <div class="bubble-text">
+            <b>Вікторія ✨</b><br>
+            Привіт! Потрібна допомога з вибором аромату? Напишіть мені!
+        </div>
+    </div>
+
+    <a href="https://t.me/viktoriia_viktoriia_r" class="floating-tg" id="floatingTg" target="_blank">
+        <svg viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.13-.31-1.08-.66.02-.18.27-.36.74-.55 2.91-1.27 4.85-2.11 5.81-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+        </svg>
+    </a>
+        </body>
 </html>

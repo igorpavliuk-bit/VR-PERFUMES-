@@ -2773,17 +2773,7 @@
             from { opacity: 0; transform: translateY(-5px); } 
             to { opacity: 1; transform: translateY(0); } 
         }
-/* ... тут якийсь твій попередній код стилів ... */
-        
-        /* ВИПРАВЛЕННЯ ПРІОРИТЕТУ ШАРІВ (z-index) */
-        .modal { z-index: 3000 !important; } 
-        .cart-drawer { z-index: 3500 !important; }
-        .floating-tg { z-index: 1500 !important; }
-        #scrollTopBtn { z-index: 1400 !important; }
-        .cart-floating-btn { z-index: 1500 !important; }
-        .tg-chat-bubble { z-index: 1499 !important; }
 
-   
     </style>
 </head>
 <body>
@@ -3736,20 +3726,14 @@
             if (promoDataRow) renderPremiumPromo(promoDataRow);
             populateLayeringSelects();
             
-           // Логіка хмарки: з'являється через 15с, зникає ще через 15с
-    setTimeout(() => {
-        if (!sessionStorage.getItem('chatBubbleShown')) {
-            const bubble = document.getElementById('tgChatBubble');
-            if (bubble) {
-                bubble.classList.add('show');
-                // Вимикаємо хмарку рівно через 15 секунд після появи
-                setTimeout(() => { 
-                    bubble.classList.remove('show'); 
-                    sessionStorage.setItem('chatBubbleShown', 'true'); // Щоб не набридала за одну сесію
-                }, 15000); 
-            }
-        }
-    }, 15000);
+            setTimeout(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const shareP = urlParams.get('p');
+                const shareW = urlParams.get('w');
+                if (shareP) {
+                    const foundItem = globalCatalogData.find(p => (p[0] + " " + p[1]).toLowerCase() === shareP.toLowerCase());
+                    if (foundItem) showModal(foundItem);
+                }
                 if (shareW) {
                     try {
                         const importedIds = JSON.parse(decodeURIComponent(shareW));

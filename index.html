@@ -3785,29 +3785,27 @@ body.modal-open {
     }
 
         // === ГЕНЕРАЦІЯ ОЛЬФАКТОРНОЇ КАРТИ (DNA) ===
-    function generateDNA(l, s, sw, f, g) {
-    // Плавний запуск анімації через мікрозатримку
+   function generateDNA(l, s, sw, f, g) {
+    // Затримка 150мс, щоб анімація спрацювала після відкриття вікна
     setTimeout(() => {
         const fills = document.querySelectorAll('.dna-bar-fill');
-        fills.forEach(bar => {
-            bar.style.width = bar.getAttribute('data-width') + '%';
+        fills.forEach(bar => { 
+            bar.style.width = bar.getAttribute('data-width') + '%'; 
         });
         const pointer = document.querySelector('.gender-pointer');
         if(pointer) pointer.style.left = pointer.getAttribute('data-pos') + '%';
-    }, 100);
+    }, 150);
 
     return `
-        <div style="background: rgba(128,128,128,0.03); padding: 18px; border-radius: 12px; margin: 15px 0; border: 1px solid rgba(197, 160, 89, 0.15);">
-            <div style="font-size: 10px; text-transform: uppercase; color: var(--gold); letter-spacing: 2px; margin-bottom: 18px; text-align: center; font-weight: 800; opacity: 0.8;">
-                Fragrance Profile
-            </div>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px 25px;">
+        <div style="background: rgba(128,128,128,0.03); padding: 15px; border-radius: 12px; margin: 15px 0; border: 1px solid rgba(197, 160, 89, 0.1);">
+            <div style="font-size: 9px; text-transform: uppercase; color: var(--gold); letter-spacing: 2px; margin-bottom: 12px; text-align: center; font-weight: 800;">Ольфакторний профіль</div>
+            <div class="dna-grid">
                 ${renderDNABar('Стійкість', l)}
                 ${renderDNABar('Шлейф', s)}
                 ${renderDNABar('Солодкість', sw)}
                 ${renderDNABar('Свіжість', f)}
             </div>
-            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(128,128,128,0.08);">
+            <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(128,128,128,0.1);">
                 ${renderGenderBar(g)}
             </div>
         </div>`;
@@ -3815,13 +3813,13 @@ body.modal-open {
 
 function renderDNABar(label, value) {
     return `
-        <div style="display:flex; flex-direction:column; gap:5px;">
-            <div style="display:flex; justify-content:space-between; font-size:9px; font-weight:700; text-transform:uppercase; color: #888; letter-spacing: 0.5px;">
+        <div style="display:flex; flex-direction:column; gap:4px;">
+            <div style="display:flex; justify-content:space-between; font-size:9px; font-weight:700; text-transform:uppercase; color: #888;">
                 <span>${label}</span>
-                <span style="color:var(--gold); opacity:0.7;">${value}%</span>
+                <span style="color:var(--gold); opacity:0.6;">${value}%</span>
             </div>
-            <div style="background:rgba(128,128,128,0.1); height:3px; border-radius:2px; overflow:hidden;">
-                <div class="dna-bar-fill" data-width="${value}" style="width:0%; background:linear-gradient(90deg, #d4af37, #c5a059); height:100%; transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);"></div>
+            <div style="background:rgba(128,128,128,0.1); height:4px; border-radius:2px; overflow:hidden;">
+                <div class="dna-bar-fill" data-width="${value}"></div>
             </div>
         </div>`;
 }
@@ -3830,12 +3828,12 @@ function renderGenderBar(value) {
     return `
         <div style="display:flex; flex-direction:column; gap:6px;">
             <div style="display:flex; justify-content:space-between; font-size:8px; font-weight:800; text-transform:uppercase; color: #999; letter-spacing:1px;">
-                <span>♂ Maskuline</span>
-                <span style="color:var(--gold)">Unisex</span>
-                <span>Feminine ♀</span>
+                <span>♂ Чоловічий</span>
+                <span style="color:var(--gold)">Унісекс</span>
+                <span>Жіночий ♀</span>
             </div>
             <div style="background:rgba(128,128,128,0.1); height:2px; border-radius:1px; position:relative; margin: 0 5px;">
-                <div class="gender-pointer" data-pos="${value}" style="width:8px; height:8px; background:var(--gold); position:absolute; top:-3px; left:50%; transform:translateX(-50%); border-radius:50%; transition: left 1.2s cubic-bezier(0.22, 1, 0.36, 1); box-shadow: 0 0 5px var(--gold); border: 1.5px solid #fff;"></div>
+                <div class="gender-pointer" data-pos="${value}" style="width:10px; height:10px; background:var(--gold); position:absolute; top:-4px; left:50%; transform:translateX(-50%); border-radius:50%; transition: left 1.2s cubic-bezier(0.22, 1, 0.36, 1); box-shadow: 0 0 8px var(--gold); border: 2px solid #fff; z-index:2;"></div>
             </div>
         </div>`;
 }
@@ -3876,6 +3874,39 @@ function renderGenderBar(value) {
         
         let rawText = (isWeekly && weekText) ? weekText : desc;
         let f = rawText;
+     // --- ЛОГІКА СИНХРОНІЗАЦІЇ (DNA BRAIN) ---
+        let dL = 60, dS = 60, dSw = 20, dF = 20, dG = 50;
+        
+        if (rawText) {
+            const low = rawText.toLowerCase();
+
+            // 1. Стійкість та Шлейф (цифри 0-5 -> 0-100%)
+            const lonMatch = rawText.match(/Стійкість:\s*(?:<br.*?>)?\s*(\d)/i);
+            if (lonMatch) dL = parseInt(lonMatch[1]) * 20;
+
+            const silMatch = rawText.match(/Шлейф:\s*(?:<br.*?>)?\s*(\d)/i);
+            if (silMatch) dS = parseInt(silMatch[1]) * 20;
+
+            // 2. Стать (зчитуємо офіційний підпис)
+            const genMatch = rawText.match(/Стать:\s*([А-Яа-яієґїA-Za-z]+)/i);
+            if (genMatch) {
+                const gType = genMatch[1].toLowerCase();
+                if (gType.includes('жіноч')) dG = 85;
+                else if (gType.includes('чолові')) dG = 15;
+                else if (gType.includes('унісекс')) dG = 50;
+            }
+
+            // 3. Солодкість та Свіжість (по словах)
+            if (low.includes('солодк') || low.includes('ваніл')) dSw = 85;
+            if (low.includes('свіж') || low.includes('цитрус')) dF = 85;
+        }
+
+        // Рендер DNA (ОДИН ВИКЛИК)
+        const dnaBox = document.getElementById('dnaChartContainer');
+        if (dnaBox) {
+            dnaBox.innerHTML = generateDNA(dL, dS, dSw, dF, dG);
+            document.getElementById('olfactoryDNA').style.display = 'block';
+        }
 // --- СИНХРОНІЗАЦІЯ ТА СТАБІЛЬНІСТЬ ---
         let dL = 60, dS = 60, dSw = 20, dF = 20, dG = 50;
 

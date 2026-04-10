@@ -4754,51 +4754,33 @@ body.modal-open {
                     <div style="pointer-events:auto; width:100%;"><button onclick="handlePromoAction()" style="background:#fff; color:#000; border:none; padding:16px 0; width:100%; font-family:var(--sans); font-weight:900; text-transform:uppercase; letter-spacing:1.5px; border-radius:8px; cursor:pointer; font-size:11px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); transition: 0.3s;">Дізнатися більше</button></div>
                 </div>`;
             document.body.appendChild(promo);
-            setTimeout(() => { promo.style.opacity = '1'; promo.style.transform = 'translateY(0) scale(1)'; }, 100);
-        }, 2500); 
-    }
-
-    function initTheme() {
-        const savedTheme = localStorage.getItem('vr_theme');
-        if (savedTheme === 'dark') {
-            document.body.classList.add('dark-theme');
-            document.getElementById('themeBtn').innerText = '☀';
-        }
-    }
-    
-    function toggleTheme() {
-        document.body.classList.toggle('dark-theme');
-        const isDark = document.body.classList.contains('dark-theme');
-        localStorage.setItem('vr_theme', isDark ? 'dark' : 'light');
-        document.getElementById('themeBtn').innerText = isDark ? '☀' : '☾';
-    }
-
-    load();
-    initTheme();
-
+                // 1. ХМАРИНКА (спрощена логіка без блокування для перевірки)
     setTimeout(() => {
-        if (!sessionStorage.getItem('chatBubbleShown')) {
-            const bubble = document.getElementById('tgChatBubble');
-            if (bubble) {
-                bubble.classList.add('show');
-                sessionStorage.setItem('chatBubbleShown', 'true');
-                setTimeout(() => { bubble.classList.remove('show'); }, 15000);
-            }
+        const bubble = document.getElementById('tgChatBubble');
+        if (bubble) {
+            bubble.classList.add('show'); // З'являється через 15 сек
+            
+            setTimeout(() => { 
+                bubble.classList.remove('show'); // Зникає через 15 сек після появи
+            }, 15000);
         }
     }, 15000); 
     
-        // Плавне відображення кнопки вгору
+    // 2. КНОПКА ВГОРУ (із залізобетонним відображенням)
     window.addEventListener('scroll', function() {
         const scrollBtn = document.getElementById("scrollTopBtn");
         if (scrollBtn) {
             if (window.pageYOffset > 600) {
                 scrollBtn.classList.add('show-btn');
+                scrollBtn.style.display = 'flex'; // Гарантовано показуємо
             } else {
                 scrollBtn.classList.remove('show-btn');
+                scrollBtn.style.display = 'none'; // Гарантовано ховаємо
             }
         }
     });
-    // Функція в лабораторії: мікс 5 мл
+
+    // 3. ФУНКЦІЯ ЛАБОРАТОРІЇ: мікс 5 мл
     function addMixToCart(name1, name2) {
         let item1 = globalCatalogData.find(x => x[1] === name1);
         let item2 = globalCatalogData.find(x => x[1] === name2);
@@ -4824,8 +4806,7 @@ body.modal-open {
             toggleCart();
         }
     }
-
-
+</script>
 
     
 </script>

@@ -2800,6 +2800,57 @@ body.modal-open .cart-floating-btn {
 body.modal-open {
     overflow: hidden;
 }
+
+        /* КЛАС ДЛЯ ПОГОДНОГО ВІДЖЕТА */
+.weather-scent-bar {
+    display: none; /* З'явиться тільки після отримання даних */
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px 15px;
+    background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.05), transparent);
+    border-bottom: 1px solid rgba(128, 128, 128, 0.08);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.weather-city {
+    font-weight: 800;
+    color: var(--text-dark);
+}
+
+.weather-temp {
+    color: var(--gold);
+    font-weight: 900;
+    padding: 2px 6px;
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    font-family: var(--serif);
+}
+
+.weather-recommendation {
+    color: var(--text-gray);
+    font-weight: 600;
+    font-style: italic;
+    text-transform: none; /* Щоб порада читалася як речення */
+}
+
+/* Анімація появи */
+.weather-fade-in {
+    display: flex !important;
+    animation: weatherSlideDown 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes weatherSlideDown {
+    from { opacity: 0; transform: translateY(-15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+body.dark-theme .weather-scent-bar {
+    background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.1), transparent);
+}
         
     </style>
 </head>
@@ -2826,6 +2877,12 @@ body.modal-open {
         </div>
     </div>
 
+    <div id="weatherBar" class="weather-scent-bar">
+    <span class="weather-city" id="cityDisplay">📍 Визначаємо локацію...</span>
+    <span class="weather-temp" id="tempDisplay">--°C</span>
+    <span class="weather-recommendation" id="scentRec">Підбираємо аромат під ваше небо...</span>
+</div>
+    
     <div class="action-buttons">
         <a href="https://invite.viber.com/?g2=AQBjzS%2BM5uBAeFRYT57vm5okC%2BGV00WHPJgDJBWE9ptyotTAmhAhpYNBmtPwZxQe" class="viber-link">Спільнота</a>
         <div class="news-btn" onclick="document.getElementById('newsModalWindow').style.display='flex'">Новини та акції</div>
@@ -3543,6 +3600,7 @@ body.modal-open {
     }
 
     function toggleWishlist(e, b, n, btn) {
+        triggerHaptic('light');
         e.stopPropagation(); 
         const id = b + ' ' + n;
         const idx = wishlist.indexOf(id);
@@ -4009,6 +4067,7 @@ body.modal-open {
     }
 
     function selectVol(el, vol, fixedP = 0) {
+        triggerHaptic('light');
         if (el.classList.contains('disabled')) return; 
         selectedVol = vol; 
         document.querySelectorAll('.vol-chip').forEach(c => c.classList.remove('active'));
@@ -4053,6 +4112,7 @@ body.modal-open {
     }
 
     function order(b, n) {
+       triggerHaptic('success');
         const pText = document.getElementById('modalPriceLabel').innerText;
         let priceNum = parseInt(pText.replace(/\D/g, ''));
         if(isNaN(priceNum)) priceNum = 0; 
@@ -4711,6 +4771,74 @@ body.modal-open {
             toggleCart();
         }
     }
+
+    // 1. ФУНКЦІЯ ХАПТІК-ВІДГУКУ (VIBRATION)
+function triggerHaptic(style = 'light') {
+    if (!navigator.vibrate) return; // Якщо браузер не підтримує (наприклад, iOS Safari)
+    
+    if (style === 'light') navigator.vibrate(15); 
+    if (style === 'success') navigator.vibrate([20, 40, 20]); 
+}
+
+// 2. ГОЛОВНА ЛОГІКА ПОГОДИ
+function initSmartWeather() {
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+            async (pos) => {
+                // Користувач дозволив доступ
+                const { latitude: lat, longitude: lon } = pos.coords;
+                await fetchWeatherData(lat, lon);
+            },
+            async () => {
+                // Відмова — дефолт на Хмельницький
+                console.log("Гео заблоковано. Ставимо Хмельницький.");
+                await fetchWeatherData(49.42, 26.98, "Хмельницький");
+            }
+        );
+    } else {
+        fetchWeatherData(49.42, 26.98, "Хмельницький");
+    }
+}
+
+async function fetchWeatherData(lat, lon, forcedCity = null) {
+    try {
+        // Отримуємо назву міста через зворотне геокодування (OSM)
+        let cityName = forcedCity;
+        if (!cityName) {
+            const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&accept-language=uk`);
+            const geoData = await geoRes.json();
+            cityName = geoData.address.city || geoData.address.town || geoData.address.village || "Ваше місто";
+        }
+
+        // Отримуємо погоду (Open-Meteo)
+        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+        const wData = await weatherRes.json();
+        const temp = Math.round(wData.current_weather.temperature);
+
+        // Оновлюємо інтерфейс
+        document.getElementById('cityDisplay').innerText = `📍 ${cityName}`;
+        document.getElementById('tempDisplay').innerText = `${temp}°C`;
+
+        let advice = "";
+        if (temp <= 5) advice = "Сьогодні час для глибоких шлейфів Уду та Спецій 🪵";
+        else if (temp <= 16) advice = "Ідеально розкриються ноти Шкіри, Ванілі та Дерева 🍦";
+        else if (temp <= 24) advice = "Чудовий час для Мускусу, Троянди та Пудри 🌸";
+        else advice = "Радимо освіжаючі Цитруси, Акватику та М'яту 🍋";
+
+        document.getElementById('scentRec').innerText = advice;
+        
+        // Поволі показуємо плашку
+        const bar = document.getElementById('weatherBar');
+        bar.classList.add('weather-fade-in');
+
+    } catch (err) {
+        console.error("Weather error:", err);
+    }
+}
+
+// Запускаємо процес
+initSmartWeather();
+    
 </script>
 
     <div class="tg-chat-bubble" id="tgChatBubble">

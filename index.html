@@ -3786,42 +3786,65 @@ body.modal-open {
 
     // === ГЕНЕРАЦІЯ ОЛЬФАКТОРНОЇ КАРТИ (DNA) ===
     function generateDNA(descText) {
-        let l = 50, s = 50, sw = 20, f = 20;
+        function generateDNA(descText) {
         let d = (descText || "").toLowerCase();
         
-        if(d.includes('стійк') || d.includes('екстракт') || d.includes('парфум')) l = Math.min(100, l + 35);
-        if(d.includes('шлейф') || d.includes('заповнює')) s = Math.min(100, s + 35);
-        if(d.includes('солодк') || d.includes('ваніл') || d.includes('гурман')) sw = Math.min(100, sw + 60);
-        if(d.includes('свіж') || d.includes('цитрус') || d.includes('морськ') || d.includes('зелен')) f = Math.min(100, f + 60);
+        // Допоміжна функція: шукає цифру (1-5) після назви характеристики
+        function getSyncScore(keywords, defaultVal) {
+            for (let word of keywords) {
+                // Шукаємо слово, потім двокрапку, можливий <br> і саму цифру
+                let regex = new RegExp(word + ':\\s*(?:<br\\s*\\/?>)?\\s*(\\d)', 'i');
+                let match = d.match(regex);
+                if (match && match[1]) return parseInt(match[1]) * 20; // Перетворюємо 5 у 100%
+            }
+            return defaultVal;
+        }
+
+        // 1. СТІЙКІСТЬ: пріоритет цифрі з опису, якщо немає - шукаємо слово
+        let l = getSyncScore(['стійкість', 'стойкость'], null);
+        if (l === null) l = d.includes('стійк') ? 80 : 50;
+
+        // 2. ШЛЕЙФ: пріоритет цифрі, інакше слово
+        let s = getSyncScore(['шлейф'], null);
+        if (s === null) s = d.includes('шлейф') ? 80 : 50;
+
+        // 3. СОЛОДКІСТЬ: пріоритет цифрі, інакше шукаємо ноти ванілі/солодощів
+        let sw = getSyncScore(['солодкість', 'сладость'], null);
+        if (sw === null) sw = (d.includes('солодк') || d.includes('ваніл') || d.includes('гурман')) ? 80 : 20;
+
+        // 4. СВІЖІСТЬ: пріоритет цифрі, інакше шукаємо цитруси/морські ноти
+        let f = getSyncScore(['свіжість', 'свежесть'], null);
+        if (f === null) f = (d.includes('свіж') || d.includes('цитрус') || d.includes('морськ')) ? 80 : 20;
         
         return `
             <div style="display:flex; flex-direction:column; gap:8px;">
                 <div style="display:flex; align-items:center; font-size:10px; font-weight:700; color:var(--text-dark);">
                     <span style="width:75px; text-align:left;">Стійкість</span> 
                     <div style="flex:1; background:rgba(128,128,128,0.1); height:6px; border-radius:3px; overflow:hidden;">
-                        <div style="width:${l}%; background:var(--gold); height:100%; border-radius:3px;"></div>
+                        <div style="width:${l}%; background:var(--gold); height:100%; border-radius:3px; transition: width 1s ease;"></div>
                     </div>
                 </div>
                 <div style="display:flex; align-items:center; font-size:10px; font-weight:700; color:var(--text-dark);">
                     <span style="width:75px; text-align:left;">Шлейф</span> 
                     <div style="flex:1; background:rgba(128,128,128,0.1); height:6px; border-radius:3px; overflow:hidden;">
-                        <div style="width:${s}%; background:var(--gold); height:100%; border-radius:3px;"></div>
+                        <div style="width:${s}%; background:var(--gold); height:100%; border-radius:3px; transition: width 1s ease;"></div>
                     </div>
                 </div>
                 <div style="display:flex; align-items:center; font-size:10px; font-weight:700; color:var(--text-dark);">
                     <span style="width:75px; text-align:left;">Солодкість</span> 
                     <div style="flex:1; background:rgba(128,128,128,0.1); height:6px; border-radius:3px; overflow:hidden;">
-                        <div style="width:${sw}%; background:var(--gold); height:100%; border-radius:3px;"></div>
+                        <div style="width:${sw}%; background:var(--gold); height:100%; border-radius:3px; transition: width 1s ease;"></div>
                     </div>
                 </div>
                 <div style="display:flex; align-items:center; font-size:10px; font-weight:700; color:var(--text-dark);">
                     <span style="width:75px; text-align:left;">Свіжість</span> 
                     <div style="flex:1; background:rgba(128,128,128,0.1); height:6px; border-radius:3px; overflow:hidden;">
-                        <div style="width:${f}%; background:var(--gold); height:100%; border-radius:3px;"></div>
+                        <div style="width:${f}%; background:var(--gold); height:100%; border-radius:3px; transition: width 1s ease;"></div>
                     </div>
                 </div>
             </div>`;
     }
+
 
     function showModal(pArr, isWeekly = false) 
     {document.body.classList.add('modal-open');

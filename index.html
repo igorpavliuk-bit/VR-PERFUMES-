@@ -3784,51 +3784,57 @@ body.modal-open {
         }
     }
 
-  // === FRAGRANTICA STYLE DNA (ДВИГУН) ===
-    function generateDNA(l, s, sw, f, g) {
-        requestAnimationFrame(() => {
-            const bars = document.querySelectorAll('.dna-bar-fill');
-            bars.forEach(bar => { if(bar) bar.style.width = bar.getAttribute('data-width') + '%'; });
-            const genderPointer = document.querySelector('.gender-pointer');
-            if(genderPointer) genderPointer.style.left = genderPointer.getAttribute('data-pos') + '%';
-        });
-
-        return `
-            <div style="background: rgba(128,128,128,0.05); padding: 15px; border-radius: 12px; margin: 15px 0; border: 1px solid rgba(197, 160, 89, 0.1);">
-                <div style="font-size: 9px; text-transform: uppercase; color: var(--gold); letter-spacing: 2px; margin-bottom: 15px; text-align: center; font-weight: 800;">
-                    📊 Community Vibe (Fragrantica Data)
-                </div>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px 20px;">
-                    ${renderDNABar('Стійкість', l)}
-                    ${renderDNABar('Шлейф', s)}
-                    ${renderDNABar('Солодкість', sw)}
-                    ${renderDNABar('Свіжість', f)}
-                </div>
-                <div style="margin-top: 18px; padding-top: 12px; border-top: 1px solid rgba(128,128,128,0.1);">
-                    ${renderGenderBar(g)}
-                </div>
-            </div>`;
+        // === ГЕНЕРАЦІЯ ОЛЬФАКТОРНОЇ КАРТИ (DNA) ===
+    function generateDNA(descText) {
+    let d = (descText || "").toLowerCase();
+    
+    function getSyncScore(keywords, defaultVal) {
+        // Шукаємо або цифру, або ключове слово
+        for (let word of keywords) {
+            let regex = new RegExp(word + ':\\s*(?:<br\\s*\\/?>)?\\s*([\\dА-Яа-яієґї]+)', 'i');
+            let match = d.match(regex);
+            if (match && match[1]) {
+                let val = match[1].toLowerCase();
+                if (val.includes('5') || val.includes('екстремальна') || val.includes('заповню')) return 100;
+                if (val.includes('4') || val.includes('висока') || val.includes('дуже')) return 80;
+                if (val.includes('3') || val.includes('середня') || val.includes('дифуз')) return 60;
+                if (val.includes('2')) return 40;
+                if (val.includes('1')) return 20;
+            }
+        }
+        return defaultVal;
     }
 
-    function renderDNABar(label, value) {
-        return `
-            <div style="display:flex; flex-direction:column; gap:4px;">
-                <div style="display:flex; justify-content:space-between; font-size:9px; font-weight:700; text-transform:uppercase; color: #888;"><span>${label}</span><span>${value}%</span></div>
-                <div style="background:rgba(128,128,128,0.1); height:4px; border-radius:2px; overflow:hidden;">
-                    <div class="dna-bar-fill" data-width="${value}" style="width:0%; background:var(--gold); height:100%; transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);"></div>
-                </div>
-            </div>`;
-    }
+    let l = getSyncScore(['стійкість', 'стойкость'], 60);
+    let s = getSyncScore(['шлейф'], 60);
+    let sw = getSyncScore(['солодкість', 'сладость'], d.includes('солодк') ? 80 : 20);
+    let f = getSyncScore(['свіжість', 'свежесть'], d.includes('свіж') ? 80 : 20);
 
-    function renderGenderBar(value) {
-        return `
-            <div style="display:flex; flex-direction:column; gap:6px;">
-                <div style="display:flex; justify-content:space-between; font-size:8px; font-weight:800; text-transform:uppercase; color: #999; letter-spacing:0.5px;"><span>♂ Чоловічий</span><span>Унісекс</span><span>Жіночий ♀</span></div>
-                <div style="background:rgba(128,128,128,0.1); height:4px; border-radius:2px; position:relative; margin: 0 5px;">
-                    <div class="gender-pointer" data-pos="${value}" style="width:4px; height:12px; background:var(--gold); position:absolute; top:-4px; left:50%; transform:translateX(-50%); border-radius:2px; transition: left 1.5s cubic-bezier(0.22, 1, 0.36, 1); box-shadow: 0 0 5px var(--gold);"></div>
-                </div>
-            </div>`;
-    }
+    // Анімація: спочатку width: 0, а через 100мс ставимо реальну ширину
+    setTimeout(() => {
+        const bars = document.querySelectorAll('.dna-bar-fill');
+        bars.forEach(bar => { bar.style.width = bar.getAttribute('data-width') + '%'; });
+    }, 100);
+    
+    return `
+        <div style="display:flex; flex-direction:column; gap:8px;">
+            ${renderBar('Стійкість', l)}
+            ${renderBar('Шлейф', s)}
+            ${renderBar('Солодкість', sw)}
+            ${renderBar('Свіжість', f)}
+        </div>`;
+}
+
+function renderBar(label, value) {
+    return `
+        <div style="display:flex; align-items:center; font-size:10px; font-weight:700; color:var(--text-dark);">
+            <span style="width:75px; text-align:left;">${label}</span> 
+            <div style="flex:1; background:rgba(128,128,128,0.1); height:6px; border-radius:3px; overflow:hidden;">
+                <div class="dna-bar-fill" data-width="${value}" style="width:0%; background:var(--gold); height:100%; border-radius:3px; transition: width 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
+            </div>
+        </div>`;
+}
+
 
     function showModal(pArr, isWeekly = false) 
     {document.body.classList.add('modal-open');
@@ -3859,42 +3865,11 @@ body.modal-open {
         
         updateAura(mImgEl);
 
-        // --- ЕКСПЕРТНИЙ АНАЛІЗ (МІЗКИ) ---
-        const d_dna = (desc || "").toLowerCase();
-        const b_dna = brand.toLowerCase();
-
-        let expLongevity = 60; 
-        if (['nasomatto', 'terenzi', 'initio', 'mancera', 'montale', 'v canto', 'orto parisi'].some(b => b_dna.includes(b)) || d_dna.includes('екстремаль')) expLongevity = 100;
-        else if (d_dna.includes('стійк')) expLongevity = 85;
-
-        let expSillage = 60;
-        if (b_dna.includes('montale') || b_dna.includes('mancera') || d_dna.includes('заповню') || d_dna.includes('дифуз')) expSillage = 100;
-        else if (d_dna.includes('шлейф')) expSillage = 85;
-
-        let expSweet = 15;
-        ['ваніл', 'цукор', 'карамел', 'гурман', 'мед', 'фрукт', 'шоколад', 'солодк'].forEach(n => { if (d_dna.includes(n)) expSweet += 25; });
-        if (expSweet > 100) expSweet = 100;
-
-        let expFresh = 15;
-        ['цитрус', 'морськ', 'водн', 'бергамот', 'лимон', 'зелен', 'м’ят', 'свіж'].forEach(n => { if (d_dna.includes(n)) expFresh += 25; });
-        if (expFresh > 100) expFresh = 100;
-
-        let expGender = 50; 
-        if (d_dna.includes('жіноч') || d_dna.includes('для неї') || d_dna.includes('rose') || d_dna.includes('троянд')) expGender += 30;
-        if (d_dna.includes('чолові') || d_dna.includes('для нього') || d_dna.includes('тютюн') || d_dna.includes('шкіра')) expGender -= 30;
-        if (d_dna.includes('кедр') || d_dna.includes('дерев')) expGender -= 10;
-        if (d_dna.includes('унісекс') || d_dna.includes('unisex')) {
-            if (expGender > 50) expGender = 55; else if (expGender < 50) expGender = 45; else expGender = 50;
-        }
-        if (expGender > 95) expGender = 95; if (expGender < 5) expGender = 5;
-
-        const dnaContainer = document.getElementById('dnaChartContainer');
-        if (dnaContainer) {
-            dnaContainer.innerHTML = generateDNA(expLongevity, expSillage, expSweet, expFresh, expGender);
-            document.getElementById('olfactoryDNA').style.display = 'block';
-        }
-
         const scarcityDiv = document.getElementById('scarcityMsg');
+        if (stock > 0 && stock < 10) {
+            scarcityDiv.innerHTML = `<div style="background: rgba(169, 68, 66, 0.05); color: #a94442; padding: 10px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border: 1px dashed #a94442; display: inline-block;">🔥 Залишилось лише ${stock} мл!</div>`;
+        } else { scarcityDiv.innerHTML = ''; }
+        
         let rawText = (isWeekly && weekText) ? weekText : desc;
         let f = rawText;
 
@@ -4018,62 +3993,33 @@ body.modal-open {
 
                 details = details.replace(/(Група ароматів:|Група:|Стать:|Країна бренду:|Країна:)/gi, '<span style="display:inline-block; margin-top:6px;"><b>$1</b></span>');
 
-               
+                details = details.replace(/(Стійкість:|Шлейф:)\s*(?:<br\s*\/?>)?\s*(\d)[^\wА-Яа-яієґїA-Za-z]*([А-Яа-яієґїA-Za-z\s,]+)/gi, function(m, p1, p2, p3) {
+                    let num = parseInt(p2); 
+                    if(isNaN(num)) num = 0; 
+                    if(num > 5) num = 5;
+                    let bars = '';
+                    for(let i = 0; i < 5; i++) {
+                        if(i < num) bars += '<span style="display:inline-block; width:30px; height:6px; background-color:var(--gold); border-radius:3px; margin-right:4px;">&nbsp;</span>';
+                        else bars += '<span style="display:inline-block; width:30px; height:6px; background-color:rgba(128,128,128,0.2); border-radius:3px; margin-right:4px;">&nbsp;</span>';
+                    }
+                    let textDesc = p3.replace(/<br\s*\/?>/gi, '').trim();
+                    return `
+                        <div style="margin-top:12px; margin-bottom:0;">
+                            <p style="font-family:var(--cinzel); margin:0 0 4px 0; font-size:12px; font-weight:800;">${p1}</p>
+                            <div style="display:block; font-size:0; line-height:0;">${bars}</div>
+                            <p style="margin:4px 0 0 0; font-size:12px; color:#888; font-style:italic;">${textDesc}</p>
+                        </div>`;
+                });
                 
                 details += '</div>';
             }
             f = intro + details;
-            // 1. Вирізаємо з тексту слова "Стійкість" та "Шлейф", бо вони вже є в нашому новому графіку
-        f = f.replace(/(Стійкість:|Шлейф:|Стойкость:).*?(?=<br>|<p|$)/gi, '');
-
-        // 2. Прибираємо зайві порожні рядки (якщо вони утворилися після видалення)
-        f = f.replace(/(<br\s*\/?>\s*){3,}/g, '<br><br>');
         }
 
-        // --- ЕКСПЕРТНИЙ АНАЛІЗ (FRAGRANTICA LOGIC) ---
-        const d_dna = (desc || "").toLowerCase();
-        const b_dna = brand.toLowerCase();
+        // Рендер Ольфакторної Карти
+        document.getElementById('dnaChartContainer').innerHTML = generateDNA(f);
+        document.getElementById('olfactoryDNA').style.display = 'block';
 
-        let expLongevity = 60; 
-        if (['nasomatto', 'terenzi', 'initio', 'mancera', 'montale', 'v canto'].some(b => b_dna.includes(b)) || d_dna.includes('екстремаль')) expLongevity = 100;
-        else if (d_dna.includes('стійк')) expLongevity = 85;
-
-        let expSillage = 60;
-        if (b_dna.includes('montale') || b_dna.includes('mancera') || d_dna.includes('заповню') || d_dna.includes('дифуз')) expSillage = 100;
-        else if (d_dna.includes('шлейф')) expSillage = 85;
-
-        let expSweet = 15;
-        ['ваніл', 'цукор', 'карамел', 'гурман', 'мед', 'фрукт', 'шоколад'].forEach(n => { if (d_dna.includes(n)) expSweet += 25; });
-        if (expSweet > 100) expSweet = 100;
-
-        let expFresh = 15;
-        ['цитрус', 'морськ', 'водн', 'бергамот', 'лимон', 'зелен', 'м’ят'].forEach(n => { if (d_dna.includes(n)) expFresh += 25; });
-        if (expFresh > 100) expFresh = 100;
-
-       // 5. Гендер (0% - Чоловік, 50% - Унісекс, 100% - Жінка)
-        let expGender = 50; // Починаємо з центру
-
-        // Перевірка на ключові слова статі
-        if (d_dna.includes('жіноч') || d_dna.includes('для неї') || d_dna.includes('rose') || d_dna.includes('троянд')) expGender += 30;
-        if (d_dna.includes('чолові') || d_dna.includes('для нього') || d_dna.includes('тютюн') || d_dna.includes('шкіра')) expGender -= 30;
-        
-        // Вплив дерева (робимо його м'якшим, щоб не зносило повзунок занадто сильно)
-        if (d_dna.includes('дерев') || d_dna.includes('кедр') || d_dna.includes('cedr')) expGender -= 10;
-
-        // ГОЛОВНЕ ПРАВИЛО: Якщо є слово "унісекс", силоміць повертаємо повзунок до центру
-        if (d_dna.includes('унісекс') || d_dna.includes('unisex')) {
-            // Якщо є натяк на жінку, лишаємо 55%, якщо на чоловіка 45%, якщо чисто унісекс - 50%
-            if (expGender > 50) expGender = 55;
-            else if (expGender < 50) expGender = 45;
-            else expGender = 50;
-        }
-
-        // Обмежувачі
-        if (expGender > 95) expGender = 95; if (expGender < 5) expGender = 5;
-
-        // Викликаємо відображення
-        document.getElementById('dnaChartContainer').innerHTML = generateDNA(expLongevity, expSillage, expSweet, expFresh, expGender);
-       
         // Соціальний доказ
         const proofElem = document.getElementById('socialProof');
         if (Math.random() > 0.4) {
@@ -4149,10 +4095,7 @@ body.modal-open {
                     <button class="review-submit-btn" onclick="submitReview('${brand.replace(/'/g, "\\'").replace(/"/g, '&quot;')}', '${name.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">Відправити відгук</button>
                 </div>
             </div>`;
-
-     // Видаляємо зайві написи, бо вони вже є в золотому графіку зверху
-      f = f.replace(/(Стійкість:|Шлейф:|Стойкость:).*?(?=<br>|<p|$)/gi, '');
-        f = f.replace(/(<br\s*\/?>\s*){3,}/g, '<br><br>');
+        
         document.getElementById('mD').innerHTML = f + shareBtnHTML + volHTML;
         document.getElementById('reviewFormContainerHTML').innerHTML = reviewFormHTML;
         

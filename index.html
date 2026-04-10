@@ -3784,35 +3784,28 @@ body.modal-open {
         }
     }
 
-    // === ГЕНЕРАЦІЯ ОЛЬФАКТОРНОЇ КАРТИ (DNA) ===
+        // === ГЕНЕРАЦІЯ ОЛЬФАКТОРНОЇ КАРТИ (DNA) ===
     function generateDNA(descText) {
-        function generateDNA(descText) {
         let d = (descText || "").toLowerCase();
         
-        // Допоміжна функція: шукає цифру (1-5) після назви характеристики
         function getSyncScore(keywords, defaultVal) {
             for (let word of keywords) {
-                // Шукаємо слово, потім двокрапку, можливий <br> і саму цифру
                 let regex = new RegExp(word + ':\\s*(?:<br\\s*\\/?>)?\\s*(\\d)', 'i');
                 let match = d.match(regex);
-                if (match && match[1]) return parseInt(match[1]) * 20; // Перетворюємо 5 у 100%
+                if (match && match[1]) return parseInt(match[1]) * 20;
             }
             return defaultVal;
         }
 
-        // 1. СТІЙКІСТЬ: пріоритет цифрі з опису, якщо немає - шукаємо слово
         let l = getSyncScore(['стійкість', 'стойкость'], null);
         if (l === null) l = d.includes('стійк') ? 80 : 50;
 
-        // 2. ШЛЕЙФ: пріоритет цифрі, інакше слово
         let s = getSyncScore(['шлейф'], null);
         if (s === null) s = d.includes('шлейф') ? 80 : 50;
 
-        // 3. СОЛОДКІСТЬ: пріоритет цифрі, інакше шукаємо ноти ванілі/солодощів
         let sw = getSyncScore(['солодкість', 'сладость'], null);
         if (sw === null) sw = (d.includes('солодк') || d.includes('ваніл') || d.includes('гурман')) ? 80 : 20;
 
-        // 4. СВІЖІСТЬ: пріоритет цифрі, інакше шукаємо цитруси/морські ноти
         let f = getSyncScore(['свіжість', 'свежесть'], null);
         if (f === null) f = (d.includes('свіж') || d.includes('цитрус') || d.includes('морськ')) ? 80 : 20;
         

@@ -3785,57 +3785,56 @@ body.modal-open {
     }
 
         // === ГЕНЕРАЦІЯ ОЛЬФАКТОРНОЇ КАРТИ (DNA) ===
-    function generateDNA(lPercent, sPercent, swPercent, fPercent, gPercent) {
-        // Запуск анімації
-        setTimeout(() => {
-            const fills = document.querySelectorAll('.dna-bar-fill');
-            fills.forEach(bar => {
-                bar.style.width = bar.getAttribute('data-width') + '%';
-            });
-            const pointer = document.querySelector('.gender-pointer');
-            if(pointer) pointer.style.left = pointer.getAttribute('data-pos') + '%';
-        }, 100);
-
-        return `
-            <div style="background: rgba(128,128,128,0.05); padding: 15px; border-radius: 12px; margin: 15px 0; border: 1px solid rgba(197, 160, 89, 0.1);">
-                <div style="font-size: 9px; text-transform: uppercase; color: var(--gold); letter-spacing: 2px; margin-bottom: 12px; text-align: center; font-weight: 800;">
-                    📊 ОЛЬФАКТОРНИЙ ПРОФІЛЬ
-                </div>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px 20px;">
-                    ${renderDNABar('Стійкість', lPercent)}
-                    ${renderDNABar('Шлейф', sPercent)}
-                    ${renderDNABar('Солодкість', swPercent)}
-                    ${renderDNABar('Свіжість', fPercent)}
-                </div>
-                <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(128,128,128,0.1);">
-                    ${renderGenderBar(gPercent)}
-                </div>
-            </div>`;
+    function generateDNA(descText) {
+    let d = (descText || "").toLowerCase();
+    
+    function getSyncScore(keywords, defaultVal) {
+        // Шукаємо або цифру, або ключове слово
+        for (let word of keywords) {
+            let regex = new RegExp(word + ':\\s*(?:<br\\s*\\/?>)?\\s*([\\dА-Яа-яієґї]+)', 'i');
+            let match = d.match(regex);
+            if (match && match[1]) {
+                let val = match[1].toLowerCase();
+                if (val.includes('5') || val.includes('екстремальна') || val.includes('заповню')) return 100;
+                if (val.includes('4') || val.includes('висока') || val.includes('дуже')) return 80;
+                if (val.includes('3') || val.includes('середня') || val.includes('дифуз')) return 60;
+                if (val.includes('2')) return 40;
+                if (val.includes('1')) return 20;
+            }
+        }
+        return defaultVal;
     }
 
-    function renderDNABar(label, value) {
-        return `
-            <div style="display:flex; flex-direction:column; gap:4px;">
-                <div style="display:flex; justify-content:space-between; font-size:9px; font-weight:700; text-transform:uppercase; color: #888;">
-                    <span>${label}</span>
-                </div>
-                <div style="background:rgba(128,128,128,0.1); height:4px; border-radius:2px; overflow:hidden;">
-                    <div class="dna-bar-fill" data-width="${value}" style="width:0%; background:var(--gold); height:100%; transition: width 1s ease;"></div>
-                </div>
-            </div>`;
-    }
+    let l = getSyncScore(['стійкість', 'стойкость'], 60);
+    let s = getSyncScore(['шлейф'], 60);
+    let sw = getSyncScore(['солодкість', 'сладость'], d.includes('солодк') ? 80 : 20);
+    let f = getSyncScore(['свіжість', 'свежесть'], d.includes('свіж') ? 80 : 20);
 
-    function renderGenderBar(value) {
-        return `
-            <div style="display:flex; flex-direction:column; gap:4px;">
-                <div style="display:flex; justify-content:space-between; font-size:8px; font-weight:800; text-transform:uppercase; color: #999;">
-                    <span>♂ Men</span><span>Unisex</span><span>Women ♀</span>
-                </div>
-                <div style="background:rgba(128,128,128,0.1); height:4px; border-radius:2px; position:relative;">
-                    <div class="gender-pointer" data-pos="${value}" style="width:8px; height:8px; background:var(--gold); position:absolute; top:-2px; left:50%; transform:translateX(-50%); border-radius:50%; transition: left 1s ease; border: 1px solid #fff;"></div>
-                </div>
-            </div>`;
-    }
+    // Анімація: спочатку width: 0, а через 100мс ставимо реальну ширину
+    setTimeout(() => {
+        const bars = document.querySelectorAll('.dna-bar-fill');
+        bars.forEach(bar => { bar.style.width = bar.getAttribute('data-width') + '%'; });
+    }, 100);
+    
+    return `
+        <div style="display:flex; flex-direction:column; gap:8px;">
+            ${renderBar('Стійкість', l)}
+            ${renderBar('Шлейф', s)}
+            ${renderBar('Солодкість', sw)}
+            ${renderBar('Свіжість', f)}
+        </div>`;
+}
+
+function renderBar(label, value) {
+    return `
+        <div style="display:flex; align-items:center; font-size:10px; font-weight:700; color:var(--text-dark);">
+            <span style="width:75px; text-align:left;">${label}</span> 
+            <div style="flex:1; background:rgba(128,128,128,0.1); height:6px; border-radius:3px; overflow:hidden;">
+                <div class="dna-bar-fill" data-width="${value}" style="width:0%; background:var(--gold); height:100%; border-radius:3px; transition: width 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
+            </div>
+        </div>`;
+}
+
 
     function showModal(pArr, isWeekly = false) 
     {document.body.classList.add('modal-open');
@@ -4018,29 +4017,9 @@ body.modal-open {
         }
 
         // Рендер Ольфакторної Карти
-        // --- КРОК 2: РОЗРАХУНОК БАЛІВ ---
-        function extractScore(text, keyword) {
-            const regex = new RegExp(keyword + ':\\s*(\\d)', 'i');
-            const match = text.match(regex);
-            return match ? parseInt(match[1]) : 3; 
-        }
-
-        const cleanD = f.toLowerCase(); 
-        
-        const lValue = extractScore(f, 'стійкість') * 20; 
-        const sValue = extractScore(f, 'шлейф') * 20;
-        
-        const swValue = (cleanD.includes('солодк') || cleanD.includes('ваніл')) ? 85 : 20;
-        const fValue = (cleanD.includes('свіж') || cleanD.includes('цитрус')) ? 85 : 20;
-        
-        let gValue = 50; 
-        if (cleanD.includes('жіноч') || cleanD.includes('для неї')) gValue = 85;
-        if (cleanD.includes('чолові') || cleanD.includes('для нього')) gValue = 15;
-
-        // Малюємо оновлений DNA
-        document.getElementById('dnaChartContainer').innerHTML = generateDNA(lValue, sValue, swValue, fValue, gValue);
+        document.getElementById('dnaChartContainer').innerHTML = generateDNA(f);
         document.getElementById('olfactoryDNA').style.display = 'block';
-        // --- КІНЕЦЬ ВСТАВКИ ---
+
         // Соціальний доказ
         const proofElem = document.getElementById('socialProof');
         if (Math.random() > 0.4) {

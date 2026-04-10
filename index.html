@@ -3784,7 +3784,7 @@ body.modal-open {
         }
     }
 
-    // === FRAGRANTICA STYLE DNA (ДВИГУН) ===
+  // === FRAGRANTICA STYLE DNA (ДВИГУН) ===
     function generateDNA(l, s, sw, f, g) {
         requestAnimationFrame(() => {
             const bars = document.querySelectorAll('.dna-bar-fill');
@@ -3858,45 +3858,36 @@ body.modal-open {
         mImgEl.onerror = function() { this.src = 'https://i.postimg.cc/CxkmFFJ3/logo.png'; };
         
         updateAura(mImgEl);
-     // --- ЕКСПЕРТНИЙ АНАЛІЗ (FRAGRANTICA LOGIC) ---
+
+        // --- ЕКСПЕРТНИЙ АНАЛІЗ (МІЗКИ) ---
         const d_dna = (desc || "").toLowerCase();
         const b_dna = brand.toLowerCase();
 
-        // 1. Стійкість
         let expLongevity = 60; 
-        const powerBrands = ['nasomatto', 'terenzi', 'initio', 'mancera', 'montale', 'orto parisi', 'v canto'];
-        if (powerBrands.some(b => b_dna.includes(b)) || d_dna.includes('екстремаль') || d_dna.includes('дуже стійк')) expLongevity = 100;
-        else if (d_dna.includes('стійк') || d_dna.includes('тривал')) expLongevity = 85;
+        if (['nasomatto', 'terenzi', 'initio', 'mancera', 'montale', 'v canto', 'orto parisi'].some(b => b_dna.includes(b)) || d_dna.includes('екстремаль')) expLongevity = 100;
+        else if (d_dna.includes('стійк')) expLongevity = 85;
 
-        // 2. Шлейф
         let expSillage = 60;
         if (b_dna.includes('montale') || b_dna.includes('mancera') || d_dna.includes('заповню') || d_dna.includes('дифуз')) expSillage = 100;
-        else if (d_dna.includes('шлейф') || d_dna.includes('хвіст')) expSillage = 85;
+        else if (d_dna.includes('шлейф')) expSillage = 85;
 
-        // 3. Солодкість
         let expSweet = 15;
-        const sNotes = ['ваніл', 'цукор', 'карамел', 'гурман', 'мед', 'фрукт', 'шоколад', 'фінік', 'праліне', 'зефір'];
-        sNotes.forEach(n => { if (d_dna.includes(n)) expSweet += 25; });
+        ['ваніл', 'цукор', 'карамел', 'гурман', 'мед', 'фрукт', 'шоколад', 'солодк'].forEach(n => { if (d_dna.includes(n)) expSweet += 25; });
         if (expSweet > 100) expSweet = 100;
 
-        // 4. Свіжість
         let expFresh = 15;
-        const fNotes = ['цитрус', 'морськ', 'водн', 'бергамот', 'лимон', 'зелен', 'м’ят', 'озон', 'чай'];
-        fNotes.forEach(n => { if (d_dna.includes(n)) expFresh += 25; });
+        ['цитрус', 'морськ', 'водн', 'бергамот', 'лимон', 'зелен', 'м’ят', 'свіж'].forEach(n => { if (d_dna.includes(n)) expFresh += 25; });
         if (expFresh > 100) expFresh = 100;
 
-        // 5. Гендер (0% - Чоловік, 50% - Унісекс, 100% - Жінка)
         let expGender = 50; 
-        if (d_dna.includes('жіноч') || d_dna.includes('для неї') || d_dna.includes('rose') || d_dna.includes('троянд')) expGender += 35;
-        if (d_dna.includes('чолові') || d_dna.includes('для нього') || d_dna.includes('тютюн') || d_dna.includes('шкіра') || d_dna.includes('дерев')) expGender -= 25;
-        
-        // Перевірка на Унісекс
+        if (d_dna.includes('жіноч') || d_dna.includes('для неї') || d_dna.includes('rose') || d_dna.includes('троянд')) expGender += 30;
+        if (d_dna.includes('чолові') || d_dna.includes('для нього') || d_dna.includes('тютюн') || d_dna.includes('шкіра')) expGender -= 30;
+        if (d_dna.includes('кедр') || d_dna.includes('дерев')) expGender -= 10;
         if (d_dna.includes('унісекс') || d_dna.includes('unisex')) {
             if (expGender > 50) expGender = 55; else if (expGender < 50) expGender = 45; else expGender = 50;
         }
         if (expGender > 95) expGender = 95; if (expGender < 5) expGender = 5;
 
-        // Викликаємо малювання графіка
         const dnaContainer = document.getElementById('dnaChartContainer');
         if (dnaContainer) {
             dnaContainer.innerHTML = generateDNA(expLongevity, expSillage, expSweet, expFresh, expGender);
@@ -3904,10 +3895,6 @@ body.modal-open {
         }
 
         const scarcityDiv = document.getElementById('scarcityMsg');
-        if (stock > 0 && stock < 10) {
-            scarcityDiv.innerHTML = `<div style="background: rgba(169, 68, 66, 0.05); color: #a94442; padding: 10px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border: 1px dashed #a94442; display: inline-block;">🔥 Залишилось лише ${stock} мл!</div>`;
-        } else { scarcityDiv.innerHTML = ''; }
-        
         let rawText = (isWeekly && weekText) ? weekText : desc;
         let f = rawText;
 
@@ -4164,7 +4151,7 @@ body.modal-open {
             </div>`;
 
      // Видаляємо зайві написи, бо вони вже є в золотому графіку зверху
-        f = f.replace(/(Стійкість:|Шлейф:|Стойкость:).*?(?=<br>|<p|$)/gi, '');
+      f = f.replace(/(Стійкість:|Шлейф:|Стойкость:).*?(?=<br>|<p|$)/gi, '');
         f = f.replace(/(<br\s*\/?>\s*){3,}/g, '<br><br>');
         document.getElementById('mD').innerHTML = f + shareBtnHTML + volHTML;
         document.getElementById('reviewFormContainerHTML').innerHTML = reviewFormHTML;

@@ -3837,8 +3837,8 @@ body.modal-open {
             </div>`;
     }
 
-    function showModal(pArr, isWeekly = false) {
-        document.body.classList.add('modal-open');
+    function showModal(pArr, isWeekly = false) 
+    {document.body.classList.add('modal-open');
         const [brand, name, price, minVol, desc, img, , top, weekText, , , bottleMl, bottlePrice, , stockCol] = pArr;
         
         const itemId = brand + ' ' + name;
@@ -3849,6 +3849,8 @@ body.modal-open {
         renderRecentlyViewed();
         
         const stock = parseFloat(stockCol);
+        const isOutOfStock = !isNaN(stock) && stock <= 0;
+        
         currentBasePrice = price; 
         currentFixedPrice = 0; 
         selectedVol = "5 мл"; 
@@ -3869,39 +3871,30 @@ body.modal-open {
             scarcityDiv.innerHTML = `<div style="background: rgba(169, 68, 66, 0.05); color: #a94442; padding: 10px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border: 1px dashed #a94442; display: inline-block;">🔥 Залишилось лише ${stock} мл!</div>`;
         } else { scarcityDiv.innerHTML = ''; }
         
-        // 1. Отримуємо ОРИГІНАЛЬНИЙ текст
         let rawText = (isWeekly && weekText) ? weekText : desc;
         let f = rawText;
 
-        // --- КРОК 2: РОЗРАХУНОК DNA (РОБИМО ПЕРШИМ) ---
-        function getScore(text, key) {
-            const r = new RegExp(key + ':\\s*(\\d)', 'i');
-            const m = text.match(r);
-            return m ? parseInt(m[1]) : 3; 
-        }
-
-        const lVal = getScore(rawText, 'стійкість') * 20;
-        const sVal = getScore(rawText, 'шлейф') * 20;
-        
-        const cleanLow = rawText.toLowerCase();
-        const swVal = (cleanLow.includes('солодк') || cleanLow.includes('ваніл') || cleanLow.includes('карамел')) ? 85 : 20;
-        const fVal = (cleanLow.includes('свіж') || cleanLow.includes('цитрус') || cleanLow.includes('морськ')) ? 85 : 20;
-        
-        let gVal = 50; 
-        if (cleanLow.includes('жіноч') || cleanLow.includes('для неї')) gValue = 85;
-        if (cleanLow.includes('чолові') || cleanLow.includes('для нього')) gValue = 15;
-
-        // МАЛЮЄМО DNA
-        document.getElementById('dnaChartContainer').innerHTML = generateDNA(lVal, sVal, swVal, fVal, gVal);
-        document.getElementById('olfactoryDNA').style.display = 'block';
-
-        // --- ДАЛІ ОБРОБКА ТЕКСТУ (ФОРМАТУВАННЯ) ---
         f = f.replace(/\{(.*?)\}/g, function(match, perfName) {
             let searchStr = perfName.toLowerCase().trim();
             let found = globalCatalogData.find(p => (p[0] + ' ' + p[1]).toLowerCase().includes(searchStr));
+
+            if (!found) {
+                let words = searchStr.replace(/by |paris |parfums |[^\wа-яіїєґ0-9]/gi, ' ').split(/\s+/).filter(w => w.length > 1);
+                if (words.length > 0) {
+                    found = globalCatalogData.find(p => {
+                        let dbStr = (p[0] + p[1]).toLowerCase(); 
+                        return words.every(w => dbStr.includes(w));
+                    });
+                }
+            }
+
             if (found) {
                 let imgSrc = found[5].replace(/'/g, "%27");
-                return `<div style="display:flex; align-items:center; gap:12px; margin: 8px 0; padding: 6px 12px; background: rgba(128,128,128,0.05); border-radius: 8px; border: 1px dashed rgba(197,160,89,0.4);"><img src="${imgSrc}" style="width: 35px; height: 35px; object-fit: contain; border-radius: 4px;"><span style="font-family: var(--serif); font-size: 13px; font-weight: 700; color: var(--text-dark);">${found[0]} ${found[1]}</span></div>`;
+                return `
+                    <div style="display:flex; align-items:center; gap:12px; margin: 8px 0; padding: 6px 12px; background: rgba(128,128,128,0.05); border-radius: 8px; border: 1px dashed rgba(197,160,89,0.4);">
+                        <img src="${imgSrc}" style="width: 35px; height: 35px; object-fit: contain; border-radius: 4px; background: transparent;">
+                        <span style="font-family: var(--serif); font-size: 13px; font-weight: 700; color: var(--text-dark);">${found[0]} ${found[1]}</span>
+                    </div>`;
             }
             return `<b style="color: var(--gold);">${perfName}</b>`;
         });
@@ -3918,7 +3911,7 @@ body.modal-open {
             let totalScore = (c5 * 5) + (c4 * 4) + (c3 * 3) + (c2 * 2) + (c1 * 1);
             let avgStars = Math.round(totalScore / totalRev);
             let starsStr = '★'.repeat(avgStars) + '☆'.repeat(5 - avgStars);
-            aggregatedStarsHTML = `<div style="text-align:center; color:var(--gold); font-size:18px; letter-spacing:3px; margin-top:-10px; margin-bottom:20px;">${starsStr} <span style="font-size:12px; color:#999; font-weight:600;">(${totalRev})</span></div>`;
+            aggregatedStarsHTML = `<div style="text-align:center; color:var(--gold); font-size:18px; letter-spacing:3px; margin-top:-10px; margin-bottom:20px;" title="Оцінка на основі ${totalRev} відгуків">${starsStr} <span style="font-size:12px; color:#999; letter-spacing:0; vertical-align:middle; font-weight:600;">(${totalRev})</span></div>`;
         }
 
         let reviewsHTML = '';
@@ -3928,7 +3921,24 @@ body.modal-open {
             if(revStart !== -1) {
                 let revText = f.substring(revStart);
                 f = f.substring(0, revStart);
-                reviewsHTML += `<div class="faq-container" style="margin-top:20px; border-top:none;"><div class="faq-item" style="border-bottom:none;"><div class="faq-question" onclick="toggleFaq(this)" style="font-family: var(--cinzel); font-size: 11px; color: var(--gold); letter-spacing: 2px;">💬 Відгуки (${totalRev})</div><div class="faq-answer"><div class="reviews-scroll-container" style="max-height: 250px;">` + revText.replace(/\[\+\+\](.*?)(?=<br>|\[|$)/g, '<div class="review-box review-pos"><span style="color:var(--gold); font-size:10px; display:block; letter-spacing:2px; margin-bottom:2px;">★★★★★</span>$1</div>').replace(/\[\+\](.*?)(?=<br>|\[|$)/g, '<div class="review-box review-pos"><span style="color:var(--gold); font-size:10px; display:block; letter-spacing:2px; margin-bottom:2px;">★★★★☆</span>$1</div>').replace(/\[=\](.*?)(?=<br>|\[|$)/g, '<div class="review-box"><span style="color:var(--gold); font-size:10px; display:block; letter-spacing:2px; margin-bottom:2px;">★★★☆☆</span>$1</div>').replace(/\[-\](.*?)(?=<br>|\[|$)/g, '<div class="review-box review-neg"><span style="color:#888; font-size:10px; display:block; letter-spacing:2px; margin-bottom:2px;">★★☆☆☆</span>$1</div>').replace(/\[--\](.*?)(?=<br>|\[|$)/g, '<div class="review-box review-neg"><span style="color:#888; font-size:10px; display:block; letter-spacing:2px; margin-bottom:2px;">★☆☆☆☆</span>$1</div>') + `</div></div></div></div>`;
+                
+                reviewsHTML += `
+                <div class="faq-container" style="margin-top:20px; border-top:none;">
+                    <div class="faq-item" style="border-bottom:none;">
+                        <div class="faq-question" onclick="toggleFaq(this)" style="font-family: var(--cinzel); font-size: 11px; color: var(--gold); letter-spacing: 2px;">
+                            💬 Відгуки (${totalRev})
+                        </div>
+                        <div class="faq-answer">
+                            <div class="reviews-scroll-container" style="max-height: 250px; border-bottom: none;">`;
+                
+                reviewsHTML += revText
+                    .replace(/\[\+\+\](.*?)(?=<br>|\[|$)/g, '<div class="review-box review-pos"><span style="color:var(--gold); font-size:10px; display:block; letter-spacing:2px; margin-bottom:2px;">★★★★★</span>$1</div>')
+                    .replace(/\[\+\](.*?)(?=<br>|\[|$)/g, '<div class="review-box review-pos"><span style="color:var(--gold); font-size:10px; display:block; letter-spacing:2px; margin-bottom:2px;">★★★★☆</span>$1</div>')
+                    .replace(/\[=\](.*?)(?=<br>|\[|$)/g, '<div class="review-box"><span style="color:var(--gold); font-size:10px; display:block; letter-spacing:2px; margin-bottom:2px;">★★★☆☆</span>$1</div>')
+                    .replace(/\[-\](.*?)(?=<br>|\[|$)/g, '<div class="review-box review-neg"><span style="color:#888; font-size:10px; display:block; letter-spacing:2px; margin-bottom:2px;">★★☆☆☆</span>$1</div>')
+                    .replace(/\[--\](.*?)(?=<br>|\[|$)/g, '<div class="review-box review-neg"><span style="color:#888; font-size:10px; display:block; letter-spacing:2px; margin-bottom:2px;">★☆☆☆☆</span>$1</div>');
+                
+                reviewsHTML += `</div></div></div></div>`;
             }
         }
 
@@ -3939,59 +3949,192 @@ body.modal-open {
         } else if (f.trim().length > 0) {
             let intro = "", details = f;
             let splitMatch = f.match(/(Стиль:|Напрямок:|Опис:|Піраміда|Основні характеристики:|Верхні ноти:)/i);
-            if (splitMatch && splitMatch.index > 0) { intro = f.substring(0, splitMatch.index); details = f.substring(splitMatch.index); }
-            if (intro.trim()) { intro = '<p style="font-size:14px; margin-bottom:15px; line-height:1.6;">' + intro.replace(/(<br\s*\/?>\s*)+/g, '<br><br>').trim() + '</p>'; }
+            
+            if (splitMatch && splitMatch.index > 0) { 
+                intro = f.substring(0, splitMatch.index); 
+                details = f.substring(splitMatch.index); 
+            }
+
+            if (intro.trim()) { 
+                intro = '<p style="font-size:14px; margin-bottom:15px; line-height:1.6;">' + intro.replace(/(<br\s*\/?>\s*)+/g, '<br><br>').trim() + '</p>'; 
+            }
 
             if (details.trim()) {
                 details = '<div style="background-color:rgba(128,128,128,0.05); padding:15px; border-radius:8px; font-size:13.5px; line-height:1.5; text-align:left;">' + details;
+                
                 details = details.replace(/(Піраміда аромату:|Піраміда композиції:|Основні характеристики:|Стійкість та шлейф:)\s*(?:<br\s*\/?>)?/gi, '<p style="font-family:var(--cinzel); color:var(--gold); text-transform:uppercase; font-size:11px; font-weight:800; margin-top:15px; margin-bottom:5px; border-bottom:1px solid rgba(128,128,128,0.1); padding-bottom:4px;">$1</p>');
+                
                 details = details.replace(/(Стиль:|Напрямок:)/gi, '<p style="font-family:var(--cinzel); color:var(--gold); text-transform:uppercase; font-size:11px; font-weight:800; margin-top:10px; margin-bottom:4px;">$1</p>');
                 
                 details = details.replace(/(Верхні ноти:|Ноти серця:|Серце:|Середні ноти:|Базові ноти:|Ноти бази:|Акорди:)\s*(.*?)(?=<br|<p|$)/gi, function(match, title, notesText) {
-                    let icon = title.toLowerCase().includes('верх') ? 'M12 2L15 8L22 9L17 14L18.5 21L12 17.5L5.5 21L7 14L2 9L9 8L12 2Z' : (title.toLowerCase().includes('баз') ? 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z' : 'M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z');
+                    let icon = '';
+                    const t = title.toLowerCase();
+
+                    if (t.includes('верхні')) {
+                        icon = `<svg class="note-icon-svg" viewBox="0 0 24 24"><path d="M12 2L15 8L22 9L17 14L18.5 21L12 17.5L5.5 21L7 14L2 9L9 8L12 2Z"/></svg>`; 
+                    } else if (t.includes('серця') || t.includes('середні') || t.includes('серце')) {
+                        icon = `<svg class="note-icon-svg" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`; 
+                    } else if (t.includes('базові') || t.includes('бази')) {
+                        icon = `<svg class="note-icon-svg" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`; 
+                    } else {
+                        icon = `<svg class="note-icon-svg" viewBox="0 0 24 24"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>`; 
+                    }
+
+                    // === ФІКС АРТЕФАКТУ (Довжина >= 2, щоб підхоплювало "Уд") ===
                     let clickableNotes = notesText.split(/[,;]/).map(n => {
-                        let clean = n.replace(/[.,;]+$/, '').trim(); 
-                        return clean.length >= 2 ? `<span class="modal-note-tag" onclick="searchByNote('${clean}')">${clean}</span>` : clean;
+                        let cleanNote = n.replace(/[.,;]+$/, '').trim(); 
+                        if(cleanNote.length >= 2) { 
+                            return `<span class="modal-note-tag" onclick="searchByNote('${cleanNote}')">${cleanNote}</span>`;
+                        }
+                        return cleanNote;
                     }).join(' ');
-                    return `<div class="note-header"><svg class="note-icon-svg" viewBox="0 0 24 24"><path d="${icon}"/></svg> <span>${title}</span></div><div style="margin-bottom:12px; display:flex; flex-wrap:wrap; gap:4px;">${clickableNotes}</div>`;
+
+                    return `<div class="note-header">${icon} <span>${title}</span></div><div style="margin-bottom:12px; display:flex; flex-wrap:wrap; gap:4px;">${clickableNotes}</div>`;
                 });
 
                 details = details.replace(/(Група ароматів:|Група:|Стать:|Країна бренду:|Країна:)/gi, '<span style="display:inline-block; margin-top:6px;"><b>$1</b></span>');
-                
-                // МАЛЮВАННЯ НИЖНІХ БАРІВ
+
                 details = details.replace(/(Стійкість:|Шлейф:)\s*(?:<br\s*\/?>)?\s*(\d)[^\wА-Яа-яієґїA-Za-z]*([А-Яа-яієґїA-Za-z\s,]+)/gi, function(m, p1, p2, p3) {
-                    let num = parseInt(p2) || 0; if(num > 5) num = 5;
+                    let num = parseInt(p2); 
+                    if(isNaN(num)) num = 0; 
+                    if(num > 5) num = 5;
                     let bars = '';
                     for(let i = 0; i < 5; i++) {
-                        bars += `<span style="display:inline-block; width:30px; height:6px; background-color:${i < num ? 'var(--gold)' : 'rgba(128,128,128,0.2)'}; border-radius:3px; margin-right:4px;">&nbsp;</span>`;
+                        if(i < num) bars += '<span style="display:inline-block; width:30px; height:6px; background-color:var(--gold); border-radius:3px; margin-right:4px;">&nbsp;</span>';
+                        else bars += '<span style="display:inline-block; width:30px; height:6px; background-color:rgba(128,128,128,0.2); border-radius:3px; margin-right:4px;">&nbsp;</span>';
                     }
-                    return `<div style="margin-top:12px;"><p style="font-family:var(--cinzel); margin:0 0 4px 0; font-size:12px; font-weight:800;">${p1}</p><div style="display:block; font-size:0; line-height:0;">${bars}</div><p style="margin:4px 0 0 0; font-size:12px; color:#888; font-style:italic;">${p3.replace(/<br\s*\/?>/gi, '').trim()}</p></div>`;
+                    let textDesc = p3.replace(/<br\s*\/?>/gi, '').trim();
+                    return `
+                        <div style="margin-top:12px; margin-bottom:0;">
+                            <p style="font-family:var(--cinzel); margin:0 0 4px 0; font-size:12px; font-weight:800;">${p1}</p>
+                            <div style="display:block; font-size:0; line-height:0;">${bars}</div>
+                            <p style="margin:4px 0 0 0; font-size:12px; color:#888; font-style:italic;">${textDesc}</p>
+                        </div>`;
                 });
+                
                 details += '</div>';
             }
             f = intro + details;
         }
 
-        const voiceBtnHTML = `<div class="voice-control-wrapper"><button id="voiceBtn" class="voice-intro-btn" onclick="speakDescription()"><span>🔊</span> ШІ Асистент</button></div>`;
-        const shareBtnHTML = `<div style="text-align: right; margin-top: 15px;"><button onclick="sharePerfume()" style="background:none; border:none; cursor:pointer; color:var(--gold); display:inline-flex; align-items:center; font-size:11px; text-transform:uppercase; font-weight:800;"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="margin-right:6px;"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>Поділитися</button></div>`;
+        // Рендер Ольфакторної Карти
+        // --- КРОК 2: РОЗРАХУНОК БАЛІВ ---
+        function extractScore(text, keyword) {
+            const regex = new RegExp(keyword + ':\\s*(\\d)', 'i');
+            const match = text.match(regex);
+            return match ? parseInt(match[1]) : 3; 
+        }
+
+        const cleanD = f.toLowerCase(); 
+        
+        const lValue = extractScore(f, 'стійкість') * 20; 
+        const sValue = extractScore(f, 'шлейф') * 20;
+        
+        const swValue = (cleanD.includes('солодк') || cleanD.includes('ваніл')) ? 85 : 20;
+        const fValue = (cleanD.includes('свіж') || cleanD.includes('цитрус')) ? 85 : 20;
+        
+        let gValue = 50; 
+        if (cleanD.includes('жіноч') || cleanD.includes('для неї')) gValue = 85;
+        if (cleanD.includes('чолові') || cleanD.includes('для нього')) gValue = 15;
+
+        // Малюємо оновлений DNA
+        document.getElementById('dnaChartContainer').innerHTML = generateDNA(lValue, sValue, swValue, fValue, gValue);
+        document.getElementById('olfactoryDNA').style.display = 'block';
+        // --- КІНЕЦЬ ВСТАВКИ ---
+        // Соціальний доказ
+        const proofElem = document.getElementById('socialProof');
+        if (Math.random() > 0.4) {
+            const viewers = Math.floor(Math.random() * 3) + 1;
+            proofElem.innerHTML = `🔥 Цей аромат зараз переглядають ${viewers} ${viewers === 1 ? 'людина' : 'людини'}`;
+            proofElem.style.display = 'block';
+        } else {
+            proofElem.style.display = 'none';
+        }
 
         let recsHTML = '';
         let sameBrand = globalCatalogData.filter(c => c[0] === brand && c[1] !== name).slice(0, 5);
         if(sameBrand.length > 0) {
             recsHTML += '<div class="recommendations-block"><span class="rec-title">Також від ' + brand + ':</span><div class="rec-scroll">';
             sameBrand.forEach(c => {
-                recsHTML += `<div class="rec-item" onclick='showModal(${JSON.stringify(c).replace(/"/g, "&quot;")})'><img src="${c[5].replace(/'/g, "%27")}"><span>${c[1]}</span></div>`;
+                let sImg = c[5].replace(/'/g, "%27");
+                let cStr = JSON.stringify(c).replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+                recsHTML += `<div class="rec-item" onclick='showModal(${cStr})'><img src="${sImg}"><span>${c[1]}</span></div>`;
             });
             recsHTML += '</div></div>';
         }
 
+        const voiceBtnHTML = `
+            <div class="voice-control-wrapper">
+                <button id="voiceBtn" class="voice-intro-btn" onclick="speakDescription()">
+                    <span>🔊</span> ШІ Асистент
+                </button>
+            </div>`;
+        
+        const shareBtnHTML = `
+            <div style="text-align: right; margin-top: 15px; margin-bottom: 15px;">
+                <button onclick="sharePerfume()" style="background:none; border:none; cursor:pointer; color:var(--gold); display:inline-flex; align-items:center; font-size:11px; text-transform:uppercase; letter-spacing:1.5px; font-weight:800; padding: 0;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="margin-right:6px;"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92zM18 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM6 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 7.02c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg>
+                    Поділитися
+                </button>
+            </div>`;
+
         f = aggregatedStarsHTML + voiceBtnHTML + f + recsHTML + reviewsHTML;
 
-        // ВСТАНОВЛЕННЯ ВМІСТУ
-        document.getElementById('mD').innerHTML = f + shareBtnHTML + renderVolContainer(minVol, price, bottleMl, bottlePrice, brand, name);
-        document.getElementById('reviewFormContainerHTML').innerHTML = renderReviewForm(brand, name);
+        const disable2ml = minVol && String(minVol).includes('5');
+        const isBottleAvailable = bottleMl && parseInt(bottleMl) > 0;
+        const isSetType = (minVol && String(minVol).toLowerCase().includes('тільки')) || brand.toLowerCase().includes('set') || brand.toLowerCase().includes('сет') || name.toLowerCase().includes('сет');
+
+        let volButtons = '';
+        if (isSetType) {
+            selectedVol = "Набір";
+            volButtons = `<div class="vol-chip active" onclick="selectVol(this, 'Набір')">${minVol} <small>${calculatePrice(price, '2 мл')}</small></div>`;
+        } else {
+            selectedVol = "5 мл";
+            volButtons = `
+                <div class="vol-chip ${disable2ml ? 'disabled' : ''}" onclick="selectVol(this, '2 мл')">2 мл <small>${calculatePrice(price, '2 мл')}</small></div>
+                <div class="vol-chip active" onclick="selectVol(this, '5 мл')">5 мл <small>${calculatePrice(price, '5 мл')}</small></div>
+                <div class="vol-chip" onclick="selectVol(this, '10 мл')">10 мл <small>${calculatePrice(price, '10 мл')}</small></div>
+                <div class="vol-chip" onclick="selectVol(this, '20 мл')">20 мл <small>${calculatePrice(price, '20 мл')}</small></div>
+                <div class="vol-chip" onclick="selectVol(this, 'Флакон')">Флакон <small>Запит</small></div>
+                ${isBottleAvailable ? `<div class="vol-chip bottle-special" onclick="selectVol(this, 'Рідний флакон (${bottleMl} мл)', ${bottlePrice})">Залишок у рідному флаконі (${bottleMl} мл) <small>${bottlePrice} грн</small></div>` : ''}`;
+        }
         
-        setupOrderButton(stock <= 0);
+        const volHTML = `<div class="vol-container"><span class="vol-label">Оберіть об'єм:</span><div class="vol-grid">${volButtons}</div></div>`;
+            
+        const reviewFormHTML = `
+            <div class="review-form-container" id="reviewFormBlock">
+                <span class="review-form-title">Оцінити аромат</span>
+                <div class="star-rating">
+                    <input type="radio" id="star5" name="rating" value="5" onchange="showReviewFields()"><label for="star5">★</label>
+                    <input type="radio" id="star4" name="rating" value="4" onchange="showReviewFields()"><label for="star4">★</label>
+                    <input type="radio" id="star3" name="rating" value="3" onchange="showReviewFields()"><label for="star3">★</label>
+                    <input type="radio" id="star2" name="rating" value="2" onchange="showReviewFields()"><label for="star2">★</label>
+                    <input type="radio" id="star1" name="rating" value="1" onchange="showReviewFields()"><label for="star1">★</label>
+                </div>
+                <div id="reviewHiddenParts" style="display:none;">
+                    <textarea id="reviewText" class="review-textarea" rows="3" placeholder="Поділіться своїми враженнями..."></textarea>
+                    <button class="review-submit-btn" onclick="submitReview('${brand.replace(/'/g, "\\'").replace(/"/g, '&quot;')}', '${name.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">Відправити відгук</button>
+                </div>
+            </div>`;
+        
+        document.getElementById('mD').innerHTML = f + shareBtnHTML + volHTML;
+        document.getElementById('reviewFormContainerHTML').innerHTML = reviewFormHTML;
+        
+        const orderBtn = document.getElementById('modalOrderBtn');
+        if (isOutOfStock) {
+            orderBtn.innerText = 'НЕМАЄ В НАЯВНОСТІ';
+            orderBtn.style.background = 'rgba(128,128,128,0.2)';
+            orderBtn.style.color = '#888';
+            orderBtn.style.boxShadow = 'none';
+            orderBtn.style.pointerEvents = 'none';
+        } else {
+            orderBtn.innerText = 'ДОДАТИ В КОШИК';
+            orderBtn.style.background = 'var(--gold)';
+            orderBtn.style.color = '#fff';
+            orderBtn.style.boxShadow = '0 10px 20px rgba(197,160,89,0.3)';
+            orderBtn.style.pointerEvents = 'auto';
+        }
+
         updateModalStickyBar();
         document.getElementById('infoModal').style.display = 'flex';
     }

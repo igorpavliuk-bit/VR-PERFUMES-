@@ -3930,8 +3930,9 @@ function renderGenderBar(value) {
         document.getElementById('mB').innerText = brand; 
         document.getElementById('mN').innerText = name;
         
-        const mImgEl = document.getElementById('mImg');
+                const mImgEl = document.getElementById('mImg');
         mImgEl.src = safeImg; 
+        mImgEl.alt = `Парфум ${brand} ${name}`; // Ось цей рядок додаємо
         mImgEl.onerror = function() { this.src = 'https://i.postimg.cc/CxkmFFJ3/logo.png'; };
         
         updateAura(mImgEl);

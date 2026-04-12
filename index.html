@@ -3797,7 +3797,7 @@ body.modal-open {
                     <div class="wishlist-btn ${isWished ? 'active' : ''}" onclick="toggleWishlist(event, '${brand.replace(/'/g, "\\'")}', '${name.replace(/'/g, "\\'")}', this)">
                         ${isWished ? '♥' : '♡'}
                     </div>
-                    <img loading="lazy" src="${safeImg}" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
+                    <img loading="lazy" src="${safeImg}" alt="Оригінальний парфум ${brand} ${name} на розпив" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
                     <div class="card-info">
                         <div class="price-display-wrapper">${oldPriceHTML}<div class="card-price-label">${isOutOfStock ? 'Тимчасово відсутній' : displayPriceStr}</div></div>
                         <div style="font-size: 10px; color: #999; text-align: center; margin-top: -2px; margin-bottom: 5px; opacity: 0.6;">${currentPricePerMl} грн / 1 мл</div>

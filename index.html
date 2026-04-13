@@ -3607,11 +3607,14 @@ body.dark-theme .ig-story-ring.seen {
         return text.split(/[,;]/)[0].trim();
     }
 
-    function getAllNotes(text, pattern) {
+        function getAllNotes(text, pattern) {
         const match = text.match(pattern);
         if (!match || !match[2]) return [];
-        return match[2].split(/[,;]/).map(n => n.trim()).filter(n => n.length >= 2).slice(0, 3);
+        // Відрізаємо будь-яке сміття (стать, країна), якщо воно випадково потрапило в блок нот
+        let rawNotesStr = match[2].replace(/(Стать|Група|Країна|Стійкість|Шлейф|Відгуки).*/is, '');
+        return rawNotesStr.split(/[,;&]/).map(n => n.trim()).filter(n => n.length >= 2).slice(0, 3);
     }
+
 
     function pickRandom(arr) {
         return arr[Math.floor(Math.random() * arr.length)];

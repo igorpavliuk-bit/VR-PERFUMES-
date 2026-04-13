@@ -3042,6 +3042,77 @@ body.modal-open .cart-floating-btn {
 body.dark-theme .quiz-option { border-color: rgba(255,255,255,0.08); }
 body.dark-theme .quiz-result-card { background: rgba(197,160,89,0.04); border-color: rgba(197,160,89,0.15); }
 
+/* === INSTAGRAM STORIES === */
+.ig-stories-row {
+    display: flex;
+    gap: 14px;
+    padding: 16px 16px 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    align-items: flex-start;
+    background: var(--bg);
+    border-bottom: 1px solid rgba(128,128,128,0.07);
+}
+.ig-stories-row::-webkit-scrollbar { display: none; }
+
+.ig-story-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    flex-shrink: 0;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.ig-story-ring {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    padding: 2.5px;
+    background: linear-gradient(135deg, #c5a059 0%, #e8d5a3 50%, #c5a059 100%);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.ig-story-ring:active { transform: scale(0.93); opacity: 0.85; }
+
+.ig-story-ring.seen {
+    background: linear-gradient(135deg, #ccc 0%, #e0e0e0 100%);
+}
+
+.ig-story-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2.5px solid var(--bg);
+    overflow: hidden;
+    background: #f0f0f0;
+}
+
+.ig-story-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.ig-story-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-gray);
+    text-align: center;
+    max-width: 64px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+body.dark-theme .ig-story-ring.seen {
+    background: linear-gradient(135deg, #444 0%, #555 100%);
+}
+
         
     </style>
 </head>
@@ -3050,6 +3121,9 @@ body.dark-theme .quiz-result-card { background: rgba(197,160,89,0.04); border-co
     <div class="tt-hint">
         Не переходить у Telegram? Тисніть <b>(⋯)</b> та <b>«Відкрити у браузері»</b>.
     </div>
+
+    <!-- INSTAGRAM STORIES -->
+    <div class="ig-stories-row" id="igStoriesRow" style="display:none;"></div>
 
     <div class="hero-carousel" id="heroCarousel">
         <div class="slide logo-slide active">
@@ -3879,7 +3953,7 @@ body.dark-theme .quiz-result-card { background: rgba(197,160,89,0.04); border-co
 
         const brand = document.getElementById('mB').innerText;
         const name = document.getElementById('mN').innerText;
-        const rawDesc = document.getElementById('mD').innerText;
+        const rawDesc = window._viraPureDesc || '';
         
         const rawSpeech = generateViraSpeech(brand, name, rawDesc);
         const speechText = applyPronunciationMap(rawSpeech);
@@ -4608,6 +4682,8 @@ function renderGenderBar(value) {
         } else { scarcityDiv.innerHTML = ''; }
         
         let rawText = (isWeekly && weekText) ? weekText : desc;
+        // Зберігаємо чистий опис для ШІ Асистента (до будь-якої HTML-обробки)
+        window._viraPureDesc = rawText || '';
         let f = rawText;
 // --- СИНХРОНІЗАЦІЯ ТА СТАБІЛЬНІСТЬ ---
         let dL = 60, dS = 60, dSw = 20, dF = 20, dG = 50;
@@ -5552,7 +5628,62 @@ function renderGenderBar(value) {
         document.getElementById('themeBtn').innerHTML = isDark ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>' : '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
     }
 
-    // === SCENT QUIZ ===
+    // === INSTAGRAM STORIES ===
+    // Таб у Google Sheets: колонки — A:фото URL, B:посилання на пост/рілс, C:підпис (опційно)
+    // gid таба зі сторіс — замінити на свій після створення таба
+    const STORIES_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpreeDVfMb9m8VoH2fWjx3-P4e2XjpeFabLSODfQIBaLcXUA9T9xWfk4v_6R89JLgR-lvd0gwEakwM/pub?gid=STORIES_GID&single=true&output=csv';
+
+    async function loadStories() {
+        try {
+            const res = await fetch(STORIES_CSV + '&v=' + Date.now());
+            if (!res.ok) return;
+            const text = await res.text();
+            const rows = safeParseCSV(text).filter(r => r[0] && r[0].startsWith('http'));
+            if (rows.length === 0) return;
+
+            const seenStories = JSON.parse(localStorage.getItem('vr_seen_stories') || '[]');
+            const row = document.getElementById('igStoriesRow');
+            row.innerHTML = '';
+
+            rows.forEach((r, i) => {
+                const imgUrl  = r[0] ? r[0].trim() : '';
+                const linkUrl = r[1] ? r[1].trim() : 'https://www.instagram.com/vrshopping.khm';
+                const label   = r[2] ? r[2].trim() : 'Новинка';
+                const storyId = 'story_' + i;
+                const isSeen  = seenStories.includes(storyId);
+
+                const item = document.createElement('a');
+                item.className = 'ig-story-item';
+                item.href = linkUrl;
+                item.target = '_blank';
+                item.rel = 'noopener';
+                item.innerHTML = `
+                    <div class="ig-story-ring ${isSeen ? 'seen' : ''}">
+                        <div class="ig-story-inner">
+                            <img src="${imgUrl}" alt="${label} — VR Perfumes Instagram" loading="lazy" onerror="this.closest('.ig-story-item').style.display='none'">
+                        </div>
+                    </div>
+                    <span class="ig-story-label">${label}</span>`;
+
+                item.addEventListener('click', () => {
+                    // Позначаємо як переглянуту
+                    if (!seenStories.includes(storyId)) {
+                        seenStories.push(storyId);
+                        localStorage.setItem('vr_seen_stories', JSON.stringify(seenStories));
+                    }
+                    item.querySelector('.ig-story-ring').classList.add('seen');
+                });
+
+                row.appendChild(item);
+            });
+
+            row.style.display = 'flex';
+        } catch(e) {
+            // Якщо таб не налаштований — просто не показуємо
+        }
+    }
+
+    loadStories();
     const quizAnswers = [null, null, null, null];
 
     const quizNoteMap = {

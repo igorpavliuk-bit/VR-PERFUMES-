@@ -51,8 +51,7 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
         }
 
-        body.dark-theme .card, 
-        body.dark-theme .modal-content, 
+                body.dark-theme .modal-content, 
         body.dark-theme .cart-drawer, 
         body.dark-theme .about-section, 
         body.dark-theme .reviews-section, 
@@ -60,6 +59,15 @@
             background: var(--bg); 
             border-color: rgba(255, 255, 255, 0.05); 
         }
+
+        body.dark-theme .card {
+            background: rgba(30, 30, 30, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
 
         body.dark-theme .search-dropdown, 
         body.dark-theme .tg-chat-bubble, 

@@ -3541,8 +3541,13 @@ body.dark-theme .passport-card {
     gap: 10px;
 }
 
+/* Брендові кольори-акценти */
+.brand-tile { --tile-accent: #c5a059; }
+
 .brand-tile {
-    background: #0d0d0d;
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-radius: 14px;
     aspect-ratio: 3/2;
     display: flex;
@@ -3551,36 +3556,68 @@ body.dark-theme .passport-card {
     justify-content: center;
     gap: 5px;
     cursor: pointer;
-    padding: 18px 10px;
+    padding: 18px 12px;
     box-sizing: border-box;
-    border: 1px solid rgba(197,160,89,0.12);
-    transition: transform 0.18s ease, border-color 0.18s ease;
+    border: 1px solid rgba(255,255,255,0.8);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
     position: relative;
     overflow: hidden;
 }
+
+body.dark-theme .brand-tile {
+    background: rgba(26,26,26,0.75);
+    border-color: rgba(255,255,255,0.07);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
 .brand-tile::before {
     content: '';
     position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(197,160,89,0.08) 0%, transparent 65%);
+    top: 0; left: 0; right: 0;
+    height: 40%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, transparent 100%);
     pointer-events: none;
+    border-radius: 14px 14px 0 0;
 }
+
+body.dark-theme .brand-tile::before {
+    background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
+}
+
+/* Золота лінія-акцент знизу */
+.brand-tile::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 20%; right: 20%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--tile-accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.brand-tile:active::after { opacity: 1; }
+
 .brand-tile:active {
     transform: scale(0.96);
-    border-color: rgba(197,160,89,0.4);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
 }
+
 .brand-tile-name {
     font-family: var(--cinzel);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 800;
-    color: #f0f0f0;
+    color: var(--text-dark);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     text-align: center;
-    line-height: 1.25;
+    line-height: 1.3;
     position: relative;
     z-index: 1;
 }
+
+body.dark-theme .brand-tile-name { color: #f0f0f0; }
+
 .brand-tile-count {
     font-size: 9px;
     color: var(--gold);
@@ -3590,6 +3627,23 @@ body.dark-theme .passport-card {
     position: relative;
     z-index: 1;
 }
+
+/* Кнопка ШІ асистента на плитці */
+.brand-tile-voice {
+    position: absolute;
+    top: 7px;
+    right: 8px;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+    z-index: 2;
+}
+.brand-tile:active .brand-tile-voice { opacity: 0.8; }
+.brand-tile-voice svg { stroke: var(--gold); }
 
 /* Views */
 .brand-grid-view.hidden { display: none; }
@@ -4823,8 +4877,20 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
         
         const p1 = globalCatalogData.find(x => x[1] === p1Name);
         const p2 = globalCatalogData.find(x => x[1] === p2Name);
+        // Визначаємо чи є Молекула — за назвою аромату або бренду Zarkoperfume
+        const isMolecule1 = p1Name === "Будь-який аромат" || 
+            (p1 && (p1[1]?.toLowerCase().includes('molecule') || p1[1]?.toLowerCase().includes('молекул') || p1[0]?.toLowerCase().includes('zarkoperfume')));
+        const isMolecule2 = p2Name === "Будь-який аромат" || 
+            (p2 && (p2[1]?.toLowerCase().includes('molecule') || p2[1]?.toLowerCase().includes('молекул') || p2[0]?.toLowerCase().includes('zarkoperfume')));
+
+        // Бренди для персоналізованих інструкцій
+        const brand1 = p1 ? p1[0] : '';
+        const brand2 = (p2Name === "Будь-який аромат") ? 'Zarkoperfume' : (p2 ? p2[0] : '');
+        const molBrand = isMolecule1 ? (brand1 || 'Zarkoperfume') : (isMolecule2 ? (brand2 || 'Zarkoperfume') : '');
+        const baseBrand = isMolecule1 ? brand2 : brand1;
+
         const d1 = p1 ? (p1[4] + " " + p1[0]).toLowerCase() : "";
-        const d2 = (p2Name === "Будь-який аромат") ? "молекула 01" : (p2 ? (p2[4] + " " + p2[0]).toLowerCase() : "");
+        const d2 = (p2Name === "Будь-який аромат") ? "молекула 01 zarkoperfume" : (p2 ? (p2[4] + " " + p2[0]).toLowerCase() : "");
 
         // Генеруємо унікальну назву міксу
         const mixNames = {
@@ -4842,30 +4908,38 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
         let ratio = "Рекомендована пропорція: 2 розпилення бази та 1 розпилення акценту зверху.";
         let sillage = "Теплий, об'ємний шлейф з характером обох ароматів.";
 
-        if (d1.includes('молекул') || d2.includes('молекул')) {
+        if (isMolecule1 || isMolecule2 || d1.includes('молекул') || d2.includes('молекул')) {
             mixKey = 'молекул'; title = "Молекулярний підсилювач";
-            text = "Це поєднання зробить ваш шлейф неймовірно дифузним та об'ємним на шкірі.";
-            ratio = "Секрет: Наносьте Молекулу фінальним шаром для ефекту 'живого' аромату.";
+            text = `${molBrand} підсилить шлейф ${baseBrand}, зробивши його неймовірно дифузним та об'ємним на шкірі.`;
+            ratio = `Спочатку нанесіть ${baseBrand} на пульсові точки (2 розпилення). Потім поверх — ${molBrand} (1 розпилення). Молекула діє як підсилювач — вона не додає запаху, а розкриває і розширює шлейф вашого аромату.`;
             sillage = "Надпотужний шлейф — наче аромат живе власним життям.";
         } else if ((d1.includes('уд') && d2.includes('троянд')) || (d2.includes('уд') && d1.includes('троянд'))) {
+            const oudBrand = d1.includes('уд') ? brand1 : brand2;
+            const roseBrand = d1.includes('троянд') ? brand1 : brand2;
             mixKey = 'уд_троянд'; title = "Королівський Схід";
             text = "Еталонне поєднання. Темний, густий уд ідеально збалансовується оксамитовою трояндою.";
-            ratio = "Пропорція: 1 розпилення уду на 2 розпилення троянди.";
+            ratio = `Нанесіть ${oudBrand} (1 розпилення на зап'ястя), потім ${roseBrand} (2 розпилення на шию). Уд — база, троянда — серце.`;
             sillage = "Глибокий, чуттєвий шлейф — орієнтальний з квітковим серцем.";
         } else if ((d1.includes('ваніл') && d2.includes('дерев')) || (d2.includes('ваніл') && d1.includes('дерев'))) {
+            const vanBrand = d1.includes('ваніл') ? brand1 : brand2;
+            const woodBrand = d1.includes('дерев') ? brand1 : brand2;
             mixKey = 'ваніл_дерев'; title = "Гурманський баланс";
             text = "Сухі деревні ноти заспокоять солодкість ванілі, перетворивши її на глибоку базу.";
-            ratio = "Пропорція: 1 до 1, наносити поряд.";
+            ratio = `Наносьте ${vanBrand} і ${woodBrand} поряд у рівних частинах — кожен на своє зап'ястя. Не змішуйте рідини, дозвольте шкірі об'єднати аромати.`;
             sillage = "Теплий бурштиновий шлейф — солодкий, але збалансований.";
         } else if ((d1.includes('цитрус') && d2.includes('квіт')) || (d2.includes('цитрус') && d1.includes('квіт'))) {
+            const citBrand = d1.includes('цитрус') ? brand1 : brand2;
+            const florBrand = d1.includes('квіт') ? brand1 : brand2;
             mixKey = 'цитрус_квіт'; title = "Іскриста свіжість";
             text = "Цитруси підсвітять квітковий букет, додадуть йому повітря та яскравості.";
-            ratio = "Спочатку квіти (2 пшики), потім цитрусова хмарка зверху.";
+            ratio = `Спочатку ${florBrand} (2 розпилення на шию). Потім ${citBrand} (1 розпилення — легка хмарка поверх). Цитрус повинен бути фінальним акордом.`;
             sillage = "Легкий, повітряний шлейф — свіжий та квітковий.";
         } else if (d1.includes('мускус') || d2.includes('мускус')) {
+            const musBrand = d1.includes('мускус') ? brand1 : brand2;
+            const otherBrand = d1.includes('мускус') ? brand2 : brand1;
             mixKey = 'мускус'; title = "Ефект Другої шкіри";
             text = "Мускус згладить гострі кути іншого аромату, додасть пудровості та відчуття дорогого догляду.";
-            ratio = "Мускус як база (2 пшики), зверху акцент (1 пшик).";
+            ratio = `${musBrand} — база (2 розпилення на шкіру). Зверху — ${otherBrand} (1 розпилення). Мускус «пом'якшує» будь-який аромат.`;
             sillage = "Камерний шлейф — тільки для тих, хто поруч.";
         }
 
@@ -6498,8 +6572,12 @@ function renderGenderBar(value) {
     }
     
     function renderBrandGallery(cat) {
-        const brs = [...new Set(cat.map(c => c[0]))].sort();
-        // Наповнюємо приховані brand-btn для сумісності з setBrand/setCategory
+        // Виключаємо SET-категорії — це набори, а не бренд
+        const brs = [...new Set(cat.map(c => c[0]))]
+            .filter(b => b && !b.toLowerCase().includes('set') && !b.toLowerCase().includes('сет') && !b.toLowerCase().includes('набір'))
+            .sort();
+
+        // Наповнюємо приховані brand-btn для сумісності
         const s = document.getElementById('brandSlider');
         if (s) {
             s.innerHTML = '';
@@ -6510,20 +6588,45 @@ function renderGenderBar(value) {
                 const btn = document.createElement('button'); btn.className = 'brand-btn'; btn.innerText = b; btn.onclick = function() { setBrand(b, this); }; s.appendChild(btn);
             });
         }
+
         // Наповнюємо плитки галереї брендів
         const grid = document.getElementById('brandTilesGrid');
         if (!grid) return;
         grid.innerHTML = '';
+
         brs.forEach(b => {
             const count = cat.filter(c => c[0] === b).length;
+            const countWord = count === 1 ? 'аромат' : count < 5 ? 'аромати' : 'ароматів';
+
             const tile = document.createElement('div');
             tile.className = 'brand-tile';
-            tile.innerHTML = `<div class="brand-tile-name">${b}</div><div class="brand-tile-count">${count} ${count === 1 ? 'аромат' : count < 5 ? 'аромати' : 'ароматів'}</div>`;
+            tile.innerHTML = `
+                <button class="brand-tile-voice" onclick="event.stopPropagation(); speakBrandLore('${b.replace(/'/g, "\\'")}');" title="Послухати про бренд">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                </button>
+                <div class="brand-tile-name">${b}</div>
+                <div class="brand-tile-count">${count} ${countWord}</div>`;
             tile.onclick = () => showBrandPage(b);
             grid.appendChild(tile);
         });
     }
     
+    function speakBrandLore(brandName) {
+        if (!window.speechSynthesis) return;
+        window.speechSynthesis.cancel();
+
+        const lore = brandLoreData[brandName];
+        if (!lore) return;
+
+        // Застосовуємо словник вимови
+        const text = applyPronunciationMap(lore);
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'uk-UA';
+        utter.rate = 0.88;
+        utter.pitch = 1.0;
+        window.speechSynthesis.speak(utter);
+    }
+
     function formatNews(newsText) {
         if(!newsText) return;
         let formatted = newsText.replace(/\n/g, '<br>').replace(/\*(.*?)\*/g, '<b>$1</b>').replace(/\{(.*?)\}/g, '<span style="color:var(--gold); font-weight:bold; cursor:pointer; text-decoration:underline;" onclick="navigateToPerfume(\'$1\')">$1</span>');

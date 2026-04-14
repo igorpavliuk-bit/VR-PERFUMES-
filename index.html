@@ -3244,6 +3244,246 @@ body.dark-theme .ig-story-ring.seen {
     background: linear-gradient(135deg, #444 0%, #555 100%);
 }
 
+/* === 1. PARALLAX TILT — Живий флакон === */
+.aura-wrapper {
+    position: relative;
+    perspective: 600px;
+    cursor: grab;
+    user-select: none;
+}
+.aura-wrapper:active { cursor: grabbing; }
+
+#mImg {
+    position: relative;
+    z-index: 5;
+    max-height: 180px;
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+    transform-style: preserve-3d;
+}
+
+#modalAura {
+    transition: transform 0.15s ease-out;
+    will-change: transform;
+}
+
+/* === 2. COLOR MOOD — підсвітка під бренд === */
+.vol-chip {
+    transition: all 0.3s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+}
+.mood-glow {
+    transition: box-shadow 0.6s ease, border-color 0.6s ease;
+}
+
+/* === 3. MIX LAB CERTIFICATE === */
+.mix-certificate {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.mix-cert-card {
+    background: #0e0e0e;
+    border: 1px solid rgba(197,160,89,0.4);
+    border-radius: 16px;
+    padding: 32px 28px;
+    max-width: 340px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 0 60px rgba(197,160,89,0.15), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.mix-cert-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: radial-gradient(ellipse at top, rgba(197,160,89,0.08) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.cert-logo {
+    font-family: var(--cinzel);
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: block;
+    opacity: 0.7;
+}
+
+.cert-formula {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cert-formula-name {
+    color: rgba(255,255,255,0.9);
+    font-weight: 700;
+    font-size: 11px;
+}
+
+.cert-plus {
+    color: var(--gold);
+    font-size: 14px;
+}
+
+.cert-title {
+    font-family: var(--cinzel);
+    font-size: 22px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+    line-height: 1.2;
+}
+
+.cert-subtitle {
+    font-size: 11px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    font-weight: 700;
+}
+
+.cert-desc {
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+.cert-divider {
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 16px auto;
+}
+
+.cert-ratio {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+}
+
+.cert-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.cert-btn {
+    flex: 1;
+    padding: 12px;
+    font-size: 9px;
+    font-family: var(--cinzel);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.cert-btn-primary {
+    background: var(--gold);
+    color: #000;
+}
+
+.cert-btn-secondary {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.7);
+}
+
+.cert-btn-secondary:active { transform: scale(0.97); }
+.cert-btn-primary:active { transform: scale(0.97); }
+
+/* === 4. DYNAMIC BG — Синестезія фону === */
+.synesthesia-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+    background: transparent;
+}
+.synesthesia-overlay.active { opacity: 1; }
+
+/* === 5. АРОМАТ-ПАСПОРТ === */
+.passport-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    padding: 8px 16px;
+    border: 1px solid rgba(197,160,89,0.3);
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gold);
+    cursor: pointer;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+.passport-btn:active { transform: scale(0.97); }
+
+.passport-card {
+    margin-top: 12px;
+    background: rgba(197,160,89,0.04);
+    border: 1px solid rgba(197,160,89,0.15);
+    border-radius: 12px;
+    padding: 16px;
+    animation: fadeIn 0.4s ease;
+    display: none;
+    text-align: left;
+}
+.passport-card.open { display: block; }
+
+.passport-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(128,128,128,0.08);
+    font-size: 12px;
+    line-height: 1.4;
+}
+.passport-row:last-child { border-bottom: none; }
+.passport-row svg { flex-shrink: 0; margin-top: 1px; }
+.passport-row-label { font-weight: 700; color: var(--gold); font-size: 9px; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 2px; }
+
+body.dark-theme .passport-card {
+    background: rgba(197,160,89,0.03);
+    border-color: rgba(197,160,89,0.12);
+}
+
         
     </style>
 </head>
@@ -3252,6 +3492,7 @@ body.dark-theme .ig-story-ring.seen {
     <div class="tt-hint">
         Не переходить у Telegram? Тисніть <b>(⋯)</b> та <b>«Відкрити у браузері»</b>.
     </div>
+    <div class="synesthesia-overlay" id="synesthesiaOverlay"></div>
 
     <!-- INSTAGRAM STORIES -->
     <div class="ig-stories-row" id="igStoriesRow" style="display:none;"></div>
@@ -3643,6 +3884,17 @@ body.dark-theme .ig-story-ring.seen {
             </div>
             <input type="text" id="cartContact" class="cart-comment-input" placeholder="Telegram @нік або телефон *" required>
             <textarea id="cartComment" class="cart-comment-input" rows="2" placeholder="Місто, відділення НП..."></textarea>
+            <label class="gift-wrap-container" style="margin-top:10px; display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid rgba(197,160,89,0.2); border-radius:10px; cursor:pointer; background:rgba(197,160,89,0.03);">
+                <input type="checkbox" id="giftWrapCheckbox" style="display:none;" onchange="updateCartUI()">
+                <div class="gift-wrap-box" style="width:20px; height:20px; border-radius:5px; border:1.5px solid rgba(197,160,89,0.4); display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0;" id="giftWrapBox">
+                    <svg id="giftWrapCheck" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="var(--gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                    <div class="gift-wrap-text" style="font-size:12px; font-weight:700; color:var(--text-dark);">Подарункове пакування</div>
+                    <div style="font-size:10px; color:var(--gold); font-weight:700; margin-top:2px;">+100 грн · Стрічка, крафт-папір, листівка</div>
+                </div>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="rgba(197,160,89,0.5)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto; flex-shrink:0;"><path d="M20 12v10H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>
+            </label>
         </div>
         <div class="cart-footer">
             <div class="cart-total-row"><span>Всього:</span><strong id="cartTotalSum">0 грн</strong></div>
@@ -3674,6 +3926,7 @@ body.dark-theme .ig-story-ring.seen {
                     </div>
 
                     <div id="mD" style="text-align: left; font-size: 14px; line-height: 1.6;"></div>
+                    <div id="passportBlock" style="text-align:center;"></div>
                     <div id="reviewFormContainerHTML" style="margin-top: 25px;"></div>
                 </div>
             </div>
@@ -4153,12 +4406,11 @@ body.dark-theme .ig-story-ring.seen {
         window._volAdvisorActive = false;
         
         if (viraAmbient) handleViraAtmosphere('stop');
-        
-        if (isSpeaking) { 
-            synth.cancel(); 
-            isSpeaking = false; 
-            updateVoiceBtn(false); 
-        }
+        if (isSpeaking) { synth.cancel(); isSpeaking = false; updateVoiceBtn(false); }
+
+        // Прибираємо синестезію
+        const overlay = document.getElementById('synesthesiaOverlay');
+        if (overlay) { overlay.classList.remove('active'); overlay.style.background = 'transparent'; }
     }
 
     // === ОЛЬФАКТОРНА ЛАБОРАТОРІЯ (ОНОВЛЕНА ЛОГІКА ПРОПОРЦІЙ) ===
@@ -4182,58 +4434,126 @@ body.dark-theme .ig-story-ring.seen {
         const p2Name = document.getElementById('layer2').value;
         const resultBox = document.getElementById('layeringResult');
 
-        if (!p1Name || !p2Name) { 
-            resultBox.innerHTML = "Оберіть комбінацію"; 
-            return; 
-        }
-        
-        if (p1Name === p2Name) { 
-            resultBox.innerHTML = "Спробуйте обрати два різні аромати"; 
-            return; 
-        }
+        if (!p1Name || !p2Name) { resultBox.innerHTML = "Оберіть комбінацію"; return; }
+        if (p1Name === p2Name) { resultBox.innerHTML = "Спробуйте обрати два різні аромати"; return; }
         
         const p1 = globalCatalogData.find(x => x[1] === p1Name);
         const p2 = globalCatalogData.find(x => x[1] === p2Name);
-
         const d1 = p1 ? (p1[4] + " " + p1[0]).toLowerCase() : "";
         const d2 = (p2Name === "Будь-який аромат") ? "молекула 01" : (p2 ? (p2[4] + " " + p2[0]).toLowerCase() : "");
 
+        // Генеруємо унікальну назву міксу
+        const mixNames = {
+            'молекул': ['Invisible Signature', 'Phantom Sillage', 'Air Amplifier'],
+            'уд_троянд': ['Midnight Rose', 'Royal Oud', 'Oriental Embrace'],
+            'ваніл_дерев': ['Velvet Wood', 'Amber Nocturne', 'Sweet Timber'],
+            'цитрус_квіт': ['Morning Bloom', 'Solar Petals', 'Citrus Garden'],
+            'мускус': ['Second Skin', 'Cashmere Cloud', 'Silk Whisper'],
+            'default': ['Midnight Illusion', 'Golden Accord', 'Secret Formula', 'Velvet Noir', 'Alchemy No.1']
+        };
+
+        let mixKey = 'default';
         let title = "Ексклюзивний мікс";
         let text = "Ці два аромати створюють глибину, якої немає в жодному готовому флаконі.";
         let ratio = "Рекомендована пропорція: 2 розпилення бази та 1 розпилення акценту зверху.";
+        let sillage = "Теплий, об'ємний шлейф з характером обох ароматів.";
 
-        // Професійні поради бутика
         if (d1.includes('молекул') || d2.includes('молекул')) {
-            title = "Молекулярний підсилювач";
+            mixKey = 'молекул'; title = "Молекулярний підсилювач";
             text = "Це поєднання зробить ваш шлейф неймовірно дифузним та об'ємним на шкірі.";
             ratio = "Секрет: Наносьте Молекулу фінальним шаром для ефекту 'живого' аромату.";
+            sillage = "Надпотужний шлейф — наче аромат живе власним життям.";
         } else if ((d1.includes('уд') && d2.includes('троянд')) || (d2.includes('уд') && d1.includes('троянд'))) {
-            title = "Королівський Схід";
+            mixKey = 'уд_троянд'; title = "Королівський Схід";
             text = "Еталонне поєднання. Темний, густий уд ідеально збалансовується оксамитовою трояндою.";
             ratio = "Пропорція: 1 розпилення уду на 2 розпилення троянди.";
+            sillage = "Глибокий, чуттєвий шлейф — орієнтальний з квітковим серцем.";
         } else if ((d1.includes('ваніл') && d2.includes('дерев')) || (d2.includes('ваніл') && d1.includes('дерев'))) {
-            title = "Гурманський баланс";
+            mixKey = 'ваніл_дерев'; title = "Гурманський баланс";
             text = "Сухі деревні ноти заспокоять солодкість ванілі, перетворивши її на глибоку базу.";
-            ratio = "Пропорція: 1 до 1, наносити поряд, уникаючи прямого змішування рідин.";
+            ratio = "Пропорція: 1 до 1, наносити поряд.";
+            sillage = "Теплий бурштиновий шлейф — солодкий, але збалансований.";
         } else if ((d1.includes('цитрус') && d2.includes('квіт')) || (d2.includes('цитрус') && d1.includes('квіт'))) {
-            title = "Іскриста свіжість";
+            mixKey = 'цитрус_квіт'; title = "Іскриста свіжість";
             text = "Цитруси підсвітять квітковий букет, додадуть йому повітря та яскравості.";
-            ratio = "Пропорція: Спочатку квіти (2 пшики), потім цитрусова хмарка зверху.";
+            ratio = "Спочатку квіти (2 пшики), потім цитрусова хмарка зверху.";
+            sillage = "Легкий, повітряний шлейф — свіжий та квітковий.";
         } else if (d1.includes('мускус') || d2.includes('мускус')) {
-            title = "Ефект 'Другої шкіри'";
-            text = "Мускус згладить гострі кути іншого аромату, додасть йому пудровості та відчуття дорогого догляду.";
-            ratio = "Пропорція: Мускус як база (2 пшики), зверху акцент (1 пшик).";
+            mixKey = 'мускус'; title = "Ефект Другої шкіри";
+            text = "Мускус згладить гострі кути іншого аромату, додасть пудровості та відчуття дорогого догляду.";
+            ratio = "Мускус як база (2 пшики), зверху акцент (1 пшик).";
+            sillage = "Камерний шлейф — тільки для тих, хто поруч.";
         }
 
+        const names = mixNames[mixKey] || mixNames['default'];
+        const mixName = names[Math.floor(Math.random() * names.length)];
+
+        // Зберігаємо для сертифікату
+        window._lastMix = { p1Name, p2Name, mixName, title, text, ratio, sillage };
+
         resultBox.innerHTML = `
-            <div style="background: rgba(197, 160, 89, 0.05); padding: 15px; border-radius: 10px; border: 1px dashed var(--gold); animation: fadeIn 0.5s ease;">
-                <b style="color:var(--gold); font-size: 14px; text-transform: uppercase;">${title}</b>
+            <div style="background: rgba(197,160,89,0.05); padding: 15px; border-radius: 10px; border: 1px dashed var(--gold); animation: fadeIn 0.5s ease;">
+                <div style="font-size:9px; color:rgba(197,160,89,0.6); text-transform:uppercase; letter-spacing:2px; margin-bottom:4px;">Авторський мікс</div>
+                <b style="color:var(--gold); font-size: 16px; text-transform: uppercase; font-family:var(--cinzel);">${mixName}</b>
                 <p style="margin: 10px 0; font-size: 13px; line-height: 1.5; color: var(--text-dark);">${text}</p>
                 <div style="font-size: 11px; font-weight: 800; color: var(--gold); margin-bottom: 15px;">${ratio}</div>
-                <button class="cart-checkout-btn" style="padding: 10px; font-size: 10px;" onclick="addMixToCart(document.getElementById('layer1').value, document.getElementById('layer2').value)">КУПИТИ ОБИДВА ДЛЯ МІКСУ</button>
-                
-            </div>
-        `;
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button class="cart-checkout-btn" style="padding: 10px 14px; font-size: 10px; flex:1;" onclick="addMixToCart(document.getElementById('layer1').value, document.getElementById('layer2').value)">КУПИТИ ОБИДВА</button>
+                    <button style="padding:10px 14px; font-size:10px; font-family:var(--cinzel); font-weight:800; text-transform:uppercase; letter-spacing:1px; border:1px solid var(--gold); color:var(--gold); background:transparent; border-radius:6px; cursor:pointer; flex:1;" onclick="showMixCertificate()">СЕРТИФІКАТ</button>
+                </div>
+            </div>`;
+    }
+
+    function showMixCertificate() {
+        const mix = window._lastMix;
+        if (!mix) return;
+
+        const cert = document.createElement('div');
+        cert.className = 'mix-certificate';
+        cert.id = 'mixCertModal';
+        cert.innerHTML = `
+            <div class="mix-cert-card" id="mixCertCard">
+                <span class="cert-logo">VR Perfumes · Olfactory Lab</span>
+                <div class="cert-formula">
+                    <span class="cert-formula-name">${mix.p1Name}</span>
+                    <span class="cert-plus">+</span>
+                    <span class="cert-formula-name">${mix.p2Name}</span>
+                </div>
+                <div class="cert-divider"></div>
+                <h2 class="cert-title">${mix.mixName}</h2>
+                <div class="cert-subtitle">Авторська формула</div>
+                <p class="cert-desc">${mix.text}</p>
+                <div class="cert-ratio">${mix.ratio}</div>
+                <div style="font-size:10px; color:rgba(255,255,255,0.35); margin-bottom:20px; letter-spacing:0.5px;">Шлейф: ${mix.sillage}</div>
+                <div class="cert-divider"></div>
+                <div style="font-size:9px; color:rgba(255,255,255,0.2); letter-spacing:2px; text-transform:uppercase; margin:16px 0 20px;">vr-perfumes.github.io</div>
+                <div class="cert-actions">
+                    <button class="cert-btn cert-btn-secondary" onclick="document.getElementById('mixCertModal').remove()">Закрити</button>
+                    <button class="cert-btn cert-btn-primary" onclick="saveCertAsImage()">Зберегти</button>
+                </div>
+            </div>`;
+        document.body.appendChild(cert);
+        cert.addEventListener('click', e => { if (e.target === cert) cert.remove(); });
+    }
+
+    async function saveCertAsImage() {
+        // Використовуємо html2canvas якщо доступний, або просто Share API
+        const card = document.getElementById('mixCertCard');
+        const mix = window._lastMix;
+        if (!mix) return;
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: `${mix.mixName} — мій авторський мікс`,
+                    text: `Я створила свій авторський аромат "${mix.mixName}" у VR Perfumes!\n${mix.p1Name} + ${mix.p2Name}\n${mix.text}\nvr-perfumes.github.io`,
+                });
+            } catch(e) {}
+        } else if (navigator.clipboard) {
+            const text = `${mix.mixName}\n${mix.p1Name} + ${mix.p2Name}\n${mix.text}\nvr-perfumes.github.io`;
+            navigator.clipboard.writeText(text);
+            alert('Формулу скопійовано! Вставте в Instagram Stories.');
+        }
     }
 
     // === ЛОГІКА ДИНАМІЧНОЇ АУРИ ТА СОРТУВАННЯ ===
@@ -4349,6 +4669,190 @@ body.dark-theme .ig-story-ring.seen {
                 goToSlide((carouselIndex - 1 + document.querySelectorAll('.slide').length) % document.querySelectorAll('.slide').length); 
             }
         }, {passive:true});
+    }
+
+    // === 1. PARALLAX TILT — Живий флакон ===
+    function initParallaxTilt() {
+        const wrapper = document.querySelector('.aura-wrapper');
+        const img = document.getElementById('mImg');
+        const aura = document.getElementById('modalAura');
+        if (!wrapper || !img) return;
+
+        // Прибираємо старі listeners
+        wrapper.replaceWith(wrapper.cloneNode(true));
+        const newWrapper = document.querySelector('.aura-wrapper');
+        const newImg = document.getElementById('mImg');
+        const newAura = document.getElementById('modalAura');
+
+        function applyTilt(x, y, rect) {
+            const cx = rect.width / 2, cy = rect.height / 2;
+            const dx = (x - cx) / cx, dy = (y - cy) / cy;
+            const tiltX = dy * 12, tiltY = -dx * 12;
+            if (newImg) newImg.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateZ(10px)`;
+            if (newAura) newAura.style.transform = `rotateX(${tiltX * 0.4}deg) rotateY(${tiltY * 0.4}deg) translateZ(0px)`;
+        }
+
+        function resetTilt() {
+            if (newImg) newImg.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0px)';
+            if (newAura) newAura.style.transform = 'rotateX(0deg) rotateY(0deg) translateZ(0px)';
+        }
+
+        newWrapper.addEventListener('mousemove', e => {
+            const rect = newWrapper.getBoundingClientRect();
+            applyTilt(e.clientX - rect.left, e.clientY - rect.top, rect);
+        });
+        newWrapper.addEventListener('mouseleave', resetTilt);
+
+        newWrapper.addEventListener('touchmove', e => {
+            const touch = e.touches[0];
+            const rect = newWrapper.getBoundingClientRect();
+            applyTilt(touch.clientX - rect.left, touch.clientY - rect.top, rect);
+        }, { passive: true });
+        newWrapper.addEventListener('touchend', resetTilt, { passive: true });
+    }
+
+    // === 2. COLOR MOOD — підсвітка під бренд ===
+    const brandMoods = {
+        'baccarat':   { h: 197, s: 60 }, 'xerjoff':    { h: 45,  s: 70 },
+        'byredo':     { h: 220, s: 20 }, 'mancera':    { h: 35,  s: 65 },
+        'tom ford':   { h: 0,   s: 0  }, 'nishane':    { h: 160, s: 40 },
+        'initio':     { h: 280, s: 30 }, 'kilian':     { h: 45,  s: 80 },
+        'montale':    { h: 30,  s: 60 }, 'tiziana':    { h: 330, s: 50 },
+        'nasomatto':  { h: 15,  s: 55 }, 'ganymede':   { h: 195, s: 55 },
+        'memo':       { h: 150, s: 35 }, 'gritti':     { h: 55,  s: 70 },
+        'lattafa':    { h: 35,  s: 80 }, 'attar':      { h: 40,  s: 75 },
+    };
+
+    // Mood за нотами якщо бренд невідомий
+    function getMoodFromDesc(desc) {
+        const d = (desc || '').toLowerCase();
+        if (d.includes('уд') || d.includes('смол') || d.includes('ладан')) return { h: 20, s: 50 };
+        if (d.includes('троянд') || d.includes('жасмин')) return { h: 340, s: 55 };
+        if (d.includes('ваніл') || d.includes('карамел')) return { h: 35, s: 70 };
+        if (d.includes('цитрус') || d.includes('бергамот') || d.includes('лимон')) return { h: 50, s: 75 };
+        if (d.includes('мускус')) return { h: 300, s: 15 };
+        if (d.includes('деревн') || d.includes('кедр') || d.includes('сандал')) return { h: 25, s: 45 };
+        return { h: 45, s: 40 }; // золото за замовчуванням
+    }
+
+    function applyColorMood(brand, desc) {
+        const key = (brand || '').toLowerCase();
+        const mood = Object.keys(brandMoods).find(k => key.includes(k))
+            ? brandMoods[Object.keys(brandMoods).find(k => key.includes(k))]
+            : getMoodFromDesc(desc);
+
+        const { h, s } = mood;
+        const color = `hsl(${h}, ${s}%, 55%)`;
+        const colorLight = `hsla(${h}, ${s}%, 55%, 0.15)`;
+        const colorMid = `hsla(${h}, ${s}%, 55%, 0.25)`;
+
+        // Vol chips
+        document.querySelectorAll('.vol-chip').forEach(chip => {
+            chip.style.setProperty('--mood-color', color);
+            chip.style.setProperty('--mood-bg', colorLight);
+        });
+        document.querySelectorAll('.vol-chip.active').forEach(chip => {
+            chip.style.borderColor = color;
+            chip.style.color = color;
+            chip.style.background = colorLight;
+        });
+
+        // Order button glow
+        const btn = document.getElementById('modalOrderBtn');
+        if (btn) btn.style.boxShadow = `0 10px 30px ${colorMid}`;
+
+        // Aura посилення
+        const aura = document.getElementById('modalAura');
+        if (aura) aura.style.filter = `hue-rotate(${h - 45}deg) saturate(${1 + s/100})`;
+    }
+
+    // === 3. SYNESTHESIA — Динамічний фон ===
+    function applySynesthesia(desc, brand) {
+        const overlay = document.getElementById('synesthesiaOverlay');
+        if (!overlay) return;
+        const d = (desc || '').toLowerCase();
+        const b = (brand || '').toLowerCase();
+
+        let gradient = '';
+
+        if (d.includes('уд') || d.includes('смол') || b.includes('baccarat') || b.includes('xerjoff')) {
+            // Важкий уд — темний дим
+            gradient = 'radial-gradient(ellipse at 20% 50%, rgba(40,15,5,0.55) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(20,5,30,0.4) 0%, transparent 60%)';
+        } else if (d.includes('цитрус') || d.includes('бергамот') || d.includes('грейпфрут')) {
+            // Цитрус — сонячні бліки
+            gradient = 'radial-gradient(ellipse at 60% 20%, rgba(255,220,80,0.18) 0%, transparent 50%), radial-gradient(ellipse at 30% 80%, rgba(255,180,0,0.1) 0%, transparent 40%)';
+        } else if (d.includes('ваніл') || d.includes('карамел') || d.includes('шоколад')) {
+            // Гурманіка — бурштин
+            gradient = 'radial-gradient(ellipse at 50% 60%, rgba(180,100,20,0.2) 0%, transparent 55%), radial-gradient(ellipse at 70% 30%, rgba(220,140,50,0.12) 0%, transparent 45%)';
+        } else if (d.includes('троянд') || d.includes('жасмин') || d.includes('іонон')) {
+            // Квіти — пудрово-рожевий
+            gradient = 'radial-gradient(ellipse at 40% 40%, rgba(220,130,150,0.15) 0%, transparent 55%), radial-gradient(ellipse at 70% 70%, rgba(180,100,130,0.1) 0%, transparent 40%)';
+        } else if (d.includes('морськ') || d.includes('свіж') || d.includes('aqua')) {
+            // Морський — синьо-зелений
+            gradient = 'radial-gradient(ellipse at 50% 30%, rgba(50,150,200,0.15) 0%, transparent 50%), radial-gradient(ellipse at 30% 70%, rgba(30,100,150,0.1) 0%, transparent 45%)';
+        } else {
+            // Нейтральний — золоте мерехтіння
+            gradient = 'radial-gradient(ellipse at 60% 40%, rgba(197,160,89,0.08) 0%, transparent 55%)';
+        }
+
+        overlay.style.background = gradient;
+        overlay.classList.add('active');
+    }
+
+    // === 4. ПАСПОРТ АРОМАТУ ===
+    function renderPassport(brand, name, rawDesc) {
+        const block = document.getElementById('passportBlock');
+        if (!block) return;
+
+        const d = (rawDesc || '').toLowerCase();
+
+        // Генеруємо поради
+        function getWearTip() {
+            if (d.includes('уд') || d.includes('смол')) return { icon: 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707', label: 'Сезон', text: 'Осінь та зима. Холодне повітря розкриває деревні та смолисті ноти.' };
+            if (d.includes('цитрус') || d.includes('бергамот')) return { icon: 'M12 3v1m0 16v1m9-9h-1M4 12H3', label: 'Сезон', text: 'Весна та літо. Свіжість розкривається на теплій шкірі.' };
+            if (d.includes('ваніл') || d.includes('карамел')) return { icon: 'M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z', label: 'Найкращий сезон', text: 'Холодна пора. Тепло тіла розкриває гурманські ноти по-особливому.' };
+            return { icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z', label: 'Час носіння', text: 'Актуальний весь рік. Адаптується під настрій і сезон.' };
+        }
+
+        function getOccasionTip() {
+            if (d.includes('уд') || d.includes('ладан') || d.includes('смол')) return 'Вечірній вихід, театр, ресторан. Занадто інтенсивний для офісу.';
+            if (d.includes('мускус') || d.includes('пудр')) return 'Щоденний аромат та романтичні зустрічі. Камерний та чуттєвий.';
+            if (d.includes('цитрус') || d.includes('свіж')) return 'Офіс, прогулянки, активний день. Ненав\'язливий та енергійний.';
+            if (d.includes('троянд') || d.includes('жасмин')) return 'Побачення, вечірки, особливі моменти. Неможливо не помітити.';
+            return 'Універсальний. Підходить для будь-якого приводу.';
+        }
+
+        function getApplyTip() {
+            const lon = rawDesc.match(/стійкість:\s*(\d)/i);
+            const lonVal = lon ? parseInt(lon[1]) : 3;
+            if (lonVal >= 4) return 'Достатньо 2–3 розпилення на пульсові точки. Стійкість не потребує повторного нанесення.';
+            if (lonVal <= 2) return 'Наносьте на волосся та одяг — тканина тримає аромат довше за шкіру.';
+            return 'Зап\'ястя, шия, за вухами. Не розтирайте — дозвольте розкритися природно.';
+        }
+
+        const wearTip = getWearTip();
+        const occasion = getOccasionTip();
+        const applyTip = getApplyTip();
+
+        block.innerHTML = `
+            <button class="passport-btn" onclick="this.nextElementSibling.classList.toggle('open'); this.style.display='none';">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Як носити цей аромат?
+            </button>
+            <div class="passport-card" id="passportCard">
+                <div class="passport-row">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="${wearTip.icon}"/></svg>
+                    <div><span class="passport-row-label">${wearTip.label}</span>${wearTip.text}</div>
+                </div>
+                <div class="passport-row">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <div><span class="passport-row-label">Привід</span>${occasion}</div>
+                </div>
+                <div class="passport-row">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M12 8v4l3 3"/></svg>
+                    <div><span class="passport-row-label">Нанесення</span>${applyTip}</div>
+                </div>
+            </div>`;
     }
 
     function toggleAbout() {
@@ -5134,8 +5638,19 @@ function renderGenderBar(value) {
         updateModalStickyBar();
         const infoModal = document.getElementById('infoModal');
         infoModal.style.display = 'flex';
-        // Клас додаємо після display:flex щоб анімація спрацювала
         requestAnimationFrame(() => infoModal.classList.add('modal-visible'));
+
+        // Паспорт аромату
+        renderPassport(brand, name, rawText);
+
+        // Синестезія фону
+        applySynesthesia(rawText, brand);
+
+        // Color Mood
+        applyColorMood(brand, rawText);
+
+        // Parallax tilt на фото
+        initParallaxTilt();
     }
 
     function updateModalStickyBar() {
@@ -5359,6 +5874,16 @@ function renderGenderBar(value) {
         let finalTotal = total;
         if(cart.length > 0 && giftBox && giftBox.checked) { finalTotal += 100; }
         document.getElementById('cartTotalSum').innerText = finalTotal > 0 ? finalTotal + ' грн' : '0 грн';
+
+        // Візуальний стан чекбоксу пакування
+        const giftCheck = document.getElementById('giftWrapCheck');
+        const giftWrapBox = document.getElementById('giftWrapBox');
+        if (giftBox && giftCheck && giftWrapBox) {
+            const checked = giftBox.checked;
+            giftCheck.style.display = checked ? 'block' : 'none';
+            giftWrapBox.style.background = checked ? 'rgba(197,160,89,0.15)' : 'transparent';
+            giftWrapBox.style.borderColor = checked ? 'var(--gold)' : 'rgba(197,160,89,0.4)';
+        }
     }
 
     async function checkoutCart() {

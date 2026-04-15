@@ -3545,7 +3545,9 @@ body.dark-theme .passport-card {
 .brand-tile { --tile-accent: #c5a059; }
 
 .brand-tile {
-    background: rgba(197, 160, 89, 0.05);
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-radius: 14px;
     aspect-ratio: 3/2;
     display: flex;
@@ -3556,26 +3558,30 @@ body.dark-theme .passport-card {
     cursor: pointer;
     padding: 18px 12px;
     box-sizing: border-box;
-    border: 1px solid rgba(197, 160, 89, 0.25);
-    transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    border: 1px solid rgba(255,255,255,0.8);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
     position: relative;
     overflow: hidden;
 }
 
 body.dark-theme .brand-tile {
-    background: rgba(197, 160, 89, 0.07);
-    border-color: rgba(197, 160, 89, 0.2);
+    background: rgba(26,26,26,0.75);
+    border-color: rgba(255,255,255,0.07);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
 }
 
 .brand-tile::before {
     content: '';
     position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(197,160,89,0.1) 0%, transparent 65%);
+    top: 0; left: 0; right: 0;
+    height: 40%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, transparent 100%);
     pointer-events: none;
+    border-radius: 14px 14px 0 0;
 }
 body.dark-theme .brand-tile::before {
-    background: radial-gradient(ellipse at 50% 0%, rgba(197,160,89,0.12) 0%, transparent 65%);
+    background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
 }
 
 .brand-tile::after {
@@ -3583,7 +3589,7 @@ body.dark-theme .brand-tile::before {
     position: absolute;
     bottom: 0; left: 20%; right: 20%;
     height: 2px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    background: linear-gradient(90deg, transparent, var(--tile-accent), transparent);
     opacity: 0;
     transition: opacity 0.3s ease;
     border-radius: 2px;
@@ -3591,8 +3597,7 @@ body.dark-theme .brand-tile::before {
 .brand-tile:active::after { opacity: 1; }
 .brand-tile:active {
     transform: scale(0.96);
-    background: rgba(197, 160, 89, 0.12);
-    border-color: rgba(197, 160, 89, 0.5);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
 }
 
 /* SVG орнамент на плитці */
@@ -3609,7 +3614,7 @@ body.dark-theme .brand-tile::before {
     font-family: var(--cinzel);
     font-size: 11px;
     font-weight: 800;
-    color: var(--gold);
+    color: var(--text-dark);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     text-align: center;
@@ -3617,11 +3622,11 @@ body.dark-theme .brand-tile::before {
     position: relative;
     z-index: 1;
 }
-body.dark-theme .brand-tile-name { color: var(--gold); }
+body.dark-theme .brand-tile-name { color: #f0f0f0; }
 
 .brand-tile-count {
     font-size: 9px;
-    color: rgba(197, 160, 89, 0.65);
+    color: var(--tile-accent);
     text-transform: uppercase;
     letter-spacing: 1.5px;
     font-weight: 600;
@@ -3766,7 +3771,10 @@ body.dark-theme .brand-tile-name { color: var(--gold); }
 }
 
 /* Dark theme */
-
+body.dark-theme .brand-tile {
+    background: #0a0a0a;
+    border-color: rgba(197,160,89,0.18);
+}
 body.dark-theme .brand-item-mini {
     background: #1a1a1a;
     border-color: rgba(255,255,255,0.04);
@@ -4321,26 +4329,6 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
         "Zadig & Voltaire": "Паризький бренд із бунтарським духом. Заснований у 1997 році. Поєднує рок-н-рольну естетику з паризькою витонченістю. This is Her і This is Him — яскраві унісекс провокації.",
 
         "Hormone Paris": "Авторський французький бренд, що вивчає зв'язок між ароматом і емоціями. Базується на концепції феромонів та природного зваблення. Нішевий, рідкісний, запам'ятовується надовго.",
-
-        "Billie Eilish": "Дебютний аромат Біллі Айліш став сенсацією у 2021 році — бочкоподібний флакон у формі тіла, аромат на основі мандарину, ванілі та мускусу. Відображає крихкість і силу артистки. Ваш Turn — ще одна гучна глава її парфумерної історії.",
-
-        "Victoria's Secret": "Американська парфумерна легенда, відома флоральними та чуттєвими ароматами з 1990-х. Bombshell — культовий бестселер, який носять мільйони. Ідеальне поєднання доступності та справжньої жіночності.",
-
-        "Hermes": "Паризький дім Hermès заснований у 1837 році. Парфумерна лінія очолюється Крістін Нагель з 2016 року. Аромати Hermès відрізняються натуральністю, витонченістю і вишуканою шкіряною суперпозицією.",
-
-        "Lattafa Perfumes": "Дубайський дім ароматів Lattafa — один з провідних виробників Близького Сходу. Відомий неймовірним співвідношенням ціни та якості. Пропонує розкіш арабської парфумерії, доступну кожному.",
-
-        "Chloe": "Французький бренд Chloé відомий золотим ароматом — елегантним флоральним коктейлем з квіткової чистоти та мускусної теплоти. Ніжність як жіноча сила.",
-
-        "Billie Eilish Fragrances": "Парфумерна лінія Біллі Айліш поєднує її особистий стиль з теплими, обволікаючими ароматами. Ваніль, пачулі та мускус — це почерк її парфумерного всесвіту.",
-
-        "Orlov Paris": "Паризький дім розкоші, натхненний спадщиною графа Орлова та великоднього яйця Фаберже. Виняткові матеріали, флакони-скарби та аромати, що розповідають про вічну красу.",
-
-        "2787": "Нішевий бренд, де кожна цифра — координата парфумерного відкриття. Мінімалістична упаковка приховує сміливі, нестандартні аромати для тих, хто шукає щось поза межами класичних категорій.",
-
-        "Ganymede": "Французький нішевий бренд, натхненний грецькою міфологією. Ганімед — наймолодший бог Олімпу, виночерпій богів. Аромати поєднують небесну легкість з чуттєвою глибиною.",
-
-        "Orlov Paris": "Паризький дім розкоші, натхненний спадщиною графа Орлова та великоднього яйця Фаберже. Виняткові матеріали, флакони-скарби та аромати, що розповідають про вічну красу.",
     };
 
     function openBrandGallery() {
@@ -4361,31 +4349,7 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
     }
 
     function showBrandPage(brandName) {
-        // Динамічний fallback на основі ароматів з каталогу
-        function buildLoreFallback(bName) {
-            const items = globalCatalogData.filter(c => c[0] === bName);
-            const count = items.length;
-            const topItems = items.filter(c => c[7] && (c[7].toLowerCase().includes('топ') || c[7].toLowerCase().includes('хіт'))).slice(0, 2);
-            const hitNames = topItems.map(c => c[1]).join(' і ');
-            const noteSet = new Set();
-            items.forEach(c => {
-                const desc = (c[4] || '').toLowerCase();
-                if (desc.includes('троянд') || desc.includes('жасмин')) noteSet.add('квіткові ноти');
-                else if (desc.includes('уд') || desc.includes('смол')) noteSet.add('орієнтальні акорди');
-                else if (desc.includes('ваніл') || desc.includes('карамел')) noteSet.add('гурманські відтінки');
-                else if (desc.includes('цитрус') || desc.includes('бергамот')) noteSet.add('цитрусову свіжість');
-                else if (desc.includes('мускус')) noteSet.add('мускусну теплоту');
-                else if (desc.includes('дерев') || desc.includes('кедр') || desc.includes('сандал')) noteSet.add('деревні ноти');
-            });
-            const noteList = [...noteSet].slice(0, 2).join(' та ');
-            let text = `Бренд представлений ${count} ${count === 1 ? 'ароматом' : count < 5 ? 'ароматами' : 'ароматами'} у нашому барі.`;
-            if (noteList) text += ` Характерна риса колекції — ${noteList}.`;
-            if (hitNames) text += ` Особливо популярні: ${hitNames}.`;
-            text += ' Кожна композиція — це ретельно відібраний оригінал з унікальним характером.';
-            return text;
-        }
-
-        const lore = brandLoreData[brandName] || buildLoreFallback(brandName);
+        const lore = brandLoreData[brandName] || 'Преміальний нішевий бренд з унікальними ароматами. Кожна композиція — це окрема парфумерна історія.';
         const brandItems = globalCatalogData.filter(c => c[0] === brandName).slice(0, 6);
 
         document.getElementById('brandDetailName').textContent = brandName;
@@ -4930,11 +4894,11 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
         const isMolecule2 = p2Name === "Будь-який аромат" || 
             (p2 && (p2[1]?.toLowerCase().includes('molecule') || p2[1]?.toLowerCase().includes('молекул') || p2[0]?.toLowerCase().includes('zarkoperfume')));
 
-        // Назви ароматів для персоналізованих порад
-        const aroma1 = p1Name;
-        const aroma2 = p2Name === "Будь-який аромат" ? "Molecule 01" : p2Name;
-        const molAroma = isMolecule1 ? aroma1 : (isMolecule2 ? aroma2 : '');
-        const baseAroma = isMolecule1 ? aroma2 : aroma1;
+        // Бренди для персоналізованих інструкцій
+        const brand1 = p1 ? p1[0] : '';
+        const brand2 = (p2Name === "Будь-який аромат") ? 'Zarkoperfume' : (p2 ? p2[0] : '');
+        const molBrand = isMolecule1 ? (brand1 || 'Zarkoperfume') : (isMolecule2 ? (brand2 || 'Zarkoperfume') : '');
+        const baseBrand = isMolecule1 ? brand2 : brand1;
 
         const d1 = p1 ? (p1[4] + " " + p1[0]).toLowerCase() : "";
         const d2 = (p2Name === "Будь-який аромат") ? "молекула 01 zarkoperfume" : (p2 ? (p2[4] + " " + p2[0]).toLowerCase() : "");
@@ -4957,36 +4921,36 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
 
         if (isMolecule1 || isMolecule2 || d1.includes('молекул') || d2.includes('молекул')) {
             mixKey = 'молекул'; title = "Молекулярний підсилювач";
-            text = `«${molAroma}» підсилить шлейф «${baseAroma}», зробивши його неймовірно дифузним та об'ємним на шкірі.`;
-            ratio = `Спочатку нанесіть «${baseAroma}» на пульсові точки (2 розпилення). Потім поверх — «${molAroma}» (1 розпилення). Молекула діє як підсилювач — розкриває і розширює шлейф, не змінюючи характер аромату.`;
+            text = `${molBrand} підсилить шлейф ${baseBrand}, зробивши його неймовірно дифузним та об'ємним на шкірі.`;
+            ratio = `Спочатку нанесіть ${baseBrand} на пульсові точки (2 розпилення). Потім поверх — ${molBrand} (1 розпилення). Молекула діє як підсилювач — вона не додає запаху, а розкриває і розширює шлейф вашого аромату.`;
             sillage = "Надпотужний шлейф — наче аромат живе власним життям.";
         } else if ((d1.includes('уд') && d2.includes('троянд')) || (d2.includes('уд') && d1.includes('троянд'))) {
-            const oudAroma = d1.includes('уд') ? aroma1 : aroma2;
-            const roseAroma = d1.includes('троянд') ? aroma1 : aroma2;
+            const oudBrand = d1.includes('уд') ? brand1 : brand2;
+            const roseBrand = d1.includes('троянд') ? brand1 : brand2;
             mixKey = 'уд_троянд'; title = "Королівський Схід";
             text = "Еталонне поєднання. Темний, густий уд ідеально збалансовується оксамитовою трояндою.";
-            ratio = `Нанесіть «${oudAroma}» (1 розпилення на зап'ястя), потім «${roseAroma}» (2 розпилення на шию). Уд — база, троянда — серце.`;
+            ratio = `Нанесіть ${oudBrand} (1 розпилення на зап'ястя), потім ${roseBrand} (2 розпилення на шию). Уд — база, троянда — серце.`;
             sillage = "Глибокий, чуттєвий шлейф — орієнтальний з квітковим серцем.";
         } else if ((d1.includes('ваніл') && d2.includes('дерев')) || (d2.includes('ваніл') && d1.includes('дерев'))) {
-            const vanAroma = d1.includes('ваніл') ? aroma1 : aroma2;
-            const woodAroma = d1.includes('дерев') ? aroma1 : aroma2;
+            const vanBrand = d1.includes('ваніл') ? brand1 : brand2;
+            const woodBrand = d1.includes('дерев') ? brand1 : brand2;
             mixKey = 'ваніл_дерев'; title = "Гурманський баланс";
             text = "Сухі деревні ноти заспокоять солодкість ванілі, перетворивши її на глибоку базу.";
-            ratio = `Наносьте «${vanAroma}» і «${woodAroma}» поряд у рівних частинах — кожен на своє зап'ястя. Не змішуйте рідини, дозвольте шкірі об'єднати аромати.`;
+            ratio = `Наносьте ${vanBrand} і ${woodBrand} поряд у рівних частинах — кожен на своє зап'ястя. Не змішуйте рідини, дозвольте шкірі об'єднати аромати.`;
             sillage = "Теплий бурштиновий шлейф — солодкий, але збалансований.";
         } else if ((d1.includes('цитрус') && d2.includes('квіт')) || (d2.includes('цитрус') && d1.includes('квіт'))) {
-            const citAroma = d1.includes('цитрус') ? aroma1 : aroma2;
-            const florAroma = d1.includes('квіт') ? aroma1 : aroma2;
+            const citBrand = d1.includes('цитрус') ? brand1 : brand2;
+            const florBrand = d1.includes('квіт') ? brand1 : brand2;
             mixKey = 'цитрус_квіт'; title = "Іскриста свіжість";
             text = "Цитруси підсвітять квітковий букет, додадуть йому повітря та яскравості.";
-            ratio = `Спочатку «${florAroma}» (2 розпилення на шию). Потім «${citAroma}» (1 розпилення — легка хмарка поверх). Цитрус — фінальний акорд.`;
+            ratio = `Спочатку ${florBrand} (2 розпилення на шию). Потім ${citBrand} (1 розпилення — легка хмарка поверх). Цитрус повинен бути фінальним акордом.`;
             sillage = "Легкий, повітряний шлейф — свіжий та квітковий.";
         } else if (d1.includes('мускус') || d2.includes('мускус')) {
-            const musAroma = d1.includes('мускус') ? aroma1 : aroma2;
-            const otherAroma = d1.includes('мускус') ? aroma2 : aroma1;
+            const musBrand = d1.includes('мускус') ? brand1 : brand2;
+            const otherBrand = d1.includes('мускус') ? brand2 : brand1;
             mixKey = 'мускус'; title = "Ефект Другої шкіри";
             text = "Мускус згладить гострі кути іншого аромату, додасть пудровості та відчуття дорогого догляду.";
-            ratio = `«${musAroma}» — база (2 розпилення на шкіру). Зверху — «${otherAroma}» (1 розпилення). Мускус пом'якшує будь-який аромат, роблячи його вашим.`;
+            ratio = `${musBrand} — база (2 розпилення на шкіру). Зверху — ${otherBrand} (1 розпилення). Мускус «пом'якшує» будь-який аромат.`;
             sillage = "Камерний шлейф — тільки для тих, хто поруч.";
         }
 
@@ -5191,29 +5155,28 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
 
         // Генеруємо поради
         function getWearTip() {
-            if (d.includes('уд') || d.includes('смол') || d.includes('ладан')) return { icon: 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707', label: 'Сезон', text: 'Особливо чарівний в прохолодну пору — деревні ноти набирають глибини. Але справжні поціновувачі носять його цілий рік.' };
-            if (d.includes('цитрус') || d.includes('бергамот') || d.includes('грейпфрут')) return { icon: 'M12 3v1m0 16v1m9-9h-1M4 12H3', label: 'Сезон', text: 'Розкривається в теплу пору, але освіжає і підбадьорює в будь-яку погоду — чудовий вибір для старту дня.' };
-            if (d.includes('ваніл') || d.includes('карамел') || d.includes('шоколад')) return { icon: 'M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z', label: 'Сезон', text: 'Ідеальний комфортний аромат на кожен день. Взимку ноти стають насиченішими, влітку — м'якшими та легшими.' };
-            if (d.includes('квіт') || d.includes('троянд') || d.includes('жасмин')) return { icon: 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707', label: 'Сезон', text: 'Квіткові аромати чудові цілий рік. Взимку зігрівають і піднімають настрій, весною й літом резонують з природою.' };
-            return { icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z', label: 'Сезон', text: 'Без сезонних обмежень. Підходить до будь-якого настрою, погоди та приводу — справжній універсал.' };
+            if (d.includes('уд') || d.includes('смол')) return { icon: 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707', label: 'Сезон', text: 'Осінь та зима. Холодне повітря розкриває деревні та смолисті ноти.' };
+            if (d.includes('цитрус') || d.includes('бергамот')) return { icon: 'M12 3v1m0 16v1m9-9h-1M4 12H3', label: 'Сезон', text: 'Весна та літо. Свіжість розкривається на теплій шкірі.' };
+            if (d.includes('ваніл') || d.includes('карамел')) return { icon: 'M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z', label: 'Найкращий сезон', text: 'Холодна пора. Тепло тіла розкриває гурманські ноти по-особливому.' };
+            return { icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z', label: 'Час носіння', text: 'Актуальний весь рік. Адаптується під настрій і сезон.' };
         }
 
         function getOccasionTip() {
-            if (d.includes('уд') || d.includes('ладан') || d.includes('смол')) return 'Чудовий для вечорів, ресторанів, театру. Залишає незабутній слід — люди запам'ятають вас.';
-            if (d.includes('мускус') || d.includes('пудр')) return 'Щоденний аромат і для особливих зустрічей. Камерний, тілесний, притягує тих, хто поруч.';
-            if (d.includes('цитрус') || d.includes('свіж') || d.includes('бергамот')) return 'Відмінний вибір для офісу, зустрічей, активного дня. Свіжий, але помітний.';
-            if (d.includes('троянд') || d.includes('жасмин') || d.includes('квіт')) return 'Для побачень, вечірок і важливих моментів. Флоральний шлейф завжди доречний.';
-            if (d.includes('ваніл') || d.includes('карамел')) return 'Comfort scent — дарує відчуття затишку і тепла. Прекрасний у будь-якій ситуації, де ви хочете бути запам'ятаними.';
-            return 'Універсальний — від офісу до вечірки. Підходить для будь-якого приводу.';
+            if (d.includes('уд') || d.includes('ладан') || d.includes('смол')) return 'Вечірній вихід, театр, ресторан. Занадто інтенсивний для офісу.';
+            if (d.includes('мускус') || d.includes('пудр')) return 'Щоденний аромат та романтичні зустрічі. Камерний та чуттєвий.';
+            if (d.includes('цитрус') || d.includes('свіж')) return 'Офіс, прогулянки, активний день. Ненав\'язливий та енергійний.';
+            if (d.includes('троянд') || d.includes('жасмин')) return 'Побачення, вечірки, особливі моменти. Неможливо не помітити.';
+            return 'Універсальний. Підходить для будь-якого приводу.';
         }
 
         function getApplyTip() {
             const lon = rawDesc.match(/стійкість:\s*(\d)/i);
             const lonVal = lon ? parseInt(lon[1]) : 3;
-            if (lonVal >= 4) return '2–3 розпилення на пульсові точки — цього достатньо. Аромат буде з вами впродовж дня без повторного нанесення.';
-            if (lonVal <= 2) return 'Нанесіть на зап'ястя, шию та волосся — так аромат протримається довше. Легке повторне нанесення в середині дня освіжить шлейф.';
-            return 'Зап'ястя, шия, за вухами. Не розтирайте — дозвольте аромату розкритися природно.';
+            if (lonVal >= 4) return 'Достатньо 2–3 розпилення на пульсові точки. Стійкість не потребує повторного нанесення.';
+            if (lonVal <= 2) return 'Наносьте на волосся та одяг — тканина тримає аромат довше за шкіру.';
+            return 'Зап\'ястя, шия, за вухами. Не розтирайте — дозвольте розкритися природно.';
         }
+
         const wearTip = getWearTip();
         const occasion = getOccasionTip();
         const applyTip = getApplyTip();

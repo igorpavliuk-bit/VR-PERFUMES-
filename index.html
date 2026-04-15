@@ -3545,7 +3545,7 @@ body.dark-theme .passport-card {
 .brand-tile { --tile-accent: #c5a059; }
 
 .brand-tile {
-    background: rgba(255,255,255,0.75);
+    background: rgba(255,255,255,0.72);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-radius: 14px;
@@ -3580,12 +3580,10 @@ body.dark-theme .brand-tile {
     pointer-events: none;
     border-radius: 14px 14px 0 0;
 }
-
 body.dark-theme .brand-tile::before {
     background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
 }
 
-/* Золота лінія-акцент знизу */
 .brand-tile::after {
     content: '';
     position: absolute;
@@ -3594,13 +3592,22 @@ body.dark-theme .brand-tile::before {
     background: linear-gradient(90deg, transparent, var(--tile-accent), transparent);
     opacity: 0;
     transition: opacity 0.3s ease;
+    border-radius: 2px;
 }
-
 .brand-tile:active::after { opacity: 1; }
-
 .brand-tile:active {
     transform: scale(0.96);
     box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+/* SVG орнамент на плитці */
+.tile-ornament {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0.6;
 }
 
 .brand-tile-name {
@@ -3615,12 +3622,11 @@ body.dark-theme .brand-tile::before {
     position: relative;
     z-index: 1;
 }
-
 body.dark-theme .brand-tile-name { color: #f0f0f0; }
 
 .brand-tile-count {
     font-size: 9px;
-    color: var(--gold);
+    color: var(--tile-accent);
     text-transform: uppercase;
     letter-spacing: 1.5px;
     font-weight: 600;
@@ -3628,22 +3634,22 @@ body.dark-theme .brand-tile-name { color: #f0f0f0; }
     z-index: 1;
 }
 
-/* Кнопка ШІ асистента на плитці */
-.brand-tile-voice {
+/* === ГЕЙМІФІКАЦІЯ — бейдж "Розвідник" === */
+.brand-tile-badge {
     position: absolute;
     top: 7px;
-    right: 8px;
-    width: 22px;
-    height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.4;
-    transition: opacity 0.2s;
+    left: 8px;
+    background: var(--tile-accent);
+    color: #fff;
+    font-size: 7px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    opacity: 0.85;
     z-index: 2;
 }
-.brand-tile:active .brand-tile-voice { opacity: 0.8; }
-.brand-tile-voice svg { stroke: var(--gold); }
 
 /* Views */
 .brand-grid-view.hidden { display: none; }
@@ -4348,6 +4354,11 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
 
         document.getElementById('brandDetailName').textContent = brandName;
         document.getElementById('brandDetailLore').textContent = lore;
+        _currentBrandDetailName = brandName;
+
+        // Скидаємо кнопку Віри
+        const viraBtn = document.getElementById('brandViraBtn');
+        if (viraBtn) viraBtn.innerHTML = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg> Послухати про бренд`;
 
         const itemsContainer = document.getElementById('brandDetailItems');
         itemsContainer.innerHTML = '';
@@ -6598,15 +6609,49 @@ function renderGenderBar(value) {
             const count = cat.filter(c => c[0] === b).length;
             const countWord = count === 1 ? 'аромат' : count < 5 ? 'аромати' : 'ароматів';
 
+            // Унікальний акцент кожної плитки — ротація кольорів та мікро-орнаменти
+            const tileAccents = [
+                { hue: 45,  sat: 60 },  // золото
+                { hue: 200, sat: 25 },  // сталевий
+                { hue: 30,  sat: 50 },  // бронза
+                { hue: 270, sat: 20 },  // лавандовий
+                { hue: 160, sat: 25 },  // смарагд
+                { hue: 15,  sat: 45 },  // теракота
+            ];
+            const accent = tileAccents[brs.indexOf(b) % tileAccents.length];
+            const accentColor = `hsl(${accent.hue}, ${accent.sat}%, 50%)`;
+            const accentBg = `hsla(${accent.hue}, ${accent.sat}%, 50%, 0.06)`;
+
             const tile = document.createElement('div');
             tile.className = 'brand-tile';
+            tile.style.setProperty('--tile-accent', accentColor);
+            tile.style.background = `rgba(255,255,255,0.72)`;
+
+            // Орнамент — різні SVG-патерни для різних плиток
+            const ornaments = [
+                `<svg class="tile-ornament" viewBox="0 0 60 30" fill="none"><circle cx="30" cy="15" r="12" stroke="${accentColor}" stroke-width="0.4" opacity="0.3"/><circle cx="30" cy="15" r="6" stroke="${accentColor}" stroke-width="0.4" opacity="0.2"/></svg>`,
+                `<svg class="tile-ornament" viewBox="0 0 60 30" fill="none"><line x1="10" y1="15" x2="50" y2="15" stroke="${accentColor}" stroke-width="0.4" opacity="0.3"/><line x1="30" y1="5" x2="30" y2="25" stroke="${accentColor}" stroke-width="0.4" opacity="0.3"/></svg>`,
+                `<svg class="tile-ornament" viewBox="0 0 60 30" fill="none"><rect x="18" y="8" width="24" height="14" stroke="${accentColor}" stroke-width="0.4" opacity="0.25" rx="1"/></svg>`,
+                `<svg class="tile-ornament" viewBox="0 0 60 30" fill="none"><polygon points="30,6 42,22 18,22" stroke="${accentColor}" stroke-width="0.4" fill="none" opacity="0.2"/></svg>`,
+                `<svg class="tile-ornament" viewBox="0 0 60 30" fill="none"><path d="M20 15 Q30 5 40 15 Q30 25 20 15" stroke="${accentColor}" stroke-width="0.4" fill="none" opacity="0.25"/></svg>`,
+                `<svg class="tile-ornament" viewBox="0 0 60 30" fill="none"><circle cx="20" cy="15" r="4" stroke="${accentColor}" stroke-width="0.4" opacity="0.2"/><circle cx="40" cy="15" r="4" stroke="${accentColor}" stroke-width="0.4" opacity="0.2"/><line x1="24" y1="15" x2="36" y2="15" stroke="${accentColor}" stroke-width="0.4" opacity="0.15"/></svg>`,
+            ];
+            const ornament = ornaments[brs.indexOf(b) % ornaments.length];
+
+            const visitedBrands = JSON.parse(localStorage.getItem('vr_visited_brands') || '[]');
+            const isVisited = visitedBrands.includes(b);
+
             tile.innerHTML = `
-                <button class="brand-tile-voice" onclick="event.stopPropagation(); speakBrandLore('${b.replace(/'/g, "\\'")}');" title="Послухати про бренд">
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-                </button>
+                ${isVisited ? `<div class="brand-tile-badge">Відвідано</div>` : ''}
+                ${ornament}
                 <div class="brand-tile-name">${b}</div>
                 <div class="brand-tile-count">${count} ${countWord}</div>`;
-            tile.onclick = () => showBrandPage(b);
+            tile.onclick = () => {
+                // Зберігаємо відвідування
+                const visited = JSON.parse(localStorage.getItem('vr_visited_brands') || '[]');
+                if (!visited.includes(b)) { visited.push(b); localStorage.setItem('vr_visited_brands', JSON.stringify(visited)); }
+                showBrandPage(b);
+            };
             grid.appendChild(tile);
         });
     }
@@ -6618,13 +6663,46 @@ function renderGenderBar(value) {
         const lore = brandLoreData[brandName];
         if (!lore) return;
 
-        // Застосовуємо словник вимови
         const text = applyPronunciationMap(lore);
         const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = 'uk-UA';
         utter.rate = 0.88;
         utter.pitch = 1.0;
-        window.speechSynthesis.speak(utter);
+
+        // Вибираємо кращий голос з пріоритетом uk-UA → ru → будь-який
+        const voices = window.speechSynthesis.getVoices();
+        const ukVoice = voices.find(v => v.lang === 'uk-UA') ||
+                        voices.find(v => v.lang.startsWith('uk')) ||
+                        voices.find(v => v.lang.startsWith('ru')) ||
+                        null;
+        if (ukVoice) {
+            utter.voice = ukVoice;
+            utter.lang = ukVoice.lang;
+        } else {
+            utter.lang = 'uk-UA';
+        }
+
+        // iOS потребує невеликої затримки після cancel()
+        setTimeout(() => window.speechSynthesis.speak(utter), 120);
+    }
+
+    let _currentBrandDetailName = '';
+
+    function speakBrandLoreFromDetail() {
+        const btn = document.getElementById('brandViraBtn');
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+            if (btn) btn.innerHTML = btn.innerHTML.replace('Зупинити', 'Послухати про бренд');
+            return;
+        }
+        speakBrandLore(_currentBrandDetailName);
+        if (btn) {
+            btn.innerHTML = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Зупинити`;
+        }
+        // Повертаємо текст кнопки після закінчення
+        setTimeout(() => {
+            const b = document.getElementById('brandViraBtn');
+            if (b) b.innerHTML = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg> Послухати про бренд`;
+        }, 15000);
     }
 
     function formatNews(newsText) {
@@ -7299,9 +7377,22 @@ updateWeather();
                 <div class="brand-detail-name" id="brandDetailName"></div>
                 <div class="brand-detail-divider"></div>
                 <div class="brand-detail-lore" id="brandDetailLore"></div>
+
+                <!-- Кнопка Віри в картці бренду -->
+                <button id="brandViraBtn" onclick="speakBrandLoreFromDetail()" style="display:inline-flex; align-items:center; gap:7px; margin:12px 0 20px; padding:9px 18px; border:1px solid rgba(197,160,89,0.3); border-radius:20px; background:transparent; color:var(--gold); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; cursor:pointer; font-family:var(--cinzel); transition:all 0.2s ease;">
+                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+                    Послухати про бренд
+                </button>
+
                 <div class="brand-detail-items-title">Аромати бренду</div>
                 <div class="brand-items-grid" id="brandDetailItems"></div>
                 <button class="brand-show-all-btn" id="brandShowAllBtn">Переглянути всі аромати →</button>
+
+                <!-- Кнопка повернення внизу -->
+                <button onclick="showBrandGrid()" style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; margin-top:24px; padding:14px; border:1px solid rgba(128,128,128,0.15); border-radius:10px; background:transparent; color:var(--text-gray); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; cursor:pointer; font-family:var(--cinzel);">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    Повернутись до списку брендів
+                </button>
             </div>
 
         </div>

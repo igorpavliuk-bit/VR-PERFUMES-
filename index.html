@@ -3827,6 +3827,12 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
     object-fit: cover;
     display: block;
 }
+
+/* Вирівнювання фото "Зухвала розкіш" (Mob Wife), щоб було видно помаду */
+.aes-card img.aes-mob-wife {
+    object-position: top;
+}
+
 .aes-card-overlay {
     position: absolute;
     inset: 0;
@@ -3843,6 +3849,36 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
     text-transform: uppercase;
     letter-spacing: 1px;
     line-height: 1.2;
+}
+
+/* Кнопка закриття для естетик */
+.aes-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(128, 128, 128, 0.1);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 24px;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    transition: background 0.2s;
+    line-height: 1;
+    padding-bottom: 4px; 
+}
+.aes-close-btn:active {
+    transform: scale(0.9);
+    background: rgba(128, 128, 128, 0.2);
+}
+body.dark-theme .aes-close-btn {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 /* Модалка для результатів естетики */
@@ -3869,6 +3905,7 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
     transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
     max-height: 85vh;
     overflow-y: auto;
+    position: relative;
 }
 .aes-modal-overlay.open .aes-sheet { transform: translateY(0); }
 
@@ -3890,6 +3927,7 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
     padding: 0 10px;
 }
 body.dark-theme .aes-sheet-title { color: #f5f5f5; }
+
 
     </style>
 </head>
@@ -3946,7 +3984,7 @@ body.dark-theme .aes-sheet-title { color: #f5f5f5; }
         </div>
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--gold)" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
-    <div class="aes-section">
+        <div class="aes-section">
         <span class="aes-section-title">Підбери під образ</span>
         <div class="aes-scroll-container">
             <div class="aes-card" onclick="openAesthetic('old_money')">
@@ -3954,12 +3992,12 @@ body.dark-theme .aes-sheet-title { color: #f5f5f5; }
                 <div class="aes-card-overlay"><span class="aes-card-title">Old Money</span></div>
             </div>
             <div class="aes-card" onclick="openAesthetic('mob_wife')">
-                <img src="Images/mob-wife.webp" alt="Mob Wife">
-                <div class="aes-card-overlay"><span class="aes-card-title">Mob Wife</span></div>
+                <img src="Images/mob-wife.webp" alt="Зухвала розкіш" class="aes-mob-wife">
+                <div class="aes-card-overlay"><span class="aes-card-title">Зухвала<br>розкіш</span></div>
             </div>
             <div class="aes-card" onclick="openAesthetic('dark_academia')">
-                <img src="Images/dark-academia.webp" alt="Dark Academia">
-                <div class="aes-card-overlay"><span class="aes-card-title">Dark Academia</span></div>
+                <img src="Images/dark-academia.webp" alt="Інтелектуальний шик">
+                <div class="aes-card-overlay"><span class="aes-card-title">Інтелектуальний<br>шик</span></div>
             </div>
             <div class="aes-card" onclick="openAesthetic('minimalism')">
                 <img src="Images/minimalism.webp" alt="Сексуальний мінімалізм">
@@ -3969,7 +4007,8 @@ body.dark-theme .aes-sheet-title { color: #f5f5f5; }
     </div>
 
     <div class="aes-modal-overlay" id="aesOverlay" onclick="closeAesthetic(event)">
-        <div class="aes-sheet" id="aesSheet">
+        <div class="aes-sheet" id="aesSheet" onclick="event.stopPropagation()">
+            <button class="aes-close-btn" onclick="closeAestheticOverlay()">×</button>
             <div class="quiz-handle"></div>
             <div class="aes-sheet-header">
                 <div class="aes-sheet-title" id="aesTitle">Естетика</div>
@@ -3978,6 +4017,7 @@ body.dark-theme .aes-sheet-title { color: #f5f5f5; }
             <div class="brand-items-grid" id="aesResultsGrid"></div>
         </div>
     </div>
+
 
     <!-- SCENT QUIZ MODAL -->
     <div class="quiz-overlay" id="quizOverlay" onclick="handleQuizOverlayClick(event)">
@@ -7569,6 +7609,90 @@ updateWeather();
             const safeImg = (img || '').replace(/'/g, '%27');
             const pPerMl = parseFloat(String(price).replace(',', '.')) || 0;
             const volForPrice = minVol && String(minVol).includes('5') ? '5 мл' : '2 мл';
+    // ═══════════════════════════════════════
+    // AESTHETIC MATCHER LOGIC
+    // ═══════════════════════════════════════
+    const aestheticsData = {
+        'old_money': {
+            title: 'Old Money',
+            desc: 'Кашемір, спокійна розкіш, бездоганний смак. Аромати, що звучать дорого, елегантно та аристократично, але ніколи не кричать про це.',
+            keywords: ['ganymede', 'bois imperial', 'baccarat', 'tom ford', 'creed', 'білі квіти', 'ірис', 'chanel', 'dior']
+        },
+        'mob_wife': {
+            title: 'Зухвала розкіш',
+            desc: 'Сміливість, хутро, червона помада та абсолютна впевненість у собі. Густі, шлейфові, гіпнотичні та трохи хижі композиції.',
+            keywords: ['black orchid', 'libre', 'intense', 'уд', 'шкір', 'тубероза', 'kilian', 'tom ford', 'opium']
+        },
+        'dark_academia': {
+            title: 'Інтелектуальний шик',
+            desc: 'Затишок старовинної бібліотеки, бездоганний смак та легка осіння меланхолія. Деревні, смолисті та містичні аромати.',
+            keywords: ['oud wood', 'tobacco', 'пачулі', 'ладан', 'смол', 'дерев', 'encre', 'byredo']
+        },
+        'minimalism': {
+            title: 'Сексуальний мінімалізм',
+            desc: 'Біла сорочка на голе тіло, чистота, легка недбалість. Аромати, які зливаються зі шкірою, підсилюючи ваш власний магнетизм.',
+            keywords: ['molecule', 'not a perfume', 'musc', 'пудр', 'чист', 'білий мускус', 'zarkoperfume', 'juliette', 'blanc']
+        }
+    };
+
+    // Список арабських брендів для виключення
+    const arabicBrandsToExclude = ['lattafa', 'afnan', 'armaf', 'rasasi', 'ajmal', 'al haramain', 'fragrance world', 'maison alhambra', 'paris corner', 'orientica', 'zimaya', 'khalis', 'ard al zaafaran'];
+
+    function openAesthetic(key) {
+        if (globalCatalogData.length === 0) return;
+        
+        const data = aestheticsData[key];
+        document.getElementById('aesTitle').innerText = data.title;
+        document.getElementById('aesDesc').innerText = data.desc;
+
+        // 1. Відфільтровуємо каталог: виключаємо арабські, АЛЕ залишаємо Attar Collection
+        const filteredCatalog = globalCatalogData.filter(c => {
+            const brand = (c[0] || '').toLowerCase();
+            const isAttar = brand.includes('attar');
+            const isArabic = arabicBrandsToExclude.some(arabBrand => brand.includes(arabBrand));
+            return isAttar || !isArabic; 
+        });
+
+        // 2. Шукаємо збіги по ключових словах серед правильних брендів
+        let matched = filteredCatalog.filter(c => {
+            const searchStr = (c[0] + ' ' + c[1] + ' ' + (c[4] || '')).toLowerCase();
+            return data.keywords.some(kw => searchStr.includes(kw.toLowerCase()));
+        });
+
+        // 3. Розділяємо знайдене на Хіти та Звичайні
+        const matchedHits = matched.filter(c => c[7] && (c[7].toLowerCase().includes('топ') || c[7].toLowerCase().includes('хіт')));
+        const matchedRegular = matched.filter(c => !(c[7] && (c[7].toLowerCase().includes('топ') || c[7].toLowerCase().includes('хіт'))));
+
+        let finalSelection = [];
+
+        // Спочатку беремо хіти (перемішуємо їх)
+        finalSelection = [...matchedHits.sort(() => 0.5 - Math.random())];
+
+        // Якщо хітів менше 6, добиваємо звичайними збігами
+        if (finalSelection.length < 6) {
+            finalSelection = [...finalSelection, ...matchedRegular.sort(() => 0.5 - Math.random())].slice(0, 6);
+        } else {
+            // Якщо хітів більше 6, обрізаємо до 6
+            finalSelection = finalSelection.slice(0, 6);
+        }
+
+        // Якщо навіть після цього менше 6, просто добиваємо будь-якими хітами з каталогу
+        if (finalSelection.length < 6) {
+            const allHits = filteredCatalog.filter(c => c[7] && (c[7].toLowerCase().includes('топ') || c[7].toLowerCase().includes('хіт')));
+            const remainingNeeded = 6 - finalSelection.length;
+            const extraHits = allHits.filter(hit => !finalSelection.includes(hit)).sort(() => 0.5 - Math.random()).slice(0, remainingNeeded);
+            finalSelection = [...finalSelection, ...extraHits];
+        }
+
+        const grid = document.getElementById('aesResultsGrid');
+        grid.innerHTML = '';
+
+        // 4. Рендеримо 6 фінальних карток
+        finalSelection.forEach(item => {
+            const [brand, name, price, minVol, desc, img] = item;
+            const safeImg = (img || '').replace(/'/g, '%27');
+            const pPerMl = parseFloat(String(price).replace(',', '.')) || 0;
+            const volForPrice = minVol && String(minVol).includes('5') ? '5 мл' : '2 мл';
             const priceStr = calculatePrice(pPerMl, volForPrice);
             
             const div = document.createElement('div');
@@ -7599,6 +7723,7 @@ updateWeather();
         document.getElementById('aesOverlay').classList.remove('open');
         document.body.style.overflow = '';
     }
+
 
 </script>
 

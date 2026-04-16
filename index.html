@@ -3782,6 +3782,85 @@ body.dark-theme .brand-item-mini-name {
 }
 body.dark-theme .brand-detail-name { color: #f5f5f5; }
 body.dark-theme .brand-gallery-close { color: #ccc; }
+
+/* === AESTHETIC MATCHER === */
+.aesthetic-trigger {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 15px 10px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(197,160,89,0.07) 0%, rgba(197,160,89,0.03) 100%);
+    border: 1px solid rgba(197,160,89,0.2);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+.aesthetic-trigger::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.35) 0%, transparent 60%);
+    pointer-events: none;
+}
+.aesthetic-trigger:active { transform: scale(0.98); }
+.aesthetic-trigger-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gold); }
+.aesthetic-trigger-sub { font-size: 10px; color: var(--text-gray); margin-top: 2px; letter-spacing: 0.3px; }
+
+.aesthetic-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 4500;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    overflow-y: auto;
+}
+.aesthetic-overlay.open { display: block; }
+.aesthetic-sheet { min-height: 100vh; padding: 20px 15px 80px; box-sizing: border-box; }
+
+.aesthetic-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 0 16px; }
+.aesthetic-header-title { font-family: var(--cinzel); font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #fff; }
+.aesthetic-close-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); border: none; border-radius: 50%; cursor: pointer; }
+.aesthetic-sub-header { font-size: 11px; color: rgba(255,255,255,0.45); text-align: center; letter-spacing: 0.5px; margin-bottom: 22px; display: block; }
+
+.aesthetic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+
+.aesthetic-card {
+    position: relative; border-radius: 16px; overflow: hidden;
+    cursor: pointer; aspect-ratio: 3/4;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1.5px solid rgba(255,255,255,0.05);
+}
+.aesthetic-card.active { border-color: var(--gold); box-shadow: 0 0 20px rgba(197,160,89,0.25); }
+.aesthetic-card:active { transform: scale(0.97); }
+
+.aesthetic-card-img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.72) saturate(0.85); transition: filter 0.4s ease; }
+.aesthetic-card.active .aesthetic-card-img { filter: brightness(0.55) saturate(1.1); }
+
+.aesthetic-card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.15) 50%, transparent 100%); }
+
+.aesthetic-card-label { position: absolute; bottom: 14px; left: 0; right: 0; text-align: center; font-family: var(--cinzel); font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; color: #fff; z-index: 2; padding: 0 8px; line-height: 1.3; text-shadow: 0 1px 6px rgba(0,0,0,0.6); }
+.aesthetic-card-vibe { position: absolute; bottom: 34px; left: 0; right: 0; text-align: center; font-size: 8px; color: rgba(255,255,255,0.5); letter-spacing: 1px; text-transform: uppercase; z-index: 2; }
+
+.aesthetic-card-check { position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; background: var(--gold); border-radius: 50%; display: none; align-items: center; justify-content: center; z-index: 3; }
+.aesthetic-card.active .aesthetic-card-check { display: flex; }
+
+.aesthetic-results { display: none; animation: fadeIn 0.4s ease; }
+.aesthetic-results.open { display: block; }
+
+.aesthetic-results-title { font-family: var(--cinzel); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+
+.aesthetic-result-card { display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s ease; backdrop-filter: blur(10px); }
+.aesthetic-result-card:active { transform: scale(0.98); background: rgba(255,255,255,0.1); }
+
+.aesthetic-result-img { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; flex-shrink: 0; background: rgba(255,255,255,0.05); }
+.aesthetic-result-brand { font-size: 9px; color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; display: block; }
+.aesthetic-result-name { font-size: 13px; font-weight: 700; color: #fff; margin: 3px 0; }
+.aesthetic-result-why { font-size: 10px; color: rgba(255,255,255,0.45); font-style: italic; line-height: 1.4; }
     </style>
 </head>
 <body>
@@ -3836,6 +3915,76 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
             <span class="quiz-trigger-sub">4 питання — персональна рекомендація</span>
         </div>
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--gold)" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+
+    <!-- AESTHETIC MATCHER TRIGGER -->
+    <div class="aesthetic-trigger" onclick="openAesthetic()">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--gold)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <div>
+            <div class="aesthetic-trigger-label">Підбери під образ</div>
+            <div class="aesthetic-trigger-sub">Old Money · Соблазн · Мінімалізм · Темна романтика</div>
+        </div>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--gold)" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+
+    <!-- AESTHETIC MATCHER MODAL -->
+    <div class="aesthetic-overlay" id="aestheticOverlay">
+        <div class="aesthetic-sheet">
+            <div class="aesthetic-header">
+                <span class="aesthetic-header-title">Парфумерний гардероб</span>
+                <button class="aesthetic-close-btn" onclick="closeAesthetic()">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <span class="aesthetic-sub-header">Оберіть образ — ми підберемо аромат</span>
+
+            <div class="aesthetic-grid">
+                <div class="aesthetic-card" id="acard-oldmoney" onclick="selectAesthetic('oldmoney')">
+                    <img class="aesthetic-card-img" src="Images/old-money.webp" alt="Old Money естетика" loading="lazy">
+                    <div class="aesthetic-card-overlay"></div>
+                    <div class="aesthetic-card-vibe">Кашемір · Спокій · Розкіш</div>
+                    <div class="aesthetic-card-label">Old Money</div>
+                    <div class="aesthetic-card-check">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                </div>
+                <div class="aesthetic-card" id="acard-seduction" onclick="selectAesthetic('seduction')">
+                    <img class="aesthetic-card-img" src="Images/mob-wife.webp" alt="Соблазн естетика" loading="lazy">
+                    <div class="aesthetic-card-overlay"></div>
+                    <div class="aesthetic-card-vibe">Зухвалість · Сила · Бажання</div>
+                    <div class="aesthetic-card-label">Соблазн</div>
+                    <div class="aesthetic-card-check">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                </div>
+                <div class="aesthetic-card" id="acard-dark" onclick="selectAesthetic('dark')">
+                    <img class="aesthetic-card-img" src="Images/dark-academia.webp" alt="Темна романтика естетика" loading="lazy">
+                    <div class="aesthetic-card-overlay"></div>
+                    <div class="aesthetic-card-vibe">Книги · Осінь · Таємниця</div>
+                    <div class="aesthetic-card-label">Темна романтика</div>
+                    <div class="aesthetic-card-check">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                </div>
+                <div class="aesthetic-card" id="acard-minimal" onclick="selectAesthetic('minimal')">
+                    <img class="aesthetic-card-img" src="Images/minimalism.webp" alt="Чистий мінімалізм естетика" loading="lazy">
+                    <div class="aesthetic-card-overlay"></div>
+                    <div class="aesthetic-card-vibe">Чистота · Свобода · Простота</div>
+                    <div class="aesthetic-card-label">Мінімалізм</div>
+                    <div class="aesthetic-card-check">
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="aesthetic-results" id="aestheticResults">
+                <div class="aesthetic-results-title">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    <span id="aestheticResultsLabel">Ваші аромати</span>
+                </div>
+                <div id="aestheticResultsList"></div>
+            </div>
+        </div>
     </div>
 
     <!-- SCENT QUIZ MODAL -->
@@ -6917,6 +7066,129 @@ function renderGenderBar(value) {
     }
 
     loadStories();
+
+    // === AESTHETIC MATCHER ===
+    const aestheticData = {
+        oldmoney: {
+            label: 'Old Money · Ваші аромати',
+            keywords: [
+                { brand: 'Hermès', name: 'Terre d\'Hermes', why: 'Класика старих грошей — деревний, чистий, без зайвого' },
+                { brand: 'Byredo', name: 'Bal d\'Afrique', why: 'Золота богема. Витончений та неймовірно стійкий' },
+                { brand: 'Montale', name: 'Soleil de Capri', why: 'Середземноморська розкіш — сонячна та спокійна' },
+                { brand: 'Tom Ford', name: 'Noir Extreme', why: 'Те, що носять у клубах для обраних' },
+                { brand: 'Jo Malone', name: 'Wood Sage', why: 'Британська стриманість. Нічого зайвого' },
+                { brand: 'Prada', name: 'Luna Rossa Black', why: 'Мінімалістична розкіш — елегантно та незмінно' },
+            ]
+        },
+        seduction: {
+            label: 'Соблазн · Ваші аромати',
+            keywords: [
+                { brand: 'By Kilian', name: 'Princess', why: 'Ваніль і мускус — солодка зброя спокуси' },
+                { brand: 'Mancera', name: 'Wild Python', why: 'Сміливий, чуттєвий, незабутній шлейф' },
+                { brand: 'Nishane', name: 'Hacivat', why: 'Складний та магнетичний — для тих, хто знає собі ціну' },
+                { brand: 'Trussardi', name: 'Musc Noir', why: 'Мускус, що перетворює будь-який образ на зброю' },
+                { brand: 'Mancera', name: 'Amore Caffe', why: 'Кава та амбра — пристрасть у кожному розпиленні' },
+                { brand: 'Giardini Di Toscana', name: 'Bianco Latte', why: 'Ніжна та чуттєва — молоко і ваніль на шкірі' },
+            ]
+        },
+        dark: {
+            label: 'Темна романтика · Ваші аромати',
+            keywords: [
+                { brand: 'Les Liquides Imaginaires', name: 'Fortis', why: 'Філософський — важкий, інтелектуальний, незвичний' },
+                { brand: 'Lattafa Perfumes', name: 'TERIAQ', why: 'Орієнтальна таємниця з глибоким деревним характером' },
+                { brand: 'V Canto', name: 'Ricina', why: 'Темний, квітковий, майже готичний' },
+                { brand: 'Mancera', name: 'Cedrat Boise', why: 'Деревина після дощу — бібліотека і шкіряні крісла' },
+                { brand: 'Attar Collection', name: 'Fleur de Santal', why: 'Сандал і квіти — медитативно та глибоко' },
+                { brand: 'Juliette Has A Gun', name: 'Pear Inc', why: 'Гіркувато-солодкий — як перші сторінки роману' },
+            ]
+        },
+        minimal: {
+            label: 'Мінімалізм · Ваші аромати',
+            keywords: [
+                { brand: 'Essential Parfums', name: 'Nice Bergamote', why: 'Чиста свіжість без зайвого — ранкова шкіра' },
+                { brand: 'Essential Parfums', name: 'Fig Infusion', why: 'Зелена інжирна тінь — майже невловима' },
+                { brand: 'Obvious', name: 'Une Pistache', why: 'Тихий, кремовий, впевнений у собі' },
+                { brand: 'Jo Malone', name: 'Blackberry', why: 'Британська стриманість на кожен день' },
+                { brand: 'Memo Paris', name: 'Sintra', why: 'Чистий, як добре спроектований простір' },
+                { brand: 'Chopard', name: 'Happy Bigaradia', why: 'Легкий цитрус — свіжість без зусиль' },
+            ]
+        }
+    };
+
+    function openAesthetic() {
+        const overlay = document.getElementById('aestheticOverlay');
+        overlay.classList.add('open');
+        document.body.classList.add('modal-open');
+        document.querySelectorAll('.aesthetic-card').forEach(c => c.classList.remove('active'));
+        document.getElementById('aestheticResults').classList.remove('open');
+        document.getElementById('aestheticResultsList').innerHTML = '';
+    }
+
+    function closeAesthetic() {
+        document.getElementById('aestheticOverlay').classList.remove('open');
+        document.body.classList.remove('modal-open');
+    }
+
+    function selectAesthetic(key) {
+        document.querySelectorAll('.aesthetic-card').forEach(c => c.classList.remove('active'));
+        const activeCard = document.getElementById('acard-' + key);
+        if (activeCard) activeCard.classList.add('active');
+
+        const data = aestheticData[key];
+        if (!data) return;
+
+        const results = [];
+        for (const kw of data.keywords) {
+            const found = globalCatalogData.find(c =>
+                c[0] && c[1] &&
+                c[0].toLowerCase().includes(kw.brand.toLowerCase()) &&
+                c[1].toLowerCase().includes(kw.name.toLowerCase())
+            );
+            if (found && !results.find(r => r.item === found)) {
+                results.push({ item: found, why: kw.why });
+            }
+            if (results.length >= 6) break;
+        }
+
+        // Fallback якщо каталог не завантажений або мало збігів
+        if (results.length < 3) {
+            globalCatalogData
+                .filter(c => c[0] && c[1] && !results.find(r => r.item === c))
+                .slice(0, 6 - results.length)
+                .forEach(c => results.push({ item: c, why: 'Ідеально підходить до цього образу' }));
+        }
+
+        const list = document.getElementById('aestheticResultsList');
+        list.innerHTML = '';
+        results.forEach(({ item, why }) => {
+            const img = (item[5] || '').replace(/'/g, '%27');
+            const price = parseFloat(String(item[2]).replace(',', '.')) || 0;
+            const priceStr = price ? `від ${Math.round(price * 5)} грн` : '';
+            const card = document.createElement('div');
+            card.className = 'aesthetic-result-card';
+            card.innerHTML = `
+                <img class="aesthetic-result-img" src="${img}" alt="${item[0]} ${item[1]}" loading="lazy" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
+                <div style="flex:1;min-width:0;">
+                    <span class="aesthetic-result-brand">${item[0]}</span>
+                    <div class="aesthetic-result-name">${item[1]}</div>
+                    <div class="aesthetic-result-why">${why}</div>
+                    ${priceStr ? `<div style="font-size:10px;color:var(--gold);font-weight:700;margin-top:4px;">${priceStr}</div>` : ''}
+                </div>
+                <svg viewBox="0 0 24 24" width="16" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"><polyline points="9 18 15 12 9 6"/></svg>`;
+            card.onclick = () => { closeAesthetic(); showModal(item); };
+            list.appendChild(card);
+        });
+
+        document.getElementById('aestheticResultsLabel').textContent = data.label;
+        const resultsBlock = document.getElementById('aestheticResults');
+        resultsBlock.classList.add('open');
+        setTimeout(() => resultsBlock.scrollIntoView({ behavior: 'smooth', block: 'start' }), 120);
+    }
+
+    document.getElementById('aestheticOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeAesthetic();
+    });
+
     const quizAnswers = [null, null, null, null];
 
     const quizNoteMap = {

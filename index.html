@@ -4362,31 +4362,33 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
         document.getElementById('brandDetailView').classList.remove('active');
     }
 
+    // Динамічний fallback для брендів без опису в brandLoreData
+    function buildLoreFallback(bName) {
+        var items = globalCatalogData.filter(function(c) { return c[0] === bName; });
+        var count = items.length;
+        if (count === 0) return 'Преміальний нішевий бренд з унікальними ароматами. Кожна композиція — це окрема парфумерна історія.';
+        var topItems = items.filter(function(c) { return c[7] && (c[7].toLowerCase().includes('топ') || c[7].toLowerCase().includes('хіт')); }).slice(0, 2);
+        var hitNames = topItems.map(function(c) { return c[1]; }).join(' і ');
+        var noteSet = new Set();
+        items.forEach(function(c) {
+            var desc = (c[4] || '').toLowerCase();
+            if (desc.includes('троянд') || desc.includes('жасмин')) noteSet.add('квіткові ноти');
+            else if (desc.includes('уд') || desc.includes('смол')) noteSet.add('орієнтальні акорди');
+            else if (desc.includes('ваніл') || desc.includes('карамел')) noteSet.add('гурманські відтінки');
+            else if (desc.includes('цитрус') || desc.includes('бергамот')) noteSet.add('цитрусову свіжість');
+            else if (desc.includes('мускус')) noteSet.add('мускусну теплоту');
+            else if (desc.includes('дерев') || desc.includes('кедр') || desc.includes('сандал')) noteSet.add('деревні ноти');
+        });
+        var noteList = Array.from(noteSet).slice(0, 2).join(' та ');
+        var countWord = count === 1 ? 'аромат' : count < 5 ? 'аромати' : 'ароматів';
+        var text = 'Бренд представлений ' + count + ' ' + countWord + ' у нашому барі.';
+        if (noteList) text += ' Характерна риса колекції — ' + noteList + '.';
+        if (hitNames) text += ' Особливо популярні: ' + hitNames + '.';
+        text += ' Кожна композиція — ретельно відібраний оригінал з унікальним характером.';
+        return text;
+    }
+
     function showBrandPage(brandName) {
-        // Динамічний fallback для невідомих брендів
-        function buildLoreFallback(bName) {
-            const items = globalCatalogData.filter(function(c) { return c[0] === bName; });
-            const count = items.length;
-            const topItems = items.filter(function(c) { return c[7] && (c[7].toLowerCase().includes('топ') || c[7].toLowerCase().includes('хіт')); }).slice(0, 2);
-            const hitNames = topItems.map(function(c) { return c[1]; }).join(' і ');
-            const noteSet = new Set();
-            items.forEach(function(c) {
-                var desc = (c[4] || '').toLowerCase();
-                if (desc.includes('троянд') || desc.includes('жасмин')) noteSet.add('квіткові ноти');
-                else if (desc.includes('уд') || desc.includes('смол')) noteSet.add('орієнтальні акорди');
-                else if (desc.includes('ваніл') || desc.includes('карамел')) noteSet.add('гурманські відтінки');
-                else if (desc.includes('цитрус') || desc.includes('бергамот')) noteSet.add('цитрусову свіжість');
-                else if (desc.includes('мускус')) noteSet.add('мускусну теплоту');
-                else if (desc.includes('дерев') || desc.includes('кедр') || desc.includes('сандал')) noteSet.add('деревні ноти');
-            });
-            var noteList = Array.from(noteSet).slice(0, 2).join(' та ');
-            var countWord = count === 1 ? 'аромат' : count < 5 ? 'аромати' : 'ароматів';
-            var text = 'Бренд представлений ' + count + ' ' + countWord + ' у нашому барі.';
-            if (noteList) text += ' Характерна риса колекції — ' + noteList + '.';
-            if (hitNames) text += ' Особливо популярні: ' + hitNames + '.';
-            text += ' Кожна композиція — ретельно відібраний оригінал з унікальним характером.';
-            return text;
-        }
         const lore = brandLoreData[brandName] || buildLoreFallback(brandName);
         const brandItems = globalCatalogData.filter(c => c[0] === brandName).slice(0, 6);
 
@@ -4958,9 +4960,12 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
         let sillage = "Теплий, об'ємний шлейф з характером обох ароматів.";
 
         if (isMolecule1 || isMolecule2 || d1.includes('молекул') || d2.includes('молекул')) {
+            // Якщо молекулу визначено через опис (не назву) — уточнюємо ролі
+            const effectiveMol = molAroma || (d2.includes('молекул') ? aroma2 : (d1.includes('молекул') ? aroma1 : aroma2));
+            const effectiveBase = effectiveMol === aroma2 ? aroma1 : aroma2;
             mixKey = 'молекул'; title = "Молекулярний підсилювач";
-            text = `«${molAroma}» підсилить шлейф «${baseAroma}», зробивши його неймовірно дифузним та об'ємним на шкірі.`;
-            ratio = `Спочатку нанесіть «${baseAroma}» на пульсові точки (2 розпилення). Потім поверх — «${molAroma}» (1 розпилення). Молекула не додає запаху, а розкриває і розширює шлейф вашого аромату.`;
+            text = `«${effectiveMol}» підсилить шлейф «${effectiveBase}», зробивши його неймовірно дифузним та об'ємним на шкірі.`;
+            ratio = `Спочатку нанесіть «${effectiveBase}» на пульсові точки (2 розпилення). Потім поверх — «${effectiveMol}» (1 розпилення). Молекула не додає запаху, а розкриває і розширює шлейф вашого аромату.`;
             sillage = "Надпотужний шлейф — наче аромат живе власним життям.";
         } else if ((d1.includes('уд') && d2.includes('троянд')) || (d2.includes('уд') && d1.includes('троянд'))) {
             const oudAroma = d1.includes('уд') ? aroma1 : aroma2;
@@ -6647,23 +6652,22 @@ function renderGenderBar(value) {
             const count = cat.filter(c => c[0] === b).length;
             const countWord = count === 1 ? 'аромат' : count < 5 ? 'аромати' : 'ароматів';
 
-            // Унікальний акцент кожної плитки — ротація кольорів та мікро-орнаменти
-            const tileAccents = [
-                { hue: 45,  sat: 60 },  // золото
-                { hue: 200, sat: 25 },  // сталевий
-                { hue: 30,  sat: 50 },  // бронза
-                { hue: 270, sat: 20 },  // лавандовий
-                { hue: 160, sat: 25 },  // смарагд
-                { hue: 15,  sat: 45 },  // теракота
+            // Відтінки золотого — варіації яскравості та насиченості
+            const goldShades = [
+                { l: 50, a: 0.22 },
+                { l: 55, a: 0.18 },
+                { l: 48, a: 0.25 },
+                { l: 52, a: 0.20 },
+                { l: 46, a: 0.28 },
+                { l: 56, a: 0.16 },
             ];
-            const accent = tileAccents[brs.indexOf(b) % tileAccents.length];
-            const accentColor = `hsl(${accent.hue}, ${accent.sat}%, 50%)`;
-            const accentBg = `hsla(${accent.hue}, ${accent.sat}%, 50%, 0.06)`;
+            const shade = goldShades[brs.indexOf(b) % goldShades.length];
+            const accentColor = `hsl(40, 55%, ${shade.l}%)`;
+            const accentBg = `hsla(40, 55%, ${shade.l}%, ${shade.a})`;
 
             const tile = document.createElement('div');
             tile.className = 'brand-tile';
             tile.style.setProperty('--tile-accent', accentColor);
-            tile.style.background = `rgba(255,255,255,0.72)`;
 
             // Орнамент — різні SVG-патерни для різних плиток
             const ornaments = [
@@ -6698,7 +6702,7 @@ function renderGenderBar(value) {
         if (!window.speechSynthesis) return;
         window.speechSynthesis.cancel();
 
-        const lore = brandLoreData[brandName];
+        const lore = brandLoreData[brandName] || (typeof buildLoreFallback === 'function' ? buildLoreFallback(brandName) : null);
         if (!lore) return;
 
         const text = applyPronunciationMap(lore);

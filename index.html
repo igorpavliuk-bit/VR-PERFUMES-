@@ -3485,7 +3485,7 @@ body.dark-theme .passport-card {
     position: fixed;
     inset: 0;
     z-index: 3600;
-    background: var(--bg);
+    background: #080808;
     transform: translateY(100%);
     transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
     display: flex;
@@ -3498,12 +3498,13 @@ body.dark-theme .passport-card {
 
 /* Header */
 .brand-gallery-header {
-    padding: 22px 20px 16px;
+    padding: 20px 20px 15px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid rgba(128,128,128,0.1);
+    border-bottom: 1px solid rgba(197,160,89,0.15);
     flex-shrink: 0;
+    background: #080808;
 }
 .brand-gallery-title {
     font-family: var(--cinzel);
@@ -3517,142 +3518,138 @@ body.dark-theme .passport-card {
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--text-dark);
-    opacity: 0.45;
+    color: rgba(197,160,89,0.6);
     padding: 4px;
     display: flex;
     align-items: center;
-    transition: opacity 0.2s;
+    transition: color 0.2s;
 }
-.brand-gallery-close:hover { opacity: 0.9; }
+.brand-gallery-close:hover { color: var(--gold); }
 
 /* Scrollable body */
 .brand-gallery-body {
     flex: 1;
     overflow-y: auto;
-    padding: 18px 14px 30px;
+    padding: 14px 12px 30px;
     -webkit-overflow-scrolling: touch;
+    background: #080808;
 }
 
 /* 2-column grid of tiles */
 .brand-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 8px;
 }
 
 /* Брендові кольори-акценти */
-.brand-tile { --tile-accent: #c5a059; }
-
+/* ═══ BRAND TILES — Noir Editorial ═══ */
 .brand-tile {
-    background: rgba(197, 160, 89, 0.05);
-    border-radius: 14px;
+    background: #111010;
+    border-radius: 12px;
     aspect-ratio: 3/2;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 4px;
     cursor: pointer;
-    padding: 18px 12px;
+    padding: 16px 12px;
     box-sizing: border-box;
-    border: 1px solid rgba(197, 160, 89, 0.25);
-    transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    border: 1px solid rgba(197, 160, 89, 0.12);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     position: relative;
     overflow: hidden;
 }
 
-body.dark-theme .brand-tile {
-    background: rgba(26,26,26,0.75);
-    border-color: rgba(255,255,255,0.07);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
-}
-
+/* Велика літера-монограма позаду */
 .brand-tile::before {
-    content: '';
+    content: attr(data-initial);
     position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 40%;
-    background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, transparent 100%);
+    font-family: var(--cinzel);
+    font-size: 100px;
+    font-weight: 900;
+    color: rgba(197, 160, 89, 0.06);
+    line-height: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     pointer-events: none;
-    border-radius: 14px 14px 0 0;
-}
-body.dark-theme .brand-tile::before {
-    background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
+    letter-spacing: -5px;
+    user-select: none;
 }
 
+/* Золота лінія знизу — завжди видима */
 .brand-tile::after {
     content: '';
     position: absolute;
-    bottom: 0; left: 20%; right: 20%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--tile-accent), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    border-radius: 2px;
-}
-.brand-tile:active::after { opacity: 1; }
-.brand-tile:active {
-    transform: scale(0.96);
-    background: rgba(197, 160, 89, 0.12);
-    border-color: rgba(197, 160, 89, 0.5);
+    bottom: 0;
+    left: 25%;
+    right: 25%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(197,160,89,0.5), transparent);
+    pointer-events: none;
 }
 
-/* SVG орнамент на плитці */
-.tile-ornament {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    opacity: 0.6;
+.brand-tile:active {
+    transform: scale(0.96);
+    box-shadow: 0 0 20px rgba(197, 160, 89, 0.12);
+    border-color: rgba(197, 160, 89, 0.35);
+}
+
+/* Світла тема — також темна картка для єдиного стилю */
+body:not(.dark-theme) .brand-tile {
+    background: #0f0f0f;
+    border-color: rgba(197, 160, 89, 0.14);
 }
 
 .brand-tile-name {
     font-family: var(--cinzel);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 800;
-    color: var(--gold);
+    color: rgba(197, 160, 89, 0.9);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
     text-align: center;
-    line-height: 1.3;
+    line-height: 1.35;
     position: relative;
     z-index: 1;
+    max-width: 90%;
 }
-body.dark-theme .brand-tile-name { color: var(--gold); }
 
 .brand-tile-count {
-    font-size: 9px;
-    color: var(--tile-accent);
+    font-size: 8px;
+    color: rgba(197, 160, 89, 0.45);
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 2px;
     font-weight: 600;
     position: relative;
     z-index: 1;
+    margin-top: 2px;
 }
 
-/* === ГЕЙМІФІКАЦІЯ — бейдж "Розвідник" === */
+/* Бейдж — тонка мітка замість жирного прямокутника */
 .brand-tile-badge {
     position: absolute;
-    top: 7px;
-    left: 8px;
-    background: var(--tile-accent);
-    color: #fff;
-    font-size: 7px;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 2px 6px;
-    border-radius: 3px;
-    opacity: 0.85;
+    top: 9px;
+    right: 9px;
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    opacity: 0.7;
     z-index: 2;
+    box-shadow: 0 0 6px rgba(197,160,89,0.6);
 }
+
 
 /* Views */
 .brand-grid-view.hidden { display: none; }
 .brand-detail-view { display: none; }
 .brand-detail-view.active { display: block; }
+.brand-detail-view .brand-detail-name { color: #f0f0f0; }
+.brand-detail-view .brand-detail-lore { color: rgba(197,160,89,0.55); }
+.brand-detail-view .brand-detail-items-title { color: rgba(197,160,89,0.6); }
 
 /* Detail */
 .brand-back-btn {
@@ -3666,11 +3663,11 @@ body.dark-theme .brand-tile-name { color: var(--gold); }
     text-transform: uppercase;
     letter-spacing: 1.5px;
     font-weight: 700;
-    color: var(--gold);
+    color: rgba(197,160,89,0.6);
     padding: 0 0 18px 0;
-    opacity: 0.8;
+    transition: color 0.2s;
 }
-.brand-back-btn:hover { opacity: 1; }
+.brand-back-btn:hover { color: var(--gold); }
 .brand-detail-name {
     font-family: var(--cinzel);
     font-size: 24px;
@@ -3711,15 +3708,15 @@ body.dark-theme .brand-tile-name { color: var(--gold); }
     gap: 10px;
 }
 .brand-item-mini {
-    background: var(--gray-light);
+    background: rgba(197,160,89,0.04);
     border-radius: 12px;
     padding: 12px;
     cursor: pointer;
-    border: 1px solid rgba(128,128,128,0.07);
+    border: 1px solid rgba(197,160,89,0.12);
     transition: border-color 0.2s ease, transform 0.15s ease;
 }
 .brand-item-mini:active {
-    border-color: var(--gold);
+    border-color: rgba(197,160,89,0.4);
     transform: scale(0.97);
 }
 .brand-item-mini img {
@@ -3735,7 +3732,7 @@ body.dark-theme .brand-tile-name { color: var(--gold); }
     font-weight: 700;
     line-height: 1.3;
     margin-bottom: 4px;
-    color: var(--text-dark);
+    color: rgba(240,240,240,0.9);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -3751,9 +3748,9 @@ body.dark-theme .brand-tile-name { color: var(--gold); }
     width: 100%;
     margin-top: 18px;
     padding: 14px;
-    background: none;
-    border: 1px solid rgba(197,160,89,0.4);
-    color: var(--gold);
+    background: rgba(197,160,89,0.06);
+    border: 1px solid rgba(197,160,89,0.3);
+    color: rgba(197,160,89,0.85);
     font-size: 10px;
     font-weight: 800;
     text-transform: uppercase;
@@ -3765,7 +3762,7 @@ body.dark-theme .brand-tile-name { color: var(--gold); }
 }
 .brand-show-all-btn:active {
     background: var(--gold);
-    color: #fff;
+    color: #000;
 }
 
 /* Dark theme */
@@ -6652,40 +6649,21 @@ function renderGenderBar(value) {
             const count = cat.filter(c => c[0] === b).length;
             const countWord = count === 1 ? 'аромат' : count < 5 ? 'аромати' : 'ароматів';
 
-            // Відтінки золотого — варіації яскравості та насиченості
-            const goldShades = [
-                { l: 50, a: 0.22 },
-                { l: 55, a: 0.18 },
-                { l: 48, a: 0.25 },
-                { l: 52, a: 0.20 },
-                { l: 46, a: 0.28 },
-                { l: 56, a: 0.16 },
-            ];
-            const shade = goldShades[brs.indexOf(b) % goldShades.length];
-            const accentColor = `hsl(40, 55%, ${shade.l}%)`;
-            const accentBg = `hsla(40, 55%, ${shade.l}%, ${shade.a})`;
+            // Монограма — перша літера бренду (використовується в CSS ::before через data-initial)
+            const initial = b.charAt(0).toUpperCase();
 
             const tile = document.createElement('div');
             tile.className = 'brand-tile';
             tile.style.setProperty('--tile-accent', accentColor);
 
-            // Орнамент — різні SVG-патерни для різних плиток
-            const ornaments = [
-                `<svg class="tile-ornament" viewBox="0 0 60 30" fill="none"><circle cx="30" cy="15" r="12" stroke="${accentColor}" stroke-width="0.4" opacity="0.3"/><circle cx="30" cy="15" r="6" stroke="${accentColor}" stroke-width="0.4" opacity="0.2"/></svg>`,
-                `<svg class="tile-ornament" viewBox="0 0 60 30" fill="none"><line x1="10" y1="15" x2="50" y2="15" stroke="${accentColor}" stroke-width="0.4" opacity="0.3"/><line x1="30" y1="5" x2="30" y2="25" stroke="${accentColor}" stroke-width="0.4" opacity="0.3"/></svg>`,
-                `<svg class="tile-ornament" viewBox="0 0 60 30" fill="none"><rect x="18" y="8" width="24" height="14" stroke="${accentColor}" stroke-width="0.4" opacity="0.25" rx="1"/></svg>`,
-                `<svg class="tile-ornament" viewBox="0 0 60 30" fill="none"><polygon points="30,6 42,22 18,22" stroke="${accentColor}" stroke-width="0.4" fill="none" opacity="0.2"/></svg>`,
-                `<svg class="tile-ornament" viewBox="0 0 60 30" fill="none"><path d="M20 15 Q30 5 40 15 Q30 25 20 15" stroke="${accentColor}" stroke-width="0.4" fill="none" opacity="0.25"/></svg>`,
-                `<svg class="tile-ornament" viewBox="0 0 60 30" fill="none"><circle cx="20" cy="15" r="4" stroke="${accentColor}" stroke-width="0.4" opacity="0.2"/><circle cx="40" cy="15" r="4" stroke="${accentColor}" stroke-width="0.4" opacity="0.2"/><line x1="24" y1="15" x2="36" y2="15" stroke="${accentColor}" stroke-width="0.4" opacity="0.15"/></svg>`,
-            ];
-            const ornament = ornaments[brs.indexOf(b) % ornaments.length];
 
             const visitedBrands = JSON.parse(localStorage.getItem('vr_visited_brands') || '[]');
             const isVisited = visitedBrands.includes(b);
 
+            // data-initial для CSS монограми
+            tile.setAttribute('data-initial', initial);
             tile.innerHTML = `
-                ${isVisited ? `<div class="brand-tile-badge">Відвідано</div>` : ''}
-                ${ornament}
+                ${isVisited ? '<div class="brand-tile-badge"></div>' : ''}
                 <div class="brand-tile-name">${b}</div>
                 <div class="brand-tile-count">${count} ${countWord}</div>`;
             tile.onclick = () => {

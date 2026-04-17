@@ -965,12 +965,17 @@
             border-bottom: 2px solid var(--gold); 
         }
 
-        /* Кнопка MIX LAB тепер має своє місце і не закриває мікрофон */
+        /* Кнопка MIX LAB */
+        @keyframes softGlow {
+            0%   { box-shadow: 0 0 0 0 rgba(197,160,89,0); border-color: rgba(197,160,89,0.6); }
+            40%  { box-shadow: 0 0 10px 2px rgba(197,160,89,0.22); border-color: rgba(197,160,89,1); }
+            100% { box-shadow: 0 0 0 0 rgba(197,160,89,0); border-color: rgba(197,160,89,0.6); }
+        }
         .lab-shortcut {
             display: block;
             width: fit-content;
             background: rgba(197, 160, 89, 0.1);
-            border: 1px solid var(--gold);
+            border: 1px solid rgba(197,160,89,0.6);
             color: var(--gold);
             padding: 4px 12px;
             border-radius: 15px;
@@ -980,6 +985,7 @@
             letter-spacing: 1px;
             cursor: pointer;
             margin-bottom: 5px;
+            animation: softGlow 6s ease-in-out 3s infinite;
         }
 
         /* === КАСТОМНЕ ЗОЛОТЕ СОРТУВАННЯ === */
@@ -3917,7 +3923,7 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
 
 .aesthetic-sheet-hero {
     position: relative;
-    height: 160px;
+    height: 240px;
     flex-shrink: 0;
     overflow: hidden;
 }
@@ -3934,12 +3940,12 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
 }
 .aesthetic-sheet-hero-text {
     position: absolute;
-    bottom: 14px;
+    bottom: 18px;
     left: 20px; right: 60px;
 }
 .aesthetic-sheet-title {
     font-family: var(--cinzel);
-    font-size: 20px;
+    font-size: 26px;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -3948,13 +3954,13 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
     display: block;
 }
 .aesthetic-sheet-tagline {
-    font-size: 10px;
-    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
     font-style: italic;
-    margin-top: 4px;
+    margin-top: 6px;
     display: block;
-    letter-spacing: 0.5px;
-    line-height: 1.4;
+    letter-spacing: 0.4px;
+    line-height: 1.5;
 }
 .aesthetic-sheet-close {
     position: absolute;
@@ -3990,11 +3996,11 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 11px 12px;
+    padding: 14px 14px;
     border-radius: 12px;
     border: 1px solid rgba(255,255,255,0.07);
     background: rgba(255,255,255,0.03);
-    margin-bottom: 9px;
+    margin-bottom: 10px;
     cursor: pointer;
     transition: all 0.18s ease;
     backdrop-filter: blur(6px);
@@ -4002,15 +4008,15 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
 .aresult-card:active { background: rgba(197,160,89,0.08); border-color: rgba(197,160,89,0.3); transform: scale(0.99); }
 
 .aresult-img {
-    width: 52px; height: 52px;
+    width: 70px; height: 70px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 10px;
     flex-shrink: 0;
     background: rgba(255,255,255,0.04);
 }
-.aresult-brand { font-size: 8.5px; color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-.aresult-name { font-size: 13px; font-weight: 700; color: #fff; margin: 2px 0; line-height: 1.2; }
-.aresult-why { font-size: 10px; color: rgba(255,255,255,0.4); font-style: italic; line-height: 1.35; }
+.aresult-brand { font-size: 10px; color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+.aresult-name { font-size: 15px; font-weight: 700; color: #fff; margin: 3px 0; line-height: 1.2; }
+.aresult-why { font-size: 12px; color: rgba(255,255,255,0.42); font-style: italic; line-height: 1.35; }
 .aresult-price { font-size: 10px; color: var(--gold); font-weight: 700; margin-top: 3px; }
 
 /* ═══════════════════════════════════════════
@@ -4031,6 +4037,7 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
     cursor: pointer;
     margin-bottom: 5px;
     font-family: var(--cinzel);
+    animation: softGlow 6s ease-in-out 6s infinite;
 }
 
 /* Overlay */
@@ -4206,20 +4213,20 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
 }
 .smap-result-headline {
     font-family: var(--cinzel);
-    font-size: 22px;
+    font-size: 26px;
     font-weight: 900;
     text-transform: uppercase;
     color: #f0f0f0;
     line-height: 1.2;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     letter-spacing: 0.5px;
 }
 .smap-result-sub {
-    font-size: 12px;
-    color: rgba(197,160,89,0.55);
+    font-size: 13px;
+    color: rgba(197,160,89,0.6);
     font-style: italic;
-    margin-bottom: 22px;
-    line-height: 1.5;
+    margin-bottom: 24px;
+    line-height: 1.55;
 }
 
 .smap-perfume-list {
@@ -4231,7 +4238,7 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px;
+    padding: 14px;
     background: rgba(197,160,89,0.04);
     border: 1px solid rgba(197,160,89,0.12);
     border-radius: 12px;
@@ -4240,34 +4247,34 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
 }
 .smap-perfume-item:active { border-color: rgba(197,160,89,0.4); }
 .smap-perfume-img {
-    width: 52px;
-    height: 52px;
+    width: 70px;
+    height: 70px;
     object-fit: contain;
-    border-radius: 8px;
+    border-radius: 10px;
     background: rgba(197,160,89,0.04);
     flex-shrink: 0;
 }
 .smap-perfume-brand {
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: var(--gold);
-    margin-bottom: 2px;
+    margin-bottom: 3px;
     font-family: var(--cinzel);
 }
 .smap-perfume-name {
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 700;
-    color: rgba(240,240,240,0.92);
-    margin-bottom: 3px;
+    color: rgba(240,240,240,0.95);
+    margin-bottom: 4px;
     line-height: 1.2;
 }
 .smap-perfume-why {
-    font-size: 11px;
-    color: rgba(255,255,255,0.38);
+    font-size: 12px;
+    color: rgba(255,255,255,0.42);
     font-style: italic;
-    line-height: 1.4;
+    line-height: 1.45;
 }
     </style>
 </head>
@@ -7802,7 +7809,7 @@ function renderGenderBar(value) {
 
         // Максимум 2 сповіщення за сесію
         let toastCount = 0;
-        const MAX_TOASTS = 2;
+        const MAX_TOASTS = 1;
 
         function maybeShowToast() {
             if (toastCount >= MAX_TOASTS) return;

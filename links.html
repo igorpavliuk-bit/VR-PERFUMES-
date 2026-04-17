@@ -37,26 +37,19 @@
             align-items: center;
             animation: fadeIn 1s ease;
         }
-        /* ВИПРАВЛЕНИЙ ЛОГОТИП В КОЛІ */
-        .logo-wrapper {
-            width: 130px;
-            height: 130px;
+        
+        /* ЕСТЕТИЧНИЙ ЛОГОТИП БЕЗ БІЛОГО ФОНУ */
+        .logo-img {
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             border: 2px solid var(--gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8px; /* Відступ, щоб написи не торкалися країв */
-            background: #fff; /* Білий фон для кращої видимості лого з текстом */
+            object-fit: cover; /* Ідеально вписує зображення в коло */
             margin-bottom: 20px;
-            box-shadow: 0 0 30px rgba(197, 160, 89, 0.15);
-            overflow: hidden;
+            box-shadow: 0 0 25px rgba(197, 160, 89, 0.2);
+            background: transparent;
         }
-        .logo-img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Логотип повністю видно всередині */
-        }
+
         .brand-name {
             font-family: 'Montserrat', sans-serif;
             font-size: 20px;
@@ -121,12 +114,10 @@
 </head>
 <body>
     <div class="container">
-        <div class="logo-wrapper">
-            <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" alt="VR-PERFUMES" class="logo-img">
-        </div>
+        <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" alt="VR-PERFUMES" class="logo-img">
         
         <h1 class="brand-name">VR PERFUMES</h1>
-        <p class="bio">Преміальний парфумерний бар</p>
+        <p class="bio">Твій ольфакторний бар</p>
 
         <div class="links-wrapper">
             <a href="https://vrperfumes.github.io/VR-PERFUMES-/" class="link-btn">

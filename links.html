@@ -38,16 +38,20 @@
             animation: fadeIn 1s ease;
         }
         
-        /* ЕСТЕТИЧНИЙ ЛОГОТИП БЕЗ БІЛОГО ФОНУ */
+        /* НОВИЙ ЕСТЕТИЧНИЙ ЛОГОТИП (М'який квадрат) */
+        .logo-wrapper {
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
         .logo-img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 2px solid var(--gold);
-            object-fit: cover; /* Ідеально вписує зображення в коло */
-            margin-bottom: 20px;
-            box-shadow: 0 0 25px rgba(197, 160, 89, 0.2);
-            background: transparent;
+            width: 140px;
+            height: auto;
+            border-radius: 20px; /* М'які кути */
+            border: 1px solid rgba(197, 160, 89, 0.3); /* Тонка золота рамка */
+            box-shadow: 0 15px 35px rgba(197, 160, 89, 0.15); /* Золоте світіння */
+            display: block;
         }
 
         .brand-name {
@@ -114,7 +118,9 @@
 </head>
 <body>
     <div class="container">
-        <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" alt="VR-PERFUMES" class="logo-img">
+        <div class="logo-wrapper">
+            <img src="https://i.postimg.cc/CxkmFFJ3/logo.png" alt="VR-PERFUMES" class="logo-img">
+        </div>
         
         <h1 class="brand-name">VR PERFUMES</h1>
         <p class="bio">Твій ольфакторний бар</p>

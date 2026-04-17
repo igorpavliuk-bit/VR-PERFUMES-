@@ -3813,8 +3813,8 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
 /* Карта мудборду */
 .acard {
     flex-shrink: 0;
-    width: 130px;
-    border-radius: 14px;
+    width: 158px;
+    border-radius: 16px;
     overflow: hidden;
     cursor: pointer;
     position: relative;
@@ -3829,7 +3829,7 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
 
 .acard-img-wrap {
     position: relative;
-    height: 170px;
+    height: 210px;
     overflow: hidden;
     flex-shrink: 0;
 }
@@ -3851,30 +3851,30 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
 
 .acard-label {
     position: absolute;
-    bottom: 8px;
+    bottom: 10px;
     left: 0; right: 0;
     text-align: center;
     font-family: var(--cinzel);
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: #fff;
     line-height: 1.2;
-    padding: 0 6px;
-    text-shadow: 0 1px 6px rgba(0,0,0,0.7);
+    padding: 0 8px;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.8);
     z-index: 2;
 }
 .acard-vibe {
-    font-size: 7.5px;
+    font-size: 9px;
     color: rgba(255,255,255,0.55);
     text-align: center;
-    padding: 5px 6px 7px;
+    padding: 6px 8px 8px;
     letter-spacing: 0.4px;
-    line-height: 1.3;
+    line-height: 1.35;
     background: rgba(10,10,10,0.85);
     font-style: italic;
-    min-height: 32px;
+    min-height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4093,8 +4093,8 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
 .smap-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    padding: 16px 14px 0;
+    gap: 10px;
+    padding: 16px 12px 0;
     overflow-y: auto;
     flex: 1;
     -webkit-overflow-scrolling: touch;
@@ -4103,11 +4103,11 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
 
 .smap-card {
     position: relative;
-    border-radius: 14px;
+    border-radius: 16px;
     overflow: hidden;
     cursor: pointer;
-    aspect-ratio: 3/4;
-    border: 1px solid rgba(197,160,89,0.1);
+    aspect-ratio: 4/5;
+    border: 1px solid rgba(197,160,89,0.12);
     transition: transform 0.18s ease, border-color 0.2s ease;
 }
 .smap-card:active {
@@ -4115,16 +4115,15 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
     border-color: rgba(197,160,89,0.4);
 }
 
-/* Кольоровий градієнт-фон замість відео (відео поки через YouTube/poster) */
 .smap-card-bg {
     position: absolute;
     inset: 0;
     background-size: cover;
     background-position: center;
-    filter: brightness(0.7) saturate(0.85);
+    filter: brightness(0.65) saturate(0.9);
     transition: filter 0.4s ease;
 }
-.smap-card:active .smap-card-bg { filter: brightness(0.55) saturate(1.1); }
+.smap-card:active .smap-card-bg { filter: brightness(0.5) saturate(1.1); }
 
 /* Темний overlay для читання тексту */
 .smap-card-overlay {
@@ -4137,24 +4136,24 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
     position: absolute;
     bottom: 0;
     left: 0; right: 0;
-    padding: 12px 10px;
+    padding: 14px 12px;
     z-index: 2;
 }
 .smap-card-scene {
     font-family: var(--cinzel);
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.5px;
     color: #fff;
     line-height: 1.3;
-    margin-bottom: 3px;
-    text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+    margin-bottom: 4px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.9);
 }
 .smap-card-mood {
-    font-size: 8px;
-    color: rgba(197,160,89,0.75);
-    letter-spacing: 1px;
+    font-size: 9.5px;
+    color: rgba(197,160,89,0.8);
+    letter-spacing: 0.8px;
     text-transform: uppercase;
     font-weight: 600;
 }
@@ -8056,13 +8055,14 @@ updateWeather();
             mood: 'Сонце · Сіль · Свобода',
             headline: 'Ваш квиток в Італію',
             sub: 'Цитруси, морський бриз і розігріта шкіра під сонцем Середземномор\'я',
-            bg: 'linear-gradient(160deg, #1a3a2a 0%, #0d2218 40%, #0a1a10 100%)',
-            emoji: '🌊',
+            bg: 'amalfi-evening.webp',
             perfumes: [
                 { brand: 'Tom Ford', name: 'Soleil de Capri', why: 'Морський бриз Капрі — цитруси та сіль у флаконі Tom Ford' },
                 { brand: 'Jo Malone', name: 'Wood Sage', why: 'Морська сіль та шавлія — британська версія середземноморської свіжості' },
                 { brand: 'Essential Parfums', name: 'Nice Bergamote', why: 'Бергамот із Ніцци — чисте середземноморське сонце' },
-                { brand: 'Memo Paris', name: 'Sintra', why: 'Флердоранж і морський вітер — подорож узбережжям' },
+                { brand: 'Memo Paris', name: 'Pomelo Sorrento', why: 'Помело та морський вітер — подорож узбережжям Амальфі' },
+                { brand: 'Jo Malone', name: 'Blackberry', why: 'Літня свіжість та фруктова легкість на пляжному вітрі' },
+                { brand: 'Zarkoperfume', name: 'Pink Molecule', why: 'Повітряна молекула — сіль та шкіра під середземноморським сонцем' },
             ]
         },
         {
@@ -8071,28 +8071,30 @@ updateWeather();
             mood: 'Тепло · Деревина · Спокій',
             headline: 'Ваш притулок у горах',
             sub: 'Деревний дим, гаряче какао і вовняний светр біля живого вогню',
-            bg: 'linear-gradient(160deg, #1a0e08 0%, #120908 40%, #0a0605 100%)',
-            emoji: '🔥',
+            bg: 'mountain-fireplace.webp',
             perfumes: [
                 { brand: 'Hermès', name: 'Terre d\'Hermes', why: 'Земля, дерево, мінерал — ідеальний зимовий аромат' },
-                { brand: 'By Kilian', name: 'Princess', why: 'Тепла ваніль і мускус — затишок у флаконі' },
                 { brand: 'Mancera', name: 'Amore Caffe', why: 'Кава і деревна амбра — гарячий напій біля каміну' },
                 { brand: 'Tom Ford', name: 'Noir Extreme', why: 'Темний, деревний, зігріваючий — для зимових вечорів' },
+                { brand: 'By Kilian', name: 'Princess', why: 'Тепла ваніль і мускус — затишок у флаконі' },
+                { brand: 'Chloé', name: 'Cedrus', why: 'Кедр і мох — аромат гірського повітря та теплого дерева' },
+                { brand: 'Juliette Has A Gun', name: 'Vanilla Vibes', why: 'Ванільна теплота — відчуття пледа та каміну' },
             ]
         },
         {
             id: 'nightcity',
-            scene: 'Нічне мегаполіс у дощ',
+            scene: 'Нічне місто у дощ',
             mood: 'Місто · Неон · Таємниця',
             headline: 'Ваш нічний город',
             sub: 'Мокрий асфальт, неонові відображення і запах міста після опівночі',
-            bg: 'linear-gradient(160deg, #060d1a 0%, #040910 40%, #020508 100%)',
-            emoji: '🌆',
+            bg: 'rainy-night-city.webp',
             perfumes: [
                 { brand: 'Nishane', name: 'Hacivat', why: 'Складний та магнетичний — запах міста, що ніколи не спить' },
                 { brand: 'Byredo', name: 'Bal d\'Afrique', why: 'Міська богема — витончена та незалежна' },
                 { brand: 'Hormone Paris', name: 'This is not GABA', why: 'Молекулярна чистота — як повітря після нічного дощу' },
                 { brand: 'Les Liquides Imaginaires', name: 'Fortis', why: 'Інтелектуальний нішевий — для тих, хто любить ніч' },
+                { brand: 'Tom Ford', name: 'Noir Extreme', why: 'Чорний оксамит — темний, прянистий, міський' },
+                { brand: 'Mancera', name: 'Cedrat Boise', why: 'Свіжість міської ночі з деревним серцем' },
             ]
         },
         {
@@ -8101,28 +8103,30 @@ updateWeather();
             mood: 'Земля · Смола · Тиша',
             headline: 'Ваша лісова тиша',
             sub: 'Петрікор, хвоя і вологий мох — перші краплі літнього дощу в лісі',
-            bg: 'linear-gradient(160deg, #0a1408 0%, #080e06 40%, #050a04 100%)',
-            emoji: '🌲',
+            bg: 'pine-forest-rain.webp',
             perfumes: [
                 { brand: 'Chloé', name: 'Cedrus', why: 'Кедр і мох — лісова глибина у флаконі' },
                 { brand: 'Essential Parfums', name: 'Fig Infusion', why: 'Зелена інжирна тінь — вогкість після дощу' },
                 { brand: 'Zarkoperfume', name: 'MOLéCULE 234.38', why: 'Тонкий молекулярний — запах лісового повітря' },
                 { brand: 'Obvious', name: 'Une Pistache', why: 'Зелений, природний, тихий — як ліс у тумані' },
+                { brand: 'Jo Malone', name: 'Wood Sage', why: 'Шавлія та морська сіль — природна та земляна' },
+                { brand: 'Hormone Paris', name: 'Good Vibes', why: 'Свіжа зелень та земля після першого дощу' },
             ]
         },
         {
             id: 'desert',
             scene: 'Захід сонця в пустелі',
-            mood: 'Пісок · Уд · Містика',
+            mood: 'Пісок · Смола · Містика',
             headline: 'Ваша пустельна магія',
             sub: 'Теплий пісок, золоте небо і загадкова орієнтальна глибина',
-            bg: 'linear-gradient(160deg, #1a0e00 0%, #120900 40%, #0a0600 100%)',
-            emoji: '🌅',
+            bg: 'desert-sunset.webp',
             perfumes: [
-                { brand: 'Attar Collection', name: 'The Queen of Sheba', why: 'Розкіш Сходу — уд і троянда в пустельному золоті' },
-                { brand: 'Montale', name: 'Musk Kashmir', why: 'Кашмірський мускус — м\'яка пустельна магія' },
-                { brand: 'Lattafa', name: 'TERIAQ', why: 'Арабська розкіш — уд, амбра і золотий пісок' },
-                { brand: 'Kajal', name: 'Orchid K', why: 'Східна орхідея та уд — захід сонця Аравії' },
+                { brand: 'Tom Ford', name: 'Noir Extreme', why: 'Темний і деревний — як пустельна ніч після заходу' },
+                { brand: 'Nishane', name: 'Hacivat', why: 'Складний магнетизм — глибина Сходу без надмірності' },
+                { brand: 'Les Liquides Imaginaires', name: 'Fortis', why: 'Філософська глибина — пустельна медитація' },
+                { brand: 'V Canto', name: 'Ricina', why: 'Темний, квітково-смолистий — захід пустельного сонця' },
+                { brand: 'Mancera', name: 'Cedrat Boise', why: 'Деревна смола та пісок — сухе теплий акорд' },
+                { brand: 'Byredo', name: 'Bal d\'Afrique', why: 'Африканський захід — амбра, мускус і гаряче повітря' },
             ]
         },
         {
@@ -8131,18 +8135,19 @@ updateWeather();
             mood: 'Кава · Флори · Шарм',
             headline: 'Ваш паризький ранок',
             sub: 'Круасан, кава і запах квітів з ринку — магія французького ранку',
-            bg: 'linear-gradient(160deg, #18140a 0%, #100e08 40%, #0a0904 100%)',
-            emoji: '☕',
+            bg: 'morning-paris.webp',
             perfumes: [
                 { brand: 'Memo Paris', name: 'Sintra', why: 'Паризький нішевий — бездоганний як французьке ранкове повітря' },
-                { brand: 'Hormone Paris', name: 'Good Vibes', why: 'Паризький шарм — квітковий з нотою кави' },
                 { brand: 'Byredo', name: 'Bal d\'Afrique', why: 'Богемний Париж — трохи джазу, трохи флорену' },
                 { brand: 'Chloé', name: 'Cedrus', why: 'Французька стриманість — як архітектура Парижу' },
+                { brand: 'Jo Malone', name: 'Wood Sage', why: 'Британська елегантність — відповідь на паризький шарм' },
+                { brand: 'Essential Parfums', name: 'Nice Bergamote', why: 'Французький бергамот — ранок на терасі кав\'ярні' },
+                { brand: 'Hormone Paris', name: 'Good Vibes', why: 'Паризький позитив — легкий квітково-мускусний шлейф' },
             ]
         },
     ];
 
-    function openScentMemoryMap() {
+        function openScentMemoryMap() {
         const overlay = document.getElementById('smapOverlay');
         const grid = document.getElementById('smapGrid');
         grid.innerHTML = '';
@@ -8151,7 +8156,7 @@ updateWeather();
             const card = document.createElement('div');
             card.className = 'smap-card';
             card.innerHTML = `
-                <div class="smap-card-bg" style="background:${scene.bg};"></div>
+                <div class="smap-card-bg" style="background-image:url('${scene.bg}'); background-size:cover; background-position:center;"></div>
                 <div class="smap-card-overlay"></div>
                 <div class="smap-card-content">
                     <div class="smap-card-scene">${scene.scene}</div>
@@ -8191,14 +8196,14 @@ updateWeather();
             }
         }
         // Якщо знайдено менше 2 — доповнюємо з каталогу
-        if (results.length < 2) {
+        if (results.length < 3) {
             globalCatalogData
                 .filter(c => c[0] && c[1] && !results.find(r => r.item === c))
-                .slice(0, 4 - results.length)
+                .slice(0, 6 - results.length)
                 .forEach(c => results.push({ item: c, why: 'Підходить до цього настрою' }));
         }
 
-        results.slice(0, 4).forEach(({ item, why }) => {
+        results.slice(0, 6).forEach(({ item, why }) => {
             const img = (item[5] || '').replace(/'/g, '%27');
             const price = parseFloat(String(item[2]).replace(',', '.')) || 0;
             const priceStr = price ? 'від ' + Math.round(price * 2) + ' грн' : '';

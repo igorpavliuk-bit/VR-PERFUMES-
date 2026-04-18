@@ -59,7 +59,6 @@
             border-color: rgba(255, 255, 255, 0.05); 
         }
 
-        body.dark-theme .search-dropdown, 
         body.dark-theme .tg-chat-bubble, 
         body.dark-theme .leave-review-box, 
         body.dark-theme .cart-footer, 
@@ -198,9 +197,6 @@
         }
         
         .theme-switch { 
-            position: absolute; 
-            right: 20px; 
-            top: 20px; 
             font-size: 20px; 
             cursor: pointer; 
             z-index: 1010; 
@@ -209,7 +205,8 @@
             background: none; 
             border: none; 
             padding: 0; 
-            outline: none; 
+            outline: none;
+            flex-shrink: 0;
         }
 
         body.dark-theme .theme-switch { 
@@ -516,96 +513,332 @@
             z-index: 1000; 
         }
 
+        /* ══ STICKY CONTROLS — Compact + Expandable ══ */
         #stickyControls {
             display: flex;
             flex-direction: column;
-            padding: 12px 15px;
+            padding: 0;
+            gap: 0;
+            background: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            border-bottom: none;
+            transition: none;
+        }
+
+        /* Компактний рядок — завжди видимий */
+        .sticky-compact-bar {
+            display: flex;
+            align-items: center;
             gap: 8px;
-            background: rgba(255, 255, 255, 0.82);
+            padding: 8px 14px;
+            background: rgba(255,255,255,0.92);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(197, 160, 89, 0.1);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: padding 0.25s ease;
+            position: relative;
         }
+        body.dark-theme .sticky-compact-bar {
+            background: rgba(18,18,18,0.92);
+            border-bottom-color: rgba(255,255,255,0.05);
+        }
+
+        /* Пошуковий input в компактній панелі */
+        .sticky-compact-bar #searchInput {
+            flex: 1;
+            padding: 9px 68px 9px 14px;
+            border: 1px solid rgba(0,0,0,0.07);
+            border-radius: 20px;
+            font-size: 12px;
+            outline: none;
+            letter-spacing: 0.5px;
+            box-sizing: border-box;
+            background: rgba(255,255,255,0.7);
+            transition: all 0.25s ease;
+        }
+        body.dark-theme .sticky-compact-bar #searchInput {
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+            border-color: rgba(255,255,255,0.1);
+        }
+        .sticky-compact-bar #searchInput:focus {
+            border-color: var(--gold);
+        }
+
+        /* Кнопка розгортання панелі */
+        .sticky-expand-btn {
+            width: 34px;
+            height: 34px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(197,160,89,0.08);
+            border: 1px solid rgba(197,160,89,0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            color: var(--gold);
+            transition: background 0.2s ease, transform 0.3s ease;
+        }
+        .sticky-expand-btn:active { background: rgba(197,160,89,0.18); }
+        .sticky-expand-btn svg {
+            transition: transform 0.3s ease;
+        }
+        #stickyControls.expanded .sticky-expand-btn {
+            background: rgba(197,160,89,0.15);
+            border-color: rgba(197,160,89,0.5);
+        }
+        #stickyControls.expanded .sticky-expand-btn svg {
+            transform: rotate(90deg);
+        }
+        /* Золота крапка-індикатор на кнопці */
+        .sticky-expand-btn::after {
+            content: '';
+            position: absolute;
+            width: 6px; height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+            top: 6px; right: 6px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        /* Показуємо крапку якщо активний фільтр */
+        #stickyControls.has-filter .sticky-expand-btn::after {
+            opacity: 1;
+        }
+        .sticky-expand-btn { position: relative; }
+
+        /* Розгортальна панель */
+        .sticky-expanded-panel {
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            overflow: visible;
+            max-height: 0;
+            clip-path: inset(0 0 0 0);
+            transition: max-height 0.35s cubic-bezier(0.22,1,0.36,1), padding 0.3s ease;
+            padding: 0 14px;
+        }
+        body.dark-theme .sticky-expanded-panel {
+            background: rgba(18,18,18,0.96);
+            border-bottom-color: rgba(255,255,255,0.05);
+        }
+        body.dark-theme .sticky-expanded-panel {
+            background: rgba(18,18,18,0.96);
+            border-bottom-color: rgba(255,255,255,0.05);
+        }
+        #stickyControls.expanded .sticky-expanded-panel {
+            max-height: 320px;
+            padding: 8px 14px 14px;
+        }
+
+        /* Приховуємо search-wrapper в expanded panel (він вже в compact bar) */
+        .sticky-expanded-panel .search-wrapper { display: none; }
         
         body.dark-theme #stickyControls {
             background: rgba(18, 18, 18, 0.88);
             border-bottom-color: rgba(255, 255, 255, 0.05);
         }
 
-        .search-wrapper { 
-            position: relative; 
+        /* ═══ FRAGRANTICA-STYLE SEARCH ═══ */
+        .search-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 0;
+        }
+
+        #searchInput {
             width: 100%;
+            padding: 10px 72px 10px 18px;
+            border: 1.5px solid rgba(197,160,89,0.2);
+            border-radius: 24px;
+            font-size: 13px;
+            outline: none;
+            letter-spacing: 0.3px;
+            box-sizing: border-box;
+            background: rgba(255,255,255,0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: var(--text-dark);
+            transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+            font-family: var(--sans);
+        }
+        #searchInput:focus {
+            border-color: rgba(197,160,89,0.7);
+            background: rgba(255,255,255,0.92);
+            box-shadow: 0 0 0 3px rgba(197,160,89,0.08);
+        }
+        body.dark-theme #searchInput {
+            background: rgba(255,255,255,0.07);
+            color: #f0f0f0;
+            border-color: rgba(197,160,89,0.15);
+        }
+        body.dark-theme #searchInput:focus {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(197,160,89,0.5);
+        }
+
+        /* Glass dropdown — Fragrantica style */
+        .search-dropdown {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(8,8,8,0.78);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 5000;
+            flex-direction: column;
+            padding-top: 0;
+            overflow: hidden;
+        }
+        .search-dropdown.active { display: flex; }
+
+        /* Внутрішній контейнер з полем і результатами */
+        .search-glass-inner {
+            background: rgba(255,255,255,0.97);
+            border-radius: 0 0 20px 20px;
+            overflow: hidden;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+        body.dark-theme .search-glass-inner {
+            background: rgba(14,14,14,0.98);
+        }
+
+        /* Input у glass overlay */
+        .search-glass-input-row {
             display: flex;
             align-items: center;
+            gap: 12px;
+            padding: 16px 18px 12px;
+            border-bottom: 1px solid rgba(197,160,89,0.1);
+            flex-shrink: 0;
+        }
+        .search-glass-back {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            padding: 6px;
+            flex-shrink: 0;
+        }
+        .search-glass-field {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            font-family: var(--sans);
+            background: transparent;
+            color: var(--text-dark);
+            letter-spacing: 0.3px;
+        }
+        body.dark-theme .search-glass-field { color: #f0f0f0; }
+        .search-glass-field::placeholder { color: rgba(128,128,128,0.5); }
+        .search-glass-clear {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #aaa;
+            display: none;
+            padding: 4px;
+            flex-shrink: 0;
         }
 
-        #searchInput { 
-            width: 100%; 
-            padding: 12px 75px 12px 15px; /* Збільшено відступ справа для мікрофону та хрестика */
-            border: 1px solid rgba(0, 0, 0, 0.08); 
-            border-radius: 20px; 
-            font-size: 13px; 
-            outline: none; 
-            letter-spacing: 0.5px; 
-            box-sizing: border-box; 
-            background: rgba(255, 255, 255, 0.6); 
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.02); 
-            transition: all 0.3s ease; 
+        /* Результати */
+        .search-glass-results {
+            overflow-y: auto;
+            flex: 1;
+            -webkit-overflow-scrolling: touch;
+        }
+        .search-glass-section-title {
+            font-family: var(--cinzel);
+            font-size: 8px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(197,160,89,0.6);
+            padding: 14px 18px 6px;
+        }
+        .search-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 18px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            border-bottom: 1px solid rgba(128,128,128,0.05);
+        }
+        .search-item:active { background: rgba(197,160,89,0.06); }
+
+        .search-item img {
+            width: 54px;
+            height: 54px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: rgba(128,128,128,0.05);
+            flex-shrink: 0;
+        }
+        .search-item-info { flex: 1; min-width: 0; }
+        .search-item-brand {
+            font-family: var(--cinzel);
+            font-size: 9px;
+            color: var(--gold);
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+        .search-item-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        body.dark-theme .search-item-name { color: #f0f0f0; }
+        .search-item-price {
+            font-size: 12px;
+            color: var(--gold);
+            font-weight: 700;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .search-empty {
+            padding: 32px 18px;
+            text-align: center;
+            font-size: 13px;
+            color: #888;
+            font-style: italic;
         }
 
-        #searchInput:focus { 
-            border-color: var(--gold); 
+        /* Note chips в пошуку */
+        .search-glass-notes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px 18px 14px;
+            border-bottom: 1px solid rgba(128,128,128,0.07);
         }
-        
-        /* Кнопка Очистити (зміщена) */
-        #clearSearchBtn { 
-            position: absolute; 
-            right: 15px; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            font-size: 16px; 
-            color: #999; 
-            cursor: pointer; 
-            display: none; 
-            z-index: 10; 
-            padding: 5px; 
+        .search-note-chip {
+            padding: 5px 12px;
+            border: 1px solid rgba(197,160,89,0.3);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gold);
+            cursor: pointer;
+            background: rgba(197,160,89,0.05);
+            transition: all 0.15s ease;
         }
-        
-        /* Кнопка Мікрофона (Зміщена лівіше, щоб не було накладання) */
-        .mic-btn { 
-            position: absolute; 
-            right: 42px; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            width: 18px; 
-            height: 18px; 
-            fill: none; 
-            stroke: var(--gold); 
-            stroke-width: 2; 
-            cursor: pointer; 
-            z-index: 10; 
-            transition: 0.3s; 
-            stroke-linecap: round; 
-            stroke-linejoin: round; 
-        }
+        .search-note-chip:active { background: rgba(197,160,89,0.2); }
 
-        .mic-btn:hover { 
-            stroke: var(--text-dark); 
-        }
 
-        .mic-btn.listening { 
-            animation: mic-pulse 1.2s infinite; 
-            stroke: #ff3b30; 
-        }
-
-        @keyframes mic-pulse { 
-            0% { transform: translateY(-50%) scale(1); opacity: 1; } 
-            50% { transform: translateY(-50%) scale(1.15); opacity: 0.6; } 
-            100% { transform: translateY(-50%) scale(1); opacity: 1; } 
-        }
-        
-        /* ПРЕМІУМ НОТИ (БЕЗ ЕМОДЗІ, КОНТУРНІ) */
         .note-suggestions { 
             padding: 8px 5px 10px; 
             overflow-x: auto; 
@@ -1029,6 +1262,7 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05); 
             display: none; 
             overflow: hidden; 
+                    z-index: 2000;
         }
 
         .custom-sort-options.show { 
@@ -2396,31 +2630,36 @@
             display: block; 
         }
         
-        .cart-header { 
-            padding: 25px 20px 20px; 
-            border-bottom: 1px solid rgba(128, 128, 128, 0.1); 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
+        .cart-header {
+            padding: 22px 20px 18px;
+            border-bottom: 1px solid rgba(197,160,89,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-
-        .cart-title { 
-            font-family: var(--cinzel); 
-            font-size: 18px; 
-            font-weight: 800; 
-            margin: 0; 
-            text-transform: uppercase; 
-            letter-spacing: 2px; 
+        .cart-title {
+            font-family: var(--cinzel);
+            font-size: 14px;
+            font-weight: 900;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-dark);
         }
-
-        .cart-close { 
-            background: none; 
-            border: none; 
-            font-size: 28px; 
-            color: #999; 
-            cursor: pointer; 
-            padding: 0 10px; 
+        body.dark-theme .cart-title { color: #f0f0f0; }
+        .cart-close {
+            width: 32px; height: 32px;
+            background: rgba(128,128,128,0.08);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-dark);
+            transition: background 0.2s;
         }
+        .cart-close:active { background: rgba(128,128,128,0.18); }
         
         .shipping-progress-container { 
             margin: 15px 20px 5px; 
@@ -2456,82 +2695,110 @@
             transition: width 0.5s ease; 
         }
 
-        .cart-items { 
-            flex: 1; 
-            overflow-y: auto; 
-            padding: 15px 20px; 
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 20px 16px;
+            -webkit-overflow-scrolling: touch;
         }
 
-        .cart-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding-bottom: 15px; 
-            margin-bottom: 15px; 
-            border-bottom: 1px solid rgba(128, 128, 128, 0.1); 
+        /* ═══ CART ITEM — modern with photo ═══ */
+        .cart-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(128,128,128,0.07);
+            animation: fadeIn 0.25s ease;
+        }
+        .cart-item:last-child { border-bottom: none; }
+
+        /* Фото товару */
+        .cart-item-img {
+            width: 68px;
+            height: 68px;
+            object-fit: contain;
+            border-radius: 12px;
+            background: rgba(128,128,128,0.05);
+            flex-shrink: 0;
+            border: 1px solid rgba(128,128,128,0.08);
+        }
+        body.dark-theme .cart-item-img {
+            background: rgba(255,255,255,0.04);
         }
 
-        .cart-item-info { 
-            flex: 1; 
-            padding-right: 15px; 
+        .cart-item-info {
+            flex: 1;
+            min-width: 0;
         }
+        .cart-item-brand {
+            font-family: var(--cinzel);
+            font-size: 9px;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+            margin-bottom: 3px;
+        }
+        .cart-item-name {
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.25;
+            margin-bottom: 4px;
+            color: var(--text-dark);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        body.dark-theme .cart-item-name { color: #f0f0f0; }
+        .cart-item-vol {
+            font-size: 11px;
+            color: rgba(128,128,128,0.7);
+            margin-bottom: 6px;
+        }
+        .cart-item-price {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+        body.dark-theme .cart-item-price { color: #f0f0f0; }
 
-        .cart-item-brand { 
-            font-family: var(--cinzel); 
-            font-size: 10px; 
-            color: var(--gold); 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            font-weight: 800; 
+        /* Кнопка видалення — тонка іконка */
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: rgba(128,128,128,0.4);
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: color 0.2s;
+            margin-top: 2px;
         }
-
-        .cart-item-name { 
-            font-size: 14px; 
-            font-family: var(--serif); 
-            font-weight: 700; 
-            line-height: 1.2; 
-            margin: 4px 0; 
-        }
-
-        .cart-item-vol { 
-            font-size: 12px; 
-            color: #777; 
-        }
-
-        .cart-item-price { 
-            font-size: 14px; 
-            font-weight: 700; 
-        }
-
-        .cart-item-remove { 
-            background: none; 
-            border: none; 
-            color: #ff4d4d; 
-            font-size: 24px; 
-            cursor: pointer; 
-            padding: 5px; 
-            opacity: 0.6; 
-        }
-
-        .cart-item-remove:hover { 
-            opacity: 1; 
-        }
+        .cart-item-remove:active { color: #e55; }
         
-        .cart-empty-msg { 
-            text-align: center; 
-            color: #999; 
-            font-size: 14px; 
-            margin-top: 50px; 
-            font-family: var(--serif); 
+        .cart-empty-msg {
+            text-align: center;
+            color: rgba(128,128,128,0.5);
+            font-size: 13px;
+            margin-top: 60px;
+            font-family: var(--serif);
             font-style: italic;
+            line-height: 1.6;
         }
         
-        .cart-footer { 
-            padding: 25px 20px; 
-            border-top: 1px solid rgba(197, 160, 89, 0.1); 
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+        .cart-footer {
+            padding: 20px 20px 24px;
+            border-top: 1px solid rgba(197,160,89,0.1);
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        body.dark-theme .cart-footer {
+            background: rgba(14,14,14,0.95);
         }
         
         .gift-wrap-container { 
@@ -2584,54 +2851,75 @@
             font-weight: 700; 
         }
 
-        .cart-total-row { 
-            display: flex; 
-            justify-content: space-between; 
-            font-size: 20px; 
-            font-family: var(--serif); 
-            font-weight: 800; 
-            margin-bottom: 20px; 
+        .cart-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(128,128,128,0.1);
         }
+        .cart-total-label {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-dark);
+            opacity: 0.5;
+        }
+        .cart-total-value {
+            font-size: 22px;
+            font-family: var(--cinzel);
+            font-weight: 900;
+            color: var(--text-dark);
+        }
+        body.dark-theme .cart-total-label, body.dark-theme .cart-total-value { color: #f0f0f0; }
         
-        .cart-comment-input { 
-            width: 100%; 
-            box-sizing: border-box; 
-            padding: 14px; 
-            border: 1px solid rgba(128, 128, 128, 0.2); 
-            border-radius: 8px; 
-            font-family: var(--sans); 
-            font-size: 14px; 
-            resize: none; 
-            margin-bottom: 15px; 
-            outline: none; 
-            background: transparent;
+        .cart-comment-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 13px 16px;
+            border: 1.5px solid rgba(128,128,128,0.15);
+            border-radius: 12px;
+            font-family: var(--sans);
+            font-size: 14px;
+            resize: none;
+            margin-bottom: 12px;
+            outline: none;
+            background: rgba(128,128,128,0.04);
+            color: var(--text-dark);
+            transition: border-color 0.2s;
         }
+        body.dark-theme .cart-comment-input {
+            background: rgba(255,255,255,0.04);
+            color: #f0f0f0;
+            border-color: rgba(255,255,255,0.1);
+        }
+        .cart-comment-input:focus { border-color: var(--gold); }
 
-        .cart-comment-input:focus { 
-            border-color: var(--gold); 
+        .cart-checkout-btn {
+            display: flex;
+            width: 100%;
+            padding: 18px 0;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 14px;
+            transition: transform 0.2s ease, opacity 0.2s;
+            font-family: var(--cinzel);
         }
-
-        .cart-checkout-btn { 
-            display: flex; 
-            width: 100%; 
-            padding: 20px 0; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 13px; 
-            text-transform: uppercase; 
-            font-weight: 900; 
-            letter-spacing: 2px; 
-            background: var(--gold); 
-            color: #fff; 
-            border: none; 
-            cursor: pointer; 
-            border-radius: 8px; 
-            transition: 0.3s; 
+        body.dark-theme .cart-checkout-btn {
+            background: var(--gold);
+            color: #000;
         }
-
-        .cart-checkout-btn:active { 
-            transform: scale(0.98); 
-        }
+        .cart-checkout-btn:active { transform: scale(0.97); opacity: 0.9; }
         
         .cart-return-btn { 
             display: flex; 
@@ -3030,29 +3318,22 @@ body.modal-open .cart-floating-btn {
 .quiz-trigger {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin: 0 15px 0;
-    padding: 13px 20px;
-    border: 1px solid rgba(197,160,89,0.35);
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    gap: 10px;
+    margin: 0 18px;
+    padding: 10px 0;
+    border: none;
+    border-top: 1px solid rgba(197,160,89,0.1);
+    border-bottom: 1px solid rgba(197,160,89,0.1);
+    background: transparent;
     cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-    box-shadow: 0 2px 12px rgba(197, 160, 89, 0.07);
+    transition: opacity 0.2s ease;
 }
-body.dark-theme .quiz-trigger {
-    background: rgba(26, 26, 26, 0.65);
-    border-color: rgba(197, 160, 89, 0.2);
-}
-.quiz-trigger:active { transform: scale(0.98); }
-.quiz-trigger-icon { font-size: 18px; }
-.quiz-trigger-text { display: flex; flex-direction: column; align-items: flex-start; }
-.quiz-trigger-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gold); }
-.quiz-trigger-sub { font-size: 10px; color: var(--text-gray); letter-spacing: 0.5px; margin-top: 1px; }
+.quiz-trigger:active { opacity: 0.7; }
+
+.quiz-trigger-icon { display: flex; align-items: center; color: var(--gold); flex-shrink: 0; }
+.quiz-trigger-text { display: flex; flex-direction: column; align-items: flex-start; flex: 1; }
+.quiz-trigger-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gold); }
+.quiz-trigger-sub { font-size: 10px; color: var(--text-gray); letter-spacing: 0.3px; margin-top: 2px; }
 
 /* Overlay */
 .quiz-overlay {
@@ -3791,7 +4072,7 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
 
 /* === AESTHETIC MATCHER — inline carousel === */
 .aesthetic-section {
-    padding: 0 15px 4px;
+    padding: 14px 15px 4px;
 }
 .aesthetic-section-label {
     font-family: var(--cinzel);
@@ -4276,6 +4557,31 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
     font-style: italic;
     line-height: 1.45;
 }
+
+        /* Sort row — завжди видимий між compact bar і expanded */
+        .sticky-sort-row {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 6px 14px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 1001;
+        }
+        body.dark-theme .sticky-sort-row {
+            background: rgba(18,18,18,0.95);
+            border-bottom-color: rgba(255,255,255,0.05);
+        }
+        .sticky-sort-row .custom-sort-wrapper {
+            width: 100% !important;
+            margin-left: 0 !important;
+        }
+        .sticky-sort-row .custom-sort-header {
+            border: 1px solid rgba(197,160,89,0.25);
+        }
+        .sticky-sort-row .custom-sort-options {
+            z-index: 2000 !important;
+        }
     </style>
 </head>
 <body>
@@ -4529,75 +4835,130 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
         </div>
     </div>
 
-    <div id="stickyControls" class="sticky-active glass-panel">
-        
-        <div style="display:flex; gap:8px; align-items:center; flex-wrap:nowrap;">
-            <button class="lab-shortcut" onclick="document.querySelector('.layering-section').scrollIntoView({behavior: 'smooth'})">
-                MIX LAB
+    <div id="stickyControls" class="sticky-active">
+
+        <!-- ══ COMPACT BAR — завжди видима ══ -->
+        <div class="sticky-compact-bar">
+            <!-- Кнопки MIX LAB + MEMORY MAP -->
+            <button class="lab-shortcut" onclick="document.querySelector('.layering-section').scrollIntoView({behavior:'smooth'})" style="margin-bottom:0; flex-shrink:0;">MIX LAB</button>
+            <button class="memory-map-shortcut" onclick="openScentMemoryMap()" style="margin-bottom:0; flex-shrink:0;">
+                <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px;"><circle cx="12" cy="12" r="3"/><path d="M3 12h3M18 12h3M12 3v3M12 18v3"/></svg>MAP
             </button>
-            <button class="memory-map-shortcut" onclick="openScentMemoryMap()">
-                <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;"><circle cx="12" cy="12" r="3"/><path d="M3 12h3M18 12h3M12 3v3M12 18v3"/></svg>MEMORY MAP
+
+            <!-- Пошуковий input -->
+            <div class="search-wrapper" style="flex:1; position:relative; min-width:0;">
+                <!-- Compact trigger -->
+                <div id="searchTrigger" onclick="openSearchOverlay()" style="display:flex;align-items:center;gap:8px;padding:9px 14px 9px 18px;border:1.5px solid rgba(197,160,89,0.2);border-radius:24px;background:rgba(255,255,255,0.65);backdrop-filter:blur(12px);cursor:pointer;transition:border-color 0.2s;">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="rgba(197,160,89,0.7)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <span id="searchTriggerText" style="font-size:12px;color:rgba(128,128,128,0.6);font-family:var(--sans);flex:1;letter-spacing:0.3px;">Пошук аромату...</span>
+                    <svg class="mic-btn" id="micBtn" viewBox="0 0 24 24" onclick="event.stopPropagation();startVoiceSearch()" style="position:static;transform:none;width:16px;height:16px;flex-shrink:0;">
+                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
+                </div>
+                <input type="text" id="searchInput" style="display:none;" oninput="handleSearchInput()">
+                <span id="clearSearchBtn" style="display:none;"></span>
+            </div>
+
+            <!-- GLASS SEARCH OVERLAY -->
+            <div id="searchResults" class="search-dropdown" onclick="handleSearchOverlayClick(event)">
+                <div class="search-glass-inner">
+                    <!-- Input row -->
+                    <div class="search-glass-input-row">
+                        <button class="search-glass-back" onclick="closeSearchOverlay()">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                        </button>
+                        <input type="text" class="search-glass-field" id="searchGlassInput" placeholder="Бренд, аромат, нота..." oninput="handleGlassSearch(this.value)" autocomplete="off" autocorrect="off">
+                        <button class="search-glass-clear" id="searchGlassClear" onclick="clearGlassSearch()">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                    <!-- Notes quick filter -->
+                    <div class="search-glass-notes">
+                        <span class="search-note-chip" onclick="setGlassSearch('Ваніль')">Ваніль</span>
+                        <span class="search-note-chip" onclick="setGlassSearch('Вишня')">Вишня</span>
+                        <span class="search-note-chip" onclick="setGlassSearch('Шкіра')">Шкіра</span>
+                        <span class="search-note-chip" onclick="setGlassSearch('Троянда')">Троянда</span>
+                        <span class="search-note-chip" onclick="setGlassSearch('Мускус')">Мускус</span>
+                        <span class="search-note-chip" onclick="setGlassSearch('Бергамот')">Бергамот</span>
+                        <span class="search-note-chip" onclick="setGlassSearch('Уд')">Уд</span>
+                        <span class="search-note-chip" onclick="setGlassSearch('Пачулі')">Пачулі</span>
+                    </div>
+                    <!-- Results -->
+                    <div class="search-glass-results" id="searchGlassResults">
+                        <div class="search-glass-section-title">Популярне</div>
+                        <div id="searchGlassPopular"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Кнопка теми -->
+            <button class="theme-switch" onclick="toggleTheme()" id="themeBtn" style="position:static; flex-shrink:0;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+
+            <!-- Кнопка розгортання -->
+            <button class="sticky-expand-btn" onclick="toggleStickyPanel()" aria-label="Фільтри та категорії" id="stickyExpandBtn">
+                <svg id="expandBtnIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="6" x2="20" y2="6"/>
+                    <line x1="4" y1="12" x2="14" y2="12"/>
+                    <line x1="4" y1="18" x2="9" y2="18"/>
+                </svg>
             </button>
-        </div>
-        
-        <button class="theme-switch" onclick="toggleTheme()" id="themeBtn"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
-        
-        <div class="search-wrapper">
-            <input type="text" id="searchInput" placeholder="ПОШУК АРОМАТУ АБО БРЕНДУ..." oninput="handleSearchInput()">
-            <svg class="mic-btn" id="micBtn" viewBox="0 0 24 24" onclick="startVoiceSearch()">
-                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
-                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                <line x1="12" y1="19" x2="12" y2="23"></line>
-                <line x1="8" y1="23" x2="16" y2="23"></line>
-            </svg>
-            <span id="clearSearchBtn" onclick="clearSearch()" style="display:flex;align-items:center;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
-            <div id="searchResults" class="search-dropdown"></div>
-        </div>
-        
-        <div class="note-suggestions" id="noteSuggestions">
-            <span class="note-label">Ноти:</span>
-            <span class="note-chip" onclick="searchByNote('Ваніль', this)">Ваніль</span>
-            <span class="note-chip" onclick="searchByNote('Вишня', this)">Вишня</span>
-            <span class="note-chip" onclick="searchByNote('Шкіра', this)">Шкіра</span>
-            <span class="note-chip" onclick="searchByNote('Троянда', this)">Троянда</span>
-            <span class="note-chip" onclick="searchByNote('Бергамот', this)">Бергамот</span>
-            <span class="note-chip" onclick="searchByNote('Мускус', this)">Мускус</span>
         </div>
 
-        <div class="brand-slider" id="brandSlider" style="display:none;"></div>
-        <button class="brands-gallery-btn" onclick="openBrandGallery()">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-            Огляд брендів
-        </button>
-        <div class="tabs-container">
-            <button class="tab-btn active" onclick="setCategory('all', this)">Усі</button>
-            <button class="tab-btn" onclick="setCategory('new', this)">Новинки</button>
-            <button class="tab-btn" onclick="setCategory('top', this)">Хіти</button>
-            <button class="tab-btn" onclick="setCategory('set', this)">Сети</button>
-            <button class="tab-btn" onclick="setCategory('bottle', this)">Залишки у флаконі</button>
-            <button class="tab-btn" onclick="setCategory('wishlist', this)">Улюблені ♡</button>
+        <!-- ══ SORT ROW — завжди видимий під compact bar при розгортанні ══ -->
+        <div class="sticky-sort-row" id="stickySortRow">
+            <div class="sort-wrapper" style="padding:0; width:100%;">
+                <div class="custom-sort-wrapper" style="width:100%; margin-left:0;">
+                    <div class="custom-sort-header" onclick="toggleSortMenu(event)">
+                        <span id="currentSortText">ЗА ЗАМОВЧУВАННЯМ (НОВІ)</span>
+                        <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 10l5 5 5-5z" fill="var(--gold)"/></svg>
+                    </div>
+                    <div class="custom-sort-options" id="sortOptionsList">
+                        <div class="sort-option active" onclick="applySort('default', 'ЗА ЗАМОВЧУВАННЯМ (НОВІ)', event)">ЗА ЗАМОВЧУВАННЯМ (НОВІ)</div>
+                        <div class="sort-option" onclick="applySort('popularity', 'ЗА ПОПУЛЯРНІСТЮ (ВІДГУКИ)', event)">ЗА ПОПУЛЯРНІСТЮ (ВІДГУКИ)</div>
+                        <div class="sort-option" onclick="applySort('price-asc', 'ЦІНА: ВІД ДЕШЕВИХ', event)">ЦІНА: ВІД ДЕШЕВИХ</div>
+                        <div class="sort-option" onclick="applySort('price-desc', 'ЦІНА: ВІД ДОРОГИХ', event)">ЦІНА: ВІД ДОРОГИХ</div>
+                        <div class="sort-option" onclick="applySort('name-asc', 'ЗА АЛФАВІТОМ (А-Я)', event)">ЗА АЛФАВІТОМ (А-Я)</div>
+                    </div>
+                    <select id="sortSelect" style="display:none;" onchange="sortCatalog()">
+                        <option value="default">default</option>
+                        <option value="popularity">popularity</option>
+                        <option value="price-asc">price-asc</option>
+                        <option value="price-desc">price-desc</option>
+                        <option value="name-asc">name-asc</option>
+                    </select>
+                </div>
+            </div>
         </div>
-        
-        <div class="sort-wrapper">
-            <div class="custom-sort-wrapper">
-                <div class="custom-sort-header" onclick="toggleSortMenu(event)">
-                    <span id="currentSortText">ЗА ЗАМОВЧУВАННЯМ (НОВІ)</span>
-                    <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 10l5 5 5-5z" fill="var(--gold)"/></svg>
-                </div>
-                <div class="custom-sort-options" id="sortOptionsList">
-                    <div class="sort-option active" onclick="applySort('default', 'ЗА ЗАМОВЧУВАННЯМ (НОВІ)', event)">ЗА ЗАМОВЧУВАННЯМ (НОВІ)</div>
-                    <div class="sort-option" onclick="applySort('popularity', 'ЗА ПОПУЛЯРНІСТЮ (ВІДГУКИ)', event)">ЗА ПОПУЛЯРНІСТЮ (ВІДГУКИ)</div>
-                    <div class="sort-option" onclick="applySort('price-asc', 'ЦІНА: ВІД ДЕШЕВИХ', event)">ЦІНА: ВІД ДЕШЕВИХ</div>
-                    <div class="sort-option" onclick="applySort('price-desc', 'ЦІНА: ВІД ДОРОГИХ', event)">ЦІНА: ВІД ДОРОГИХ</div>
-                    <div class="sort-option" onclick="applySort('name-asc', 'ЗА АЛФАВІТОМ (А-Я)', event)">ЗА АЛФАВІТОМ (А-Я)</div>
-                </div>
-                <select id="sortSelect" style="display:none;" onchange="sortCatalog()">
-                    <option value="default">default</option>
-                    <option value="popularity">popularity</option>
-                    <option value="price-asc">price-asc</option>
-                    <option value="price-desc">price-desc</option>
-                    <option value="name-asc">name-asc</option>
-                </select>
+
+        <!-- ══ EXPANDED PANEL — ноти, бренди, табки ══ -->
+        <div class="sticky-expanded-panel" id="stickyExpandedPanel">
+            <div class="note-suggestions" id="noteSuggestions" style="padding:4px 0 8px; border-bottom:1px solid rgba(128,128,128,0.07);">
+                <span class="note-label">Ноти:</span>
+                <span class="note-chip" onclick="searchByNote('Ваніль', this)">Ваніль</span>
+                <span class="note-chip" onclick="searchByNote('Вишня', this)">Вишня</span>
+                <span class="note-chip" onclick="searchByNote('Шкіра', this)">Шкіра</span>
+                <span class="note-chip" onclick="searchByNote('Троянда', this)">Троянда</span>
+                <span class="note-chip" onclick="searchByNote('Бергамот', this)">Бергамот</span>
+                <span class="note-chip" onclick="searchByNote('Мускус', this)">Мускус</span>
+            </div>
+
+            <div class="brand-slider" id="brandSlider" style="display:none;"></div>
+
+            <button class="brands-gallery-btn" onclick="openBrandGallery()" style="margin: 8px 0 6px;">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Огляд брендів
+            </button>
+
+            <div class="tabs-container" style="margin-bottom:6px;">
+                <button class="tab-btn active" onclick="setCategory('all', this)">Усі</button>
+                <button class="tab-btn" onclick="setCategory('new', this)">Новинки</button>
+                <button class="tab-btn" onclick="setCategory('top', this)">Хіти</button>
+                <button class="tab-btn" onclick="setCategory('set', this)">Сети</button>
+                <button class="tab-btn" onclick="setCategory('bottle', this)">Залишки у флаконі</button>
+                <button class="tab-btn" onclick="setCategory('wishlist', this)">Улюблені ♡</button>
             </div>
         </div>
     </div>
@@ -4733,7 +5094,7 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
             <div id="cartUpsellBlock" style="display: none; margin-bottom: 20px; padding: 12px; border: 1px dashed var(--gold); border-radius: 8px; background: rgba(197, 160, 89, 0.05);">
                 <div style="font-size: 11px; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-weight: 800; text-align: center; letter-spacing: 1px;">Рекомендуємо</div>
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <img id="upsellImg" src="" alt="" style="width: 44px; height: 44px; object-fit: cover; border-radius: 6px;">
+                    <img id="upsellImg" src="" alt="" style="width: 60px; height: 60px; object-fit: contain; border-radius: 10px; background:rgba(128,128,128,0.05);">
                     <div style="flex: 1; overflow: hidden;">
                         <div id="upsellBrand" style="font-size: 9px; color: #999; text-transform: uppercase; font-weight: 800;"></div>
                         <div id="upsellName" style="font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
@@ -4757,7 +5118,7 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
             </label>
         </div>
         <div class="cart-footer">
-            <div class="cart-total-row"><span>Всього:</span><strong id="cartTotalSum">0 грн</strong></div>
+            <div class="cart-total-row"><span class="cart-total-label">Всього</span><span class="cart-total-value" id="cartTotalSum">0 грн</span></div>
             <button class="cart-checkout-btn" id="checkoutBtn" onclick="checkoutCart()">Відправити замовлення</button>
         </div>
     </div>
@@ -5976,6 +6337,171 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
         }
     }
 
+    function toggleStickyPanel() {
+        const ctrl = document.getElementById('stickyControls');
+        ctrl.classList.toggle('expanded');
+        const isExpanded = ctrl.classList.contains('expanded');
+        sessionStorage.setItem('vr_panel_expanded', isExpanded ? '1' : '0');
+        updateFilterIndicator();
+    }
+
+    function updateFilterIndicator() {
+        const ctrl = document.getElementById('stickyControls');
+        if (!ctrl) return;
+        const hasActiveFilter = document.querySelector('.tab-btn.active:not(:first-child)') ||
+            (document.getElementById('searchInput') && document.getElementById('searchInput').value.trim()) ||
+            (typeof currentBrand !== 'undefined' && currentBrand !== '');
+        if (hasActiveFilter) ctrl.classList.add('has-filter');
+        else ctrl.classList.remove('has-filter');
+    }
+
+    function initStickyPanel() {
+        const ctrl = document.getElementById('stickyControls');
+        if (!ctrl) return;
+        // За замовчуванням — розгорнута панель при першому відвідуванні
+        const saved = sessionStorage.getItem('vr_panel_expanded');
+        if (saved === null || saved === '1') {
+            ctrl.classList.add('expanded');
+        }
+    }
+
+    
+    // ═══ GLASS SEARCH OVERLAY ═══
+    let _searchOverlayOpen = false;
+
+    function openSearchOverlay() {
+        const overlay = document.getElementById('searchResults');
+        overlay.classList.add('active');
+        _searchOverlayOpen = true;
+        document.body.classList.add('modal-open');
+        setTimeout(() => {
+            const field = document.getElementById('searchGlassInput');
+            if (field) field.focus();
+        }, 100);
+        // Показуємо популярні при відкритті
+        renderSearchPopular();
+    }
+
+    function closeSearchOverlay() {
+        const overlay = document.getElementById('searchResults');
+        overlay.classList.remove('active');
+        _searchOverlayOpen = false;
+        document.body.classList.remove('modal-open');
+        const field = document.getElementById('searchGlassInput');
+        if (field) field.value = '';
+        const clearBtn = document.getElementById('searchGlassClear');
+        if (clearBtn) clearBtn.style.display = 'none';
+    }
+
+    function handleSearchOverlayClick(e) {
+        if (e.target === document.getElementById('searchResults')) {
+            closeSearchOverlay();
+        }
+    }
+
+    function renderSearchPopular() {
+        const container = document.getElementById('searchGlassPopular');
+        if (!container || globalCatalogData.length === 0) return;
+        const hits = globalCatalogData
+            .filter(c => c[7] && (c[7].toLowerCase().includes('топ') || c[7].toLowerCase().includes('хіт')))
+            .slice(0, 6);
+        const show = hits.length >= 4 ? hits : globalCatalogData.slice(0, 6);
+        container.innerHTML = '';
+        show.forEach(c => {
+            const [brand, name, price, minVol, , img] = c;
+            const pPerMl = parseFloat(String(price).replace(',', '.')) || 0;
+            const vol = minVol && String(minVol).includes('5') ? '5 мл' : '2 мл';
+            const priceStr = calculatePrice(pPerMl, vol);
+            const el = document.createElement('div');
+            el.className = 'search-item';
+            el.innerHTML = `
+                <img src="${(img||'').replace(/'/g,'%27')}" alt="${brand} ${name}" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'" loading="lazy">
+                <div class="search-item-info">
+                    <div class="search-item-brand">${brand}</div>
+                    <div class="search-item-name">${name}</div>
+                </div>
+                <div class="search-item-price">від ${priceStr}</div>`;
+            el.onclick = () => { closeSearchOverlay(); showModal(c); };
+            container.appendChild(el);
+        });
+    }
+
+    function handleGlassSearch(val) {
+        const clearBtn = document.getElementById('searchGlassClear');
+        if (clearBtn) clearBtn.style.display = val ? 'flex' : 'none';
+
+        const container = document.getElementById('searchGlassResults');
+        if (!container) return;
+
+        // Синхронізуємо з прихованим input для filterCatalog
+        const hiddenInput = document.getElementById('searchInput');
+        if (hiddenInput) { hiddenInput.value = val; triggerCatalogAnimation(); }
+
+        if (!val.trim()) {
+            container.innerHTML = '<div class="search-glass-section-title">Популярне</div><div id="searchGlassPopular"></div>';
+            renderSearchPopular();
+            return;
+        }
+
+        let q = val.toLowerCase();
+        let qFix = fixKeyboardLayout ? fixKeyboardLayout(q) : q;
+        let q1 = applySynonyms ? applySynonyms(q) : q;
+        let q2 = applySynonyms ? applySynonyms(qFix) : qFix;
+
+        let results = globalCatalogData.filter(p => {
+            let t = (p[0] + ' ' + p[1] + ' ' + (p[4] || '')).toLowerCase();
+            return t.includes(q1) || t.includes(q2);
+        });
+
+        // Сортуємо — точний збіг в назві вище
+        results.sort((a, b) => {
+            const ta = (a[0] + ' ' + a[1]).toLowerCase();
+            const tb = (b[0] + ' ' + b[1]).toLowerCase();
+            const ma = ta.includes(q1) || ta.includes(q2);
+            const mb = tb.includes(q1) || tb.includes(q2);
+            if (ma && !mb) return -1;
+            if (!ma && mb) return 1;
+            return 0;
+        });
+
+        container.innerHTML = results.length > 0
+            ? '<div class="search-glass-section-title">Результати (' + results.length + ')</div>'
+            : '';
+
+        if (results.length === 0) {
+            container.innerHTML = '<div class="search-empty">Нічого не знайдено за «' + val + '»</div>';
+            return;
+        }
+
+        results.slice(0, 12).forEach(c => {
+            const [brand, name, price, minVol, , img] = c;
+            const pPerMl = parseFloat(String(price).replace(',', '.')) || 0;
+            const vol = minVol && String(minVol).includes('5') ? '5 мл' : '2 мл';
+            const priceStr = calculatePrice(pPerMl, vol);
+            const el = document.createElement('div');
+            el.className = 'search-item';
+            el.innerHTML = `
+                <img src="${(img||'').replace(/'/g,'%27')}" alt="${brand} ${name}" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'" loading="lazy">
+                <div class="search-item-info">
+                    <div class="search-item-brand">${brand}</div>
+                    <div class="search-item-name">${name}</div>
+                </div>
+                <div class="search-item-price">від ${priceStr}</div>`;
+            el.onclick = () => { closeSearchOverlay(); showModal(c); };
+            container.appendChild(el);
+        });
+    }
+
+    function clearGlassSearch() {
+        const field = document.getElementById('searchGlassInput');
+        if (field) { field.value = ''; field.focus(); handleGlassSearch(''); }
+    }
+
+    function setGlassSearch(note) {
+        const field = document.getElementById('searchGlassInput');
+        if (field) { field.value = note; handleGlassSearch(note); }
+    }
+
     async function load() {
         showSkeletons(6);
         try {
@@ -6699,7 +7225,8 @@ function renderGenderBar(value) {
         let priceNum = parseInt(pText.replace(/\D/g, ''));
         if(isNaN(priceNum)) priceNum = 0; 
         
-        cart.push({ brand: b, name: n, volume: selectedVol, price: priceNum, priceText: pText });
+        const cartImg = currentModalImg || '';
+        cart.push({ brand: b, name: n, volume: selectedVol, price: priceNum, priceText: pText, img: cartImg });
         saveCart(); animateFlyToCart();
         
         const btn = document.getElementById('modalOrderBtn');
@@ -6748,15 +7275,19 @@ function renderGenderBar(value) {
         } else {
             let html = '';
             cart.forEach((item, index) => {
+                const imgSrc = item.img ? item.img.replace(/'/g, '%27') : 'https://i.postimg.cc/CxkmFFJ3/logo.png';
                 html += `
                     <div class="cart-item">
+                        <img class="cart-item-img" src="${imgSrc}" alt="${item.name}" loading="lazy" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
                         <div class="cart-item-info">
                             <div class="cart-item-brand">${item.brand}</div>
                             <div class="cart-item-name">${item.name}</div>
-                            <div class="cart-item-vol">Об'єм: ${item.volume}</div>
+                            <div class="cart-item-vol">${item.volume}</div>
+                            <div class="cart-item-price">${item.priceText}</div>
                         </div>
-                        <div class="cart-item-price">${item.priceText}</div>
-                        <button class="cart-item-remove" onclick="removeFromCart(${index})">×</button>
+                        <button class="cart-item-remove" onclick="removeFromCart(${index})">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
                     </div>`;
                 total += item.price;
             });
@@ -6942,91 +7473,12 @@ function renderGenderBar(value) {
     }
     function handleSearchInput() {
         const inputVal = document.getElementById('searchInput').value;
-        const resContainer = document.getElementById('searchResults');
-        const clearBtn = document.getElementById('clearSearchBtn');
-
-        if (clearBtn) clearBtn.style.display = inputVal ? 'block' : 'none';
-
         triggerCatalogAnimation();
+        if (!inputVal.trim()) return;
 
-        if (!inputVal.trim()) { resContainer.style.display = 'none'; return; }
-
-        let cleanQ = inputVal.toLowerCase().replace(/(хочу|шукаю|знайди|підкажіть|покажи|мені|аромат|парфум|духи|купити|якийсь|щось|стійкий|найди)/gi, ' ').trim();
-        let qForSearch = cleanQ.length > 1 ? cleanQ : inputVal.toLowerCase().trim();
-        let qFixedLayout = fixKeyboardLayout(qForSearch);
-        let q1 = applySynonyms(qForSearch);
-        let q2 = applySynonyms(qFixedLayout);
-
-        let results = globalCatalogData.filter(p => {
-            let searchableText = (p[0] + " " + p[1] + " " + (p[4] || "")).toLowerCase();
-            return searchableText.includes(q1) || searchableText.includes(q2);
-        });
-
-        results.sort((a, b) => {
-            let titleA = (a[0] + " " + a[1]).toLowerCase();
-            let titleB = (b[0] + " " + b[1]).toLowerCase();
-            let aIsTitleMatch = titleA.includes(q1) || titleA.includes(q2);
-            let bIsTitleMatch = titleB.includes(q1) || titleB.includes(q2);
-            if (aIsTitleMatch && !bIsTitleMatch) return -1;
-            if (!aIsTitleMatch && bIsTitleMatch) return 1;
-            return 0;
-        });
-
-        resContainer.innerHTML = '';
-        if (results.length > 0) {
-            results.forEach(c => {
-                const [brand, name, price, minVol, desc, img] = c;
-                const startsFrom5 = minVol && String(minVol).includes('5');
-                const minPriceLabel = calculatePrice(price, startsFrom5 ? '5 мл' : '2 мл');
-
-                const item = document.createElement('div');
-                item.className = 'search-item';
-                item.innerHTML = `
-                    <img src="${img.replace(/'/g, "%27")}" alt="${brand} ${name}" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
-                    <div class="search-item-info">
-                        <div class="search-item-brand">${brand}</div>
-                        <div class="search-item-name">${name}</div>
-                    </div>
-                    <div class="search-item-price">від ${minPriceLabel}</div>`;
-
-                item.onclick = () => { 
-                    showModal(c); resContainer.style.display = 'none'; document.getElementById('searchInput').value = ''; document.getElementById('clearSearchBtn').style.display = 'none'; triggerCatalogAnimation(); 
-                };
-                resContainer.appendChild(item);
-            });
-        } else {
-            resContainer.innerHTML = `<div class="search-empty" style="padding-bottom: 12px;">На жаль, за запитом <b>"${inputVal}"</b> нічого не знайдено <br><div style="margin-top: 12px; font-size:11px; color:var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Але вам точно сподобаються наші хіти:</div></div>`;
-
-            let suggestions = globalCatalogData.filter(p => p[7] && (p[7].toLowerCase().includes('топ') || p[7].toLowerCase().includes('хіт')));
-            if (suggestions.length < 3) suggestions = globalCatalogData; 
-            let shuffled = suggestions.sort(() => 0.5 - Math.random()).slice(0, 3);
-
-            shuffled.forEach(c => {
-                const [brand, name, price, minVol, desc, img] = c;
-                const startsFrom5 = minVol && String(minVol).includes('5');
-                const minPriceLabel = calculatePrice(price, startsFrom5 ? '5 мл' : '2 мл');
-
-                const item = document.createElement('div');
-                item.className = 'search-item';
-                item.style.backgroundColor = 'rgba(197, 160, 89, 0.05)'; 
-                item.innerHTML = `
-                    <img src="${img.replace(/'/g, "%27")}" alt="${brand} ${name}" onerror="this.src='https://i.postimg.cc/CxkmFFJ3/logo.png'">
-                    <div class="search-item-info">
-                        <div class="search-item-brand">${brand}</div>
-                        <div class="search-item-name">${name}</div>
-                    </div>
-                    <div class="search-item-price" style="color: var(--gold);">від ${minPriceLabel}</div>`;
-
-                item.onclick = () => { 
-                    showModal(c); resContainer.style.display = 'none'; document.getElementById('searchInput').value = ''; document.getElementById('clearSearchBtn').style.display = 'none'; triggerCatalogAnimation(); 
-                };
-                resContainer.appendChild(item);
-            });
-        }
-        resContainer.style.display = 'block';
     }
 
-    function clearSearch() { document.getElementById('searchInput').value = ''; handleSearchInput(); document.getElementById('searchResults').style.display = 'none'; document.querySelectorAll('.note-chip').forEach(c => c.classList.remove('active-note')); }
+    function clearSearch() { document.getElementById('searchInput').value = ''; handleSearchInput(); closeSearchOverlay(); document.querySelectorAll('.note-chip').forEach(c => c.classList.remove('active-note')); }
 
     function searchByNote(note, btnElement) {
         document.querySelectorAll('.note-chip').forEach(c => c.classList.remove('active-note'));
@@ -7034,7 +7486,7 @@ function renderGenderBar(value) {
         if (inputField.value.toLowerCase() === note.toLowerCase()) { clearSearch(); return; }
         if(btnElement) { btnElement.classList.add('active-note'); btnElement.style.transform = 'scale(0.9)'; setTimeout(() => { btnElement.style.transform = 'scale(1)'; }, 150); }
         inputField.value = note;
-        handleSearchInput(); document.getElementById('searchResults').style.display = 'none'; scrollToFirstCards(); closeModalAudio(); 
+        setGlassSearch(note); scrollToFirstCards(); closeModalAudio(); 
     }
 
     function navigateToPerfume(n) {
@@ -7067,6 +7519,8 @@ function renderGenderBar(value) {
         if (wBtn) wBtn.style.display = (c === 'wishlist' && wishlist.length > 0) ? 'block' : 'none';
 
         triggerCatalogAnimation(); scrollToFirstCards();
+        // Оновлюємо індикатор фільтру
+        updateFilterIndicator();
     }
     
     function setBrand(b, btn) {
@@ -7717,6 +8171,7 @@ function renderGenderBar(value) {
 
     load();
     initTheme();
+    initStickyPanel();
 
     // === СОЦІАЛЬНИЙ ДОКАЗ: "Сьогодні купили" сповіщення ===
     (function initSocialProofToasts() {
@@ -7847,6 +8302,8 @@ function renderGenderBar(value) {
                         scrollBtn.style.display = 'none';
                     }
                 }
+                // Панель не закривається автоматично при скролі
+                // (користувач сам керує через кнопку ☰)
 
                 // Паралакс — тільки поки каруселі видно на екрані
                 const carousel = document.getElementById('heroCarousel');

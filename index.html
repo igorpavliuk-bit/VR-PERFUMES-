@@ -6426,6 +6426,8 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
         });
     }
 
+    let _glassSearchTimer = null;
+
     function handleGlassSearch(val) {
         const clearBtn = document.getElementById('searchGlassClear');
         if (clearBtn) clearBtn.style.display = val ? 'flex' : 'none';
@@ -6433,9 +6435,21 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
         const container = document.getElementById('searchGlassResults');
         if (!container) return;
 
-        // Синхронізуємо з прихованим input для filterCatalog
+        // Debounce — чекаємо 250мс після останнього символу
+        clearTimeout(_glassSearchTimer);
+        _glassSearchTimer = setTimeout(() => {
+            _runGlassSearch(val);
+        }, 250);
+    }
+
+    function _runGlassSearch(val) {
+        const container = document.getElementById('searchGlassResults');
+        if (!container) return;
+
+        // Синхронізуємо з прихованим input ТІЛЬКИ для фільтрації каталогу
+        // але НЕ викликаємо triggerCatalogAnimation щоб не вішати сайт
         const hiddenInput = document.getElementById('searchInput');
-        if (hiddenInput) { hiddenInput.value = val; triggerCatalogAnimation(); }
+        if (hiddenInput) hiddenInput.value = val;
 
         if (!val.trim()) {
             container.innerHTML = '<div class="search-glass-section-title">Популярне</div><div id="searchGlassPopular"></div>';
@@ -6453,7 +6467,6 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
             return t.includes(q1) || t.includes(q2);
         });
 
-        // Сортуємо — точний збіг в назві вище
         results.sort((a, b) => {
             const ta = (a[0] + ' ' + a[1]).toLowerCase();
             const tb = (b[0] + ' ' + b[1]).toLowerCase();
@@ -6487,7 +6500,14 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
                     <div class="search-item-name">${name}</div>
                 </div>
                 <div class="search-item-price">від ${priceStr}</div>`;
-            el.onclick = () => { closeSearchOverlay(); showModal(c); };
+            el.onclick = () => {
+                closeSearchOverlay();
+                // Після закриття — показуємо відфільтрований каталог
+                const hiddenInput = document.getElementById('searchInput');
+                if (hiddenInput) hiddenInput.value = val;
+                triggerCatalogAnimation();
+                showModal(c);
+            };
             container.appendChild(el);
         });
     }
@@ -7434,69 +7454,71 @@ function renderGenderBar(value) {
         }
 
         const recognition = new SpeechRecognition();
-        recognition.lang = 'uk-UA'; // Розпізнавання українською мовою
+        recognition.lang = 'uk-UA';
         recognition.interimResults = false;
         recognition.maxAlternatives = 1;
 
         const micBtn = document.getElementById('micBtn');
-        const searchInput = document.getElementById('searchInput');
-        const originalPlaceholder = searchInput.placeholder;
+
+        // Відкриваємо пошукову оверлею
+        openSearchOverlay();
+
+        const glassField = document.getElementById('searchGlassInput');
 
         recognition.onstart = function() {
-            micBtn.style.stroke = 'var(--gold)'; 
-            micBtn.classList.add('cart-pulse-anim'); // Анімація пульсації під час прослуховування
-            searchInput.value = '';
-            searchInput.placeholder = "Слухаю...";
+            if (micBtn) micBtn.classList.add('cart-pulse-anim');
+            if (glassField) {
+                glassField.value = '';
+                glassField.placeholder = "Слухаю...";
+            }
         };
 
         recognition.onresult = function(event) {
             const transcript = event.results[0][0].transcript;
-            searchInput.value = transcript; // Вставляємо почутий текст
-            
-            // Одразу запускаємо фільтрацію каталогу
-            handleSearchInput();
-            document.getElementById('searchResults').style.display = 'block';
+            if (glassField) {
+                glassField.value = transcript;
+                handleGlassSearch(transcript);
+            }
         };
 
         recognition.onerror = function(event) {
-            console.error("Помилка мікрофона: ", event.error);
-            searchInput.placeholder = "Не розчув. Спробуйте ще";
+            if (glassField) glassField.placeholder = "Не розчув. Спробуйте ще";
         };
 
         recognition.onend = function() {
-            micBtn.style.stroke = ''; // Повертаємо стандартний колір
-            micBtn.classList.remove('cart-pulse-anim');
-            setTimeout(() => { searchInput.placeholder = originalPlaceholder; }, 2000);
+            if (micBtn) micBtn.classList.remove('cart-pulse-anim');
+            if (glassField) glassField.placeholder = "Бренд, аромат, нота...";
         };
 
         recognition.start();
     }
     function handleSearchInput() {
-        const inputVal = document.getElementById('searchInput').value;
+        // Сумісність: просто тригеримо фільтрацію каталогу по прихованому полю
         triggerCatalogAnimation();
-        if (!inputVal.trim()) return;
-
     }
 
-    function clearSearch() { document.getElementById('searchInput').value = ''; handleSearchInput(); closeSearchOverlay(); document.querySelectorAll('.note-chip').forEach(c => c.classList.remove('active-note')); }
+    function clearSearch() {
+        const hiddenInput = document.getElementById('searchInput');
+        if (hiddenInput) hiddenInput.value = '';
+        closeSearchOverlay();
+        document.querySelectorAll('.note-chip').forEach(c => c.classList.remove('active-note'));
+        triggerCatalogAnimation();
+    }
 
     function searchByNote(note, btnElement) {
         document.querySelectorAll('.note-chip').forEach(c => c.classList.remove('active-note'));
-        const inputField = document.getElementById('searchInput');
-        if (inputField.value.toLowerCase() === note.toLowerCase()) { clearSearch(); return; }
+        const hiddenInput = document.getElementById('searchInput');
+        if (hiddenInput && hiddenInput.value.toLowerCase() === note.toLowerCase()) { clearSearch(); return; }
         if(btnElement) { btnElement.classList.add('active-note'); btnElement.style.transform = 'scale(0.9)'; setTimeout(() => { btnElement.style.transform = 'scale(1)'; }, 150); }
-        inputField.value = note;
-        setGlassSearch(note); scrollToFirstCards(); closeModalAudio(); 
+        if (hiddenInput) hiddenInput.value = note;
+        setGlassSearch(note); scrollToFirstCards(); closeModalAudio();
     }
 
     function navigateToPerfume(n) {
         document.getElementById('newsModalWindow').style.display = 'none';
         const item = globalCatalogData.find(p => (p[0] + " " + p[1]).toLowerCase().includes(n.toLowerCase()));
-        if (item) { showModal(item); } 
-        else {
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) { searchInput.value = n; handleSearchInput(); scrollToFirstCards(); }
-        }
+        if (item) { showModal(item); }
+        else { setGlassSearch(n); openSearchOverlay(); scrollToFirstCards(); }
     }
 
     function setCategory(c, b) {

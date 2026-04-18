@@ -3306,11 +3306,20 @@ body.modal-open {
     display: flex !important;
 }
 
-/* Кнопки ХОВАЮТЬСЯ тільки коли відкрита модалка */
+/* Кнопки ХОВАЮТЬСЯ тільки коли відкрита модалка товару */
 body.modal-open .floating-tg, 
 body.modal-open #scrollTopBtn, 
 body.modal-open .cart-floating-btn {
     display: none !important;
+}
+
+/* При пошуку кнопки залишаються видимими */
+body.search-open .floating-tg,
+body.search-open .cart-floating-btn {
+    display: flex !important;
+}
+body.search-open {
+    overflow: hidden;
 }
 
 
@@ -6373,12 +6382,11 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
         const overlay = document.getElementById('searchResults');
         overlay.classList.add('active');
         _searchOverlayOpen = true;
-        document.body.classList.add('modal-open');
+        document.body.classList.add('search-open');
         setTimeout(() => {
             const field = document.getElementById('searchGlassInput');
             if (field) field.focus();
         }, 100);
-        // Показуємо популярні при відкритті
         renderSearchPopular();
     }
 
@@ -6386,11 +6394,14 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
         const overlay = document.getElementById('searchResults');
         overlay.classList.remove('active');
         _searchOverlayOpen = false;
-        document.body.classList.remove('modal-open');
+        document.body.classList.remove('search-open');
         const field = document.getElementById('searchGlassInput');
         if (field) field.value = '';
         const clearBtn = document.getElementById('searchGlassClear');
         if (clearBtn) clearBtn.style.display = 'none';
+        // Скидаємо прихований input
+        const hiddenInput = document.getElementById('searchInput');
+        if (hiddenInput) hiddenInput.value = '';
     }
 
     function handleSearchOverlayClick(e) {
@@ -6446,11 +6457,6 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
         const container = document.getElementById('searchGlassResults');
         if (!container) return;
 
-        // Синхронізуємо з прихованим input ТІЛЬКИ для фільтрації каталогу
-        // але НЕ викликаємо triggerCatalogAnimation щоб не вішати сайт
-        const hiddenInput = document.getElementById('searchInput');
-        if (hiddenInput) hiddenInput.value = val;
-
         if (!val.trim()) {
             container.innerHTML = '<div class="search-glass-section-title">Популярне</div><div id="searchGlassPopular"></div>';
             renderSearchPopular();
@@ -6501,12 +6507,13 @@ body.dark-theme .brand-gallery-close { color: #ccc; }
                 </div>
                 <div class="search-item-price">від ${priceStr}</div>`;
             el.onclick = () => {
-                closeSearchOverlay();
-                // Після закриття — показуємо відфільтрований каталог
+                // Записуємо у прихований input і фільтруємо каталог ПІСЛЯ закриття
                 const hiddenInput = document.getElementById('searchInput');
                 if (hiddenInput) hiddenInput.value = val;
-                triggerCatalogAnimation();
+                closeSearchOverlay();
                 showModal(c);
+                // Фільтрація каталогу у фоні після рендеру модалки
+                setTimeout(() => triggerCatalogAnimation(), 400);
             };
             container.appendChild(el);
         });
